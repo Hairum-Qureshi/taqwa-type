@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import colors from "colors";
 import { MongoClient, ServerApiVersion } from "mongodb";
+import authentication from "./routes/authentication";
 
 dotenv.config();
 colors.enable();
@@ -21,11 +22,12 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api/auth", authentication);
+
 const PORT: string | number = process.env.PORT || 4000;
 
 const MONGO_URI: string = process.env.MONGO_URI!;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(MONGO_URI, {
 	serverApi: {
 		version: ServerApiVersion.v1,
@@ -36,9 +38,7 @@ const client = new MongoClient(MONGO_URI, {
 
 async function run() {
 	try {
-		// Connect the client to the server	(optional starting in v4.7)
 		await client.connect();
-		// Send a ping to confirm a successful connection
 		await client.db("admin").command({ ping: 1 });
 		console.log(
 			"Pinged your deployment. You successfully connected to MongoDB!".green
@@ -47,7 +47,6 @@ async function run() {
 	} catch (error) {
 		console.log("<index.ts> error", (error as Error).toString().red.bold);
 	} finally {
-		// Ensures that the client will close when you finish/error
 		await client.close();
 	}
 }
