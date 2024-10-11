@@ -23,6 +23,11 @@ const userSchema = new Schema(
 			required: true,
 			unique: true
 		},
+		pfp: {
+			type: String,
+			required: true,
+			default: "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
+		},
 		password: {
 			type: String,
 			required: false
