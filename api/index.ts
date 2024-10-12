@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import colors from "colors";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import authentication from "./routes/authentication";
+import mongoose from "mongoose";
 
 dotenv.config();
 colors.enable();
@@ -17,16 +18,14 @@ const corsOptions = {
 	optionSuccessStatus: 200
 };
 
+const PORT: string | number = process.env.PORT || 4000;
+const MONGO_URI: string = process.env.MONGO_URI!;
+
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use("/api/auth", authentication);
-
-const PORT: string | number = process.env.PORT || 4000;
-
-const MONGO_URI: string = process.env.MONGO_URI!;
 
 const client = new MongoClient(MONGO_URI, {
 	serverApi: {
@@ -36,22 +35,16 @@ const client = new MongoClient(MONGO_URI, {
 	}
 });
 
-async function run() {
-	try {
-		await client.connect();
-		await client.db("admin").command({ ping: 1 });
-		console.log(
-			"Pinged your deployment. You successfully connected to MongoDB!".green
-				.bold
-		);
-	} catch (error) {
-		console.log("<index.ts> error", (error as Error).toString().red.bold);
-	} finally {
-		await client.close();
-	}
-}
-
-app.listen(PORT, () => {
-	console.log(`Server listening on port ${PORT}!`.yellow.bold);
-	run().catch(console.dir);
-});
+mongoose
+	.connect(MONGO_URI)
+	.then(() => {
+		app.listen(PORT, () => {
+			console.log(
+				`Successfully connected to MongoDB! Server listening on port ${PORT}`
+					.yellow.bold
+			);
+		});
+	})
+	.catch(err => {
+		console.log(err);
+	});
