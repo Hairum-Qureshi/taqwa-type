@@ -2,6 +2,9 @@ import { InferSchemaType, Schema, model } from "mongoose";
 
 const userSchema = new Schema(
 	{
+		_id: {
+			type: String
+		},
 		first_name: {
 			type: String,
 			required: true
@@ -29,8 +32,7 @@ const userSchema = new Schema(
 			default: "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
 		},
 		password: {
-			type: String,
-			required: false
+			type: String
 		}
 	},
 	{
