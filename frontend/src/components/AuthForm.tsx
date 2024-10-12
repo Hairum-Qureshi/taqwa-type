@@ -145,12 +145,14 @@ export default function AuthForm() {
 			</div>
 			<button
 				onClick={() => login()}
-				className="mt-10 bg-white text-black py-2 p-2 w-1/2 rounded-md flex items-center justify-left"
+				className="mt-10 bg-sky-800 text-white border-2 border-sky-400 hover:bg-sky-700 hover:border-sky-300 active:bg-sky-500 active:border-sky-200 py-2 p-2 w-1/2 rounded-md flex items-center justify-left"
 			>
-				<span className="text-2xl">
+				<span className="text-2xl mr-2">
 					<FontAwesomeIcon icon={faGoogle} />
 				</span>
-				&nbsp; Sign in with Google
+				<span className="flex justify-center w-full text-lg">
+					Sign in with Google
+				</span>
 			</button>
 		</div>
 	);
