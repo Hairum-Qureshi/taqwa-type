@@ -32,7 +32,31 @@ const userSchema = new Schema(
 			default: "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
 		},
 		password: {
+			type: String,
+			required: false
+		},
+		experience: {
+			type: Number,
+			default: 0
+		},
+		mostPracticedSurah: {
 			type: String
+		},
+		totalSurahsCompleted: {
+			type: Number,
+			default: 0
+		},
+		wordsPerMinute: {
+			type: Number,
+			default: 0
+		},
+		accuracy: {
+			type: Number,
+			default: 0
+		},
+		streak: {
+			type: Number,
+			default: 0
 		}
 	},
 	{
