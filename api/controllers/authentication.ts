@@ -34,7 +34,8 @@ const googleAuth = async (req: Request, res: Response) => {
 			res.status(201).send(createdUser);
 			console.log(createdUser);
 		} else {
-			res.status(200).json({ message: "User already exists" });
+			const user = await User.find({ email }).lean();
+			res.status(200).send(user[0]);
 		}
 	} catch (error) {
 		console.error(
