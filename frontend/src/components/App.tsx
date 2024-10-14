@@ -10,7 +10,7 @@ export default function App() {
 			<Navbar />
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/:user_id/account" element={<Account />} />
+				<Route path="/user/:user_id/account" element={<Account />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</BrowserRouter>
