@@ -130,7 +130,9 @@ export default function Account() {
 								type="text"
 								placeholder="Search Surah or Enter Chapter Number"
 								className="my-3 p-2 w-full rounded-md outline-none"
-								onInput={event => setSurahToSearch(event.target.value)}
+								onInput={event =>
+									setSurahToSearch((event.target as HTMLInputElement).value)
+								}
 							/>
 							{isLoading ? (
 								<h1 className="font-semibold text-center text-lg mt-10">
