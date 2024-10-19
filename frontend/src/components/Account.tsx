@@ -20,6 +20,8 @@ export default function Account() {
 
 	// TODO - if you're on your own profile, instead of it saying "surahs to practice", change it to "surahs [username] is practicing"
 
+	// TODO - see about possibly implementing an "estimated reading time/typing time" indicator for each surah also
+
 	const [hasProgress, setHasProgress] = useState(false);
 	const [surahs, setSurahs] = useState<Surah[]>([]);
 	const { user_id } = useParams();
@@ -149,8 +151,10 @@ export default function Account() {
 												<div className="w-full">
 													<h3>
 														{surah.englishName} |&nbsp;
-														{surah.englishNameTranslation}
+														{surah.englishNameTranslation}&nbsp;|&nbsp;
+														<span>{surah.numberOfAyahs} verses</span>
 													</h3>
+
 													<div className="border border-green-400 rounded-sm bg-green-800 p-1">
 														<p className="text-white text-xs">Progress: 0%</p>
 													</div>
@@ -171,54 +175,3 @@ export default function Account() {
 		</div>
 	);
 }
-
-// export default function Account() {
-// 	return (
-// 		<div>
-// 			<div className="w-full min-h-56 h-auto bg-slate-800">
-// 				{/* <div className="flex items-center justify-center">
-// 					<div className="border-2 border-white rounded-full w-40 h-40 mt-7">
-// 						<img src="" alt="" />
-// 					</div>
-// 				</div> */}
-// 				<section className="text-white body-font">
-// 					<div className="container px-5 py-14 mx-auto">
-// 						<h1 className="font-semibold text-3xl text-center mb-10">
-// 							Your Best Stats
-// 						</h1>
-// 						<div className="flex flex-wrap -m-4 text-center">
-// 							<div className="p-4 sm:w-1/4 w-1/2">
-// 								<h2 className="title-font font-medium sm:text-4xl text-3xl text-white">
-// 									0 WPM
-// 								</h2>
-// 								<p className="leading-relaxed">Best Typing Speed</p>
-// 							</div>
-// 							<div className="p-4 sm:w-1/4 w-1/2">
-// 								<h2 className="title-font font-medium sm:text-4xl text-3xl text-white">
-// 									1.8K
-// 								</h2>
-// 								<p className="leading-relaxed">Subscribes</p>
-// 							</div>
-// 							<div className="p-4 sm:w-1/4 w-1/2">
-// 								<h2 className="title-font font-medium sm:text-4xl text-3xl text-white">
-// 									35
-// 								</h2>
-// 								<p className="leading-relaxed">Downloads</p>
-// 							</div>
-// 							<div className="p-4 sm:w-1/4 w-1/2">
-// 								<h2 className="title-font font-medium sm:text-4xl text-3xl text-white">
-// 									4
-// 								</h2>
-// 								<p className="leading-relaxed">Products</p>
-// 							</div>
-// 						</div>
-// 					</div>
-// 				</section>
-// 			</div>
-// 			<div className="h-screen bg-gray-100 lg:flex">
-// 				<div className="lg:w-1/3 bg-red-500 lg:h-full h-1/3"></div>
-// 				<div className="w-full bg-blue-500 h-full"></div>
-// 			</div>
-// 		</div>
-// 	);
-// }
