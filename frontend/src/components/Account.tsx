@@ -82,7 +82,8 @@ export default function Account() {
 				surah.englishName.toLowerCase().includes(surahToSearch.toLowerCase()) ||
 				surah.englishNameTranslation
 					.toLowerCase()
-					.includes(surahToSearch.toLowerCase())
+					.includes(surahToSearch.toLowerCase()) ||
+				surah.number === Number(surahToSearch)
 			);
 		});
 	}, [surahs, surahToSearch, isLoading]);
@@ -127,7 +128,7 @@ export default function Account() {
 							<h1 className="text-center text-xl">Surahs To Practice:</h1>
 							<input
 								type="text"
-								placeholder="Search Surah"
+								placeholder="Search Surah or Enter Chapter Number"
 								className="my-3 p-2 w-full rounded-md outline-none"
 								onInput={event => setSurahToSearch(event.target.value)}
 							/>
