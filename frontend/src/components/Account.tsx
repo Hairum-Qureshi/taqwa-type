@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 export default function Account() {
 	type Surah = {
@@ -16,19 +16,36 @@ export default function Account() {
 		data: Surah[];
 	};
 
+	// TODO - will need to implement logic disabling the cursor from appearing on hover and allowing the user to redirect if they click on the surah buttons if they're on somebody else's profile.
+
 	const [hasProgress, setHasProgress] = useState(false);
 	const [surahs, setSurahs] = useState<Surah[]>([]);
 	const { user_id } = useParams();
 	const queryClient = useQueryClient();
 	const [loading, setIsLoading] = useState(true);
+	const [surahToSearch, setSurahToSearch] = useState("");
+	const [filteredSurahs, setFilteredSurahs] = useState<Surah[]>(surahs);
 
-	const { isLoading, data } = useQuery({
+	const { isLoading } = useQuery({
 		queryKey: ["surahs"],
 		queryFn: async () => {
 			const response = await axios.get("https://api.alquran.cloud/v1/surah");
 			return response.data;
 		}
 	});
+
+	function getCachedSurahs(): Surah[] {
+		const cachedData: SurahResponse | undefined = queryClient.getQueryData([
+			"surahs"
+		]);
+
+		if (cachedData) {
+			const { data } = cachedData;
+			return data;
+		}
+
+		return [];
+	}
 
 	useEffect(() => {
 		if (user_id) {
@@ -40,14 +57,12 @@ export default function Account() {
 					if (response.data !== "No progress found") {
 						setHasProgress(true);
 					} else {
-						const cachedData: SurahResponse | undefined =
-							queryClient.getQueryData(["surahs"]);
+						const surahs: Surah[] = getCachedSurahs();
 						if (isLoading) {
 							setIsLoading(true);
 						} else {
-							if (cachedData) {
-								const { data } = cachedData;
-								setSurahs(data);
+							if (surahs.length > 0) {
+								setSurahs(surahs);
 							}
 						}
 					}
@@ -57,6 +72,31 @@ export default function Account() {
 				});
 		}
 	}, [isLoading]);
+
+	const filtered_surahs = useMemo(() => {
+		if (isLoading || surahs.length === 0) return surahs;
+		return surahs.filter((surah: Surah) => {
+			return (
+				surah.englishName.toLowerCase().includes(surahToSearch.toLowerCase()) ||
+				surah.englishNameTranslation
+					.toLowerCase()
+					.includes(surahToSearch.toLowerCase())
+			);
+		});
+	}, [surahs, surahToSearch, isLoading]);
+
+	useEffect(() => {
+		if (surahToSearch) {
+			setFilteredSurahs(filtered_surahs);
+		} else {
+			const cachedSurahs: Surah[] = getCachedSurahs();
+			if (cachedSurahs.length > 0) {
+				setFilteredSurahs(cachedSurahs);
+			} else {
+				setFilteredSurahs(surahs); // fallback to original surahs if cache is empty
+			}
+		}
+	}, [surahToSearch, surahs]);
 
 	return (
 		<div className="h-screen lg:mx-20">
@@ -83,16 +123,21 @@ export default function Account() {
 					<div className="bg-gray-200 p-2 h-full w-full">
 						<div className="w-full h-full p-1 overflow-y-auto">
 							<h1 className="text-center text-xl">Surahs To Practice:</h1>
-							<input type="text" placeholder="Search Surah" />
+							<input
+								type="text"
+								placeholder="Search Surah"
+								className="my-3 p-2 w-full rounded-md outline-none"
+								onInput={event => setSurahToSearch(event.target.value)}
+							/>
 							{isLoading ? (
 								<h1 className="font-semibold text-center text-lg mt-10">
 									Loading Surah Data and Progress...
 								</h1>
 							) : (
-								surahs.map((surah: Surah) => {
+								filteredSurahs.map((surah: Surah) => {
 									return (
 										<div className="w-full p-2 hover:cursor-pointer bg-white border-2 border-blue-500 rounded-md my-2">
-											<div className="flex items-center">
+											<div className="flex items-center" key={surah.number}>
 												<div className="flex items-center justify-center w-11 h-11 text-lg font-semibold text-white bg-sky-800 mr-3 rounded-md">
 													{surah.number}
 												</div>
