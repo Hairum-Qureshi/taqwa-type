@@ -18,6 +18,8 @@ export default function Account() {
 
 	// TODO - will need to implement logic disabling the cursor from appearing on hover and allowing the user to redirect if they click on the surah buttons if they're on somebody else's profile.
 
+	// TODO - if you're on your own profile, instead of it saying "surahs to practice", change it to "surahs [username] is practicing"
+
 	const [hasProgress, setHasProgress] = useState(false);
 	const [surahs, setSurahs] = useState<Surah[]>([]);
 	const { user_id } = useParams();
@@ -133,7 +135,7 @@ export default function Account() {
 								<h1 className="font-semibold text-center text-lg mt-10">
 									Loading Surah Data and Progress...
 								</h1>
-							) : (
+							) : filteredSurahs.length > 0 ? (
 								filteredSurahs.map((surah: Surah) => {
 									return (
 										<div className="w-full p-2 hover:cursor-pointer bg-white border-2 border-blue-500 rounded-md my-2">
@@ -154,6 +156,10 @@ export default function Account() {
 										</div>
 									);
 								})
+							) : (
+								<h1 className="text-lg mt-10 font-semibold text-center">
+									Surah not found
+								</h1>
 							)}
 						</div>
 					</div>
