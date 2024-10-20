@@ -64,10 +64,12 @@ const googleAuth = async (req: Request, res: Response) => {
 			}
 		} else {
 			const [user] = await User.find({ email }).lean();
-			if (user && user._id) {
+			if (user && user._id && !user.isBanned) {
 				createCookie(user._id, res);
 
 				res.status(201).send(user);
+			} else if (user && user.isBanned) {
+				res.status(403).send({ message: "Your account has been banned" });
 			}
 		}
 	} catch (error) {
@@ -143,14 +145,18 @@ const signIn = async (req: Request, res: Response) => {
 				password,
 				user.password!
 			);
-			if (isPassword) {
+			if (isPassword && !user.isBanned) {
 				if (user && user._id) {
 					createCookie(user._id, res);
 
 					res.status(201).send(user);
 				}
 			} else {
-				res.status(401).json({ message: "Incorrect password" });
+				if (isPassword && user.isBanned) {
+					res.status(401).json({ message: "Your account has been banned" });
+				} else {
+					res.status(401).json({ message: "Incorrect password" });
+				}
 			}
 		}
 	} catch (error) {
