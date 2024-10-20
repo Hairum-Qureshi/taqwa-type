@@ -55,7 +55,8 @@ function daysFromNow(localDateString: string): number {
 async function sendReport(
 	report: UserReport,
 	backend_base_url: string,
-	reporter: string
+	reporter: string,
+	frontend_base_url: string
 ) {
 	try {
 		const transporter = callEmailAuth();
@@ -70,7 +71,7 @@ async function sendReport(
                     <body>
                         <div style = "width: 100%; height: 10px; backgroundColor: 'blue';"></div>
                         <h3>Salam Hairum, <br /> ${reporter} reported the following profile for having an inappropriate profile picture:</h3>
-                        <a href = ${backend_base_url}/user/${
+                        <a href = ${frontend_base_url}/user/${
 				report._id
 			}/account></a>
                         <p>Here is some information about the reported user:</p>
@@ -82,6 +83,9 @@ async function sendReport(
 															report.createdAt
 														)} days old</b> - (${report.createdAt})</li>
                             <li>Pfp link: ${report.pfp}</li>
+                            <li>Has this user been banned before? ${
+															report.hasBeenBannedBefore ? "Yes" : "No"
+														}</li>
                         </ul>
             
                         <p>Here is the image of the profile picture:</p>
@@ -89,7 +93,7 @@ async function sendReport(
 													report.pfp
 												}" alt = "reported profile picture">
                         <p>If you would like to ban this user, press the following button:</p>
-                        <button><a href = "${backend_base_url}/${
+                        <button><a href = "${backend_base_url}/api/user/${
 				report._id
 			}/ban" style = "text-decoration: none; color: black;">BAN USER</a></button>
                         <br />
@@ -104,4 +108,61 @@ async function sendReport(
 	}
 }
 
-export default sendReport;
+async function sendBanEmail(full_name: string, email: string, pfp: string) {
+	try {
+		const transporter = callEmailAuth();
+		await transporter.sendMail({
+			from: process.env.EMAIL,
+			to: email,
+			subject: "[Taqwa Type] Important Notice",
+			html: `<!DOCTYPE html>
+                    <head>
+                    <meta charset="UTF-8" />
+                    </head>
+                    <body>
+                    <h3>Salam, ${full_name}</h3>
+                    <p>
+                        We are notifying you that your account has been banned due to an inappropriate profile picture. As Taqwa Type provides a platform for reading the words of Allah (God) while improving your typing skills, it is essential that all users uphold the principles of Islam. Images representing inappropriate content, immodesty, or any other offensive content is prohibited. 
+                        <br />
+                        The image in question we have on record that has been reported is the following: <br />
+                        <img src = "${pfp}" alt = "reported pfp" /> 
+                    </p>
+                    </p>
+                        Please understand that adherence to these guidelines is expected when using our site. Attempts to evade this ban will result in consequences. <br />
+                        <b>Your ban will end in one (1) month, however, repeated offenses will result in your account being <u>permanently</u> banned.</b> <br/>
+
+                        Thank you for your understanding.
+                    </p>    
+                    <p>If you find this to be a mistake or you would like to discuss this decision further, please respond to this email.</p>
+                    </body>
+                    </html>`
+		});
+	} catch (error) {
+		"<nodemailer.ts> sendEmail function error".yellow,
+			(error as Error).toString().red.bold;
+	}
+}
+
+async function sendAccountStatusEmail(email: string) {
+	try {
+		const transporter = callEmailAuth();
+		await transporter.sendMail({
+			from: process.env.EMAIL,
+			to: email,
+			subject: "[Taqwa Type] Ban Status Update",
+			html: `<!DOCTYPE html>
+                    <head>
+                    <meta charset="UTF-8" />
+                    </head>
+                    <body>
+                        <h3>Salam, this is an email to let you know your ban has been lifted. Please note that if you are reported again, you will get permanently banned. </h3>
+                    </body>
+                    </html>`
+		});
+	} catch (error) {
+		"<nodemailer.ts> sendEmail function error".yellow,
+			(error as Error).toString().red.bold;
+	}
+}
+
+export { sendReport, sendBanEmail, sendAccountStatusEmail };
