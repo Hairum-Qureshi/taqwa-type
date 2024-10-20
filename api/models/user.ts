@@ -57,6 +57,10 @@ const userSchema = new Schema(
 		streak: {
 			type: Number,
 			default: 0
+		},
+		isBanned: {
+			type: Boolean,
+			default: false
 		}
 	},
 	{
