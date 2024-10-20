@@ -69,6 +69,10 @@ const userSchema = new Schema(
 		hasBeenBannedBefore: {
 			type: Boolean,
 			default: false
+		},
+		hasBeenWarnedBefore: {
+			type: Boolean,
+			default: false
 		}
 	},
 	{
