@@ -1,5 +1,10 @@
 import express from "express";
-import { banUser, getUserProgress, reportUser } from "../controllers/user";
+import {
+	banUser,
+	getUserProgress,
+	reportUser,
+	warnUser
+} from "../controllers/user";
 import upload from "./config/handle_uploads";
 import fs from "fs";
 import path from "path";
@@ -32,5 +37,7 @@ router.post("/report", reportUser);
 
 // TODO - implement middleware to double check that only the admin has access to this route; you may need to update your user model to include a 'isAdmin' property
 router.get("/:user_id/ban", banUser);
+
+router.get("/:user_id/email", warnUser);
 
 export default router;
