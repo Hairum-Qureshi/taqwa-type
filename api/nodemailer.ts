@@ -47,7 +47,8 @@ function daysFromNow(localDateString: string): number {
 	);
 
 	// Calculate the difference in milliseconds and convert to days
-	const diffInDays = (currentDateUTC - pastDateUTC) / (1000 * 60 * 60 * 24) - 1;
+	const diff: number = (currentDateUTC - pastDateUTC) / (1000 * 60 * 60 * 24);
+	const diffInDays = diff - 1 < 0 ? 0 : diff - 1;
 
 	return Math.floor(diffInDays); // Use Math.floor to return full days
 }
@@ -92,9 +93,9 @@ async function sendReport(
 													report.pfp
 												}" alt = "reported profile picture">
                         <p>If you would like to ban this user, press the following button:</p>
-                        <button><a href = "${backend_base_url}/api/user/${
+                        <button style="background-color: #C11010; padding: 10px 20px; border: none; border-radius: 5px;"><a href = "${backend_base_url}/api/user/${
 				report._id
-			}/ban" style = "text-decoration: none; color: black;">BAN USER</a></button>
+			}/ban" style = "text-decoration: none; color: white;">BAN USER</a></button>
                         <br />                   
   ${
 		!report.hasBeenWarnedBefore
@@ -201,6 +202,8 @@ async function followUpEmail(
 	pfp: string,
 	hasBeenBannedBefore: boolean
 ) {
+	// TODO - will need to figure out a way to distinguish "temporary bans" and "permanent bans"
+	// TODO - will need to add 'ban user' button
 	try {
 		const transporter = callEmailAuth();
 		await transporter.sendMail({
@@ -218,7 +221,8 @@ async function followUpEmail(
 														? "Because this user has been banned before, they will need to be permanently banned."
 														: "Because this user has not been banned before, their account will need to be banned."
 												}</h4>
-                        
+                        <p>This is their profile picture we have from the database:</p>
+                        <img src = "${pfp}" alt = "user pfp" />
                     </body>
                     </html>`
 		});
@@ -227,4 +231,10 @@ async function followUpEmail(
 			(error as Error).toString().red.bold;
 	}
 }
-export { sendReport, sendBanEmail, sendAccountStatusEmail, sendWarningEmail };
+export {
+	sendReport,
+	sendBanEmail,
+	sendAccountStatusEmail,
+	sendWarningEmail,
+	followUpEmail
+};
