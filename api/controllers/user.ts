@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Progress from "../models/progress";
 import User from "../models/user";
-import { sendReport, sendBanEmail } from "../nodemailer";
+import { sendReport, sendBanEmail, sendWarningEmail } from "../nodemailer";
 import { UserReport } from "../types";
 
 const getUserProgress = async (req: Request, res: Response) => {
@@ -27,6 +27,7 @@ const getUserProgress = async (req: Request, res: Response) => {
 	}
 };
 
+// TODO - need to send the reporter's user ID!
 const reportUser = async (req: Request, res: Response) => {
 	// TODO - need to implement a check to see if a user has reported this user (to prevent them from reporting repeatedly)
 	const { user_id } = req.body;
@@ -48,6 +49,7 @@ const reportUser = async (req: Request, res: Response) => {
 				hasBeenBannedBefore
 			};
 
+			// TODO - convert these to ENV variables:
 			const backend_base_url = "http://localhost:4000";
 			const frontend_base_url = "http://localhost:5173";
 
@@ -75,14 +77,18 @@ const banUser = async (req: Request, res: Response) => {
 		if (user) {
 			const { full_name, email, pfp } = user;
 
-			User.findByIdAndUpdate(user_id, {
-				isBanned: true,
-				bannedDate: new Date(),
-				hasBeenBannedBefore: true
-			}).then(() => {
-				sendBanEmail(full_name, email, pfp);
-				res.send("<h1>User successfully banned</h1>");
-			});
+			if (user.isBanned) {
+				res.send("<h1>User is already banned</h1>");
+			} else {
+				User.findByIdAndUpdate(user_id, {
+					isBanned: true,
+					bannedDate: new Date(),
+					hasBeenBannedBefore: true
+				}).then(() => {
+					sendBanEmail(full_name, email, pfp);
+					res.send("<h1>User successfully banned</h1>");
+				});
+			}
 
 			// TODO - delete that user's cookie
 
@@ -96,4 +102,27 @@ const banUser = async (req: Request, res: Response) => {
 	}
 };
 
-export { getUserProgress, reportUser, banUser };
+const warnUser = async (req: Request, res: Response) => {
+	const { user_id } = req.params;
+	try {
+		const user = await User.findById({ _id: user_id });
+
+		if (user) {
+			sendWarningEmail(user.email, user.full_name);
+			// TODO - schedule email reminder to send to admin to check if the user changed their pfp or not
+
+			res
+				.status(200)
+				.send(
+					"<h1>Warning email has been sent to user. You will also receive a follow-up email in 2 days that will contain information about this user to see if they have changed their profile picture within these 2 days.</h1>"
+				);
+		}
+	} catch (error) {
+		console.log(
+			"There was an error (user.ts file, emailUser function)",
+			(error as Error).toString().red.bold
+		);
+	}
+};
+
+export { getUserProgress, reportUser, banUser, warnUser };
