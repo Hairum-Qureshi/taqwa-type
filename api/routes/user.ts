@@ -30,4 +30,6 @@ router.post("/upload/pfp", upload.single("profile_picture"), (req, res) => {
 
 router.post("/report", reportUser);
 
+// router.post("/:user_id/ban", banUser);
+
 export default router;
