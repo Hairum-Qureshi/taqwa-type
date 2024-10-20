@@ -5,7 +5,7 @@ type UserReport = {
 	pfp: string;
 	createdAt: string;
 	hasBeenBannedBefore: boolean;
-	hasBeenWarnedBEfore: boolean;
+	hasBeenWarnedBefore: boolean;
 };
 
 export { UserReport };
