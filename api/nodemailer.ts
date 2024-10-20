@@ -79,10 +79,10 @@ async function sendReport(
                             <li>User ID: ${report._id}</li>
                             <li>User email: ${report.email}</li>
                             <li>User full name: ${report.full_name}</li>
-                            <li>Account Age: <b>${daysFromNow(
+                            <li>Account age: <b>${daysFromNow(
 															report.createdAt
 														)} days old</b> - (${report.createdAt})</li>
-                            <li>Pfp link: ${report.pfp}</li>
+                            <li>Link to profile picture: ${report.pfp}</li>
                             <li>Has this user been banned before? ${
 															report.hasBeenBannedBefore ? "Yes" : "No"
 														}</li>
