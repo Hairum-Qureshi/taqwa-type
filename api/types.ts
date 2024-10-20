@@ -4,6 +4,7 @@ type UserReport = {
 	email: string;
 	pfp: string;
 	createdAt: string;
+	hasBeenBannedBefore: boolean;
 };
 
 export { UserReport };
