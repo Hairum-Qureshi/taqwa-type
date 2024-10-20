@@ -165,4 +165,26 @@ async function sendAccountStatusEmail(email: string) {
 	}
 }
 
-export { sendReport, sendBanEmail, sendAccountStatusEmail };
+async function sendWarningEmail(email: string, full_name: string) {
+	try {
+		const transporter = callEmailAuth();
+		await transporter.sendMail({
+			from: process.env.EMAIL,
+			to: email,
+			subject: "[Taqwa Type] - Warning",
+			html: `<!DOCTYPE html>
+                    <head>
+                    <meta charset="UTF-8" />
+                    </head>
+                    <body>
+                        <h3>Salam, ${full_name}, <br /> This is an email to let you know you are receiving a warning for having an inappropriate profile picture. You have two (2) days to change your profile picture. Failure to update it within these two days will result in your account being banned. Taqwa Type is not the kind of site to host inappropriate profile picture that's dedicated to remembering the words of Allah (God). Please understand that inappropriate content of any kind is prohibited. <br /> Thank you. </h3>
+                    </body>
+                    </html>`
+		});
+	} catch (error) {
+		"<nodemailer.ts> sendEmail function error".yellow,
+			(error as Error).toString().red.bold;
+	}
+}
+
+export { sendReport, sendBanEmail, sendAccountStatusEmail, sendWarningEmail };
