@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserProgress, reportUser } from "../controllers/user";
+import { banUser, getUserProgress, reportUser } from "../controllers/user";
 import upload from "./config/handle_uploads";
 import fs from "fs";
 import path from "path";
@@ -30,6 +30,7 @@ router.post("/upload/pfp", upload.single("profile_picture"), (req, res) => {
 
 router.post("/report", reportUser);
 
-// router.post("/:user_id/ban", banUser);
+// TODO - implement middleware to double check that only the admin has access to this route; you may need to update your user model to include a 'isAdmin' property
+router.get("/:user_id/ban", banUser);
 
 export default router;
