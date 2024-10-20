@@ -83,6 +83,7 @@ async function sendReport(
 															report.createdAt
 														)} days old</b> - (${report.createdAt})</li>
                             <li>Link to profile picture: ${report.pfp}</li>
+							<li>Link to user profile: ${frontend_base_url}/user/${report._id}/account</li>
                             <li>Has this user been banned before? ${
 															report.hasBeenBannedBefore ? "Yes" : "No"
 														}</li>
