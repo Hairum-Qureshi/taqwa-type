@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 export default function Account() {
 	type Surah = {
 		number: number;
@@ -22,6 +22,10 @@ export default function Account() {
 
 	// TODO - see about possibly implementing an "estimated reading time/typing time" indicator for each surah also
 
+	// TODO - disable onclick if the user is hovering over another user's pfp on another person's account
+
+	// TODO - hide the report button if the user is on their own profile
+
 	const [hasProgress, setHasProgress] = useState(false);
 	const [surahs, setSurahs] = useState<Surah[]>([]);
 	const { user_id } = useParams();
@@ -29,6 +33,8 @@ export default function Account() {
 	const [loading, setIsLoading] = useState(true);
 	const [surahToSearch, setSurahToSearch] = useState("");
 	const [filteredSurahs, setFilteredSurahs] = useState<Surah[]>(surahs);
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const imageRef = useRef<HTMLImageElement>(null);
 
 	const { isLoading } = useQuery({
 		queryKey: ["surahs"],
@@ -59,7 +65,7 @@ export default function Account() {
 				})
 				.then(response => {
 					if (response.data !== "No progress found") {
-						setHasProgress(true);
+						// setHasProgress(true);
 					} else {
 						const surahs: Surah[] = getCachedSurahs();
 						if (isLoading) {
@@ -103,15 +109,68 @@ export default function Account() {
 		}
 	}, [surahToSearch, surahs]);
 
+	function uploadPfp() {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	}
+
+	function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+		if (event.target.files && imageRef.current) {
+			const imageFile: File = event.target.files[0];
+			const formData = new FormData();
+			formData.append("profile_picture", imageFile);
+
+			axios
+				.post("http://localhost:4000/api/user/upload/pfp", formData, {
+					withCredentials: true
+				})
+				.then(response => {
+					console.log(response);
+					if (imageRef.current && event.target.files) {
+						imageRef.current.src = window.URL.createObjectURL(
+							event.target.files[0]
+						);
+					}
+				})
+				.catch(error => console.log(error));
+		}
+	}
+
+	function reportAccount() {
+		axios
+			.post("http://localhost:4000/api/user/report", {
+				user_id,
+				withCredentials: true
+			})
+			.then(response => {
+				alert(response.data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	}
+
 	return (
 		<div className="h-screen lg:mx-20">
 			<div className="w-full h-full bg-gray-200">
 				<div className="flex-grow bg-slate-300 p-5 h-1/4 flex items-center justify-left">
-					<div className="border-2 border-black lg:w-40 lg:h-40 w-32 h-32 rounded-md flex-shrink-0">
+					<div
+						className="border-2 border-black lg:w-40 lg:h-40 w-32 h-32 rounded-md flex-shrink-0 hover:cursor-pointer"
+						onClick={uploadPfp}
+					>
+						<input
+							type="file"
+							ref={fileInputRef}
+							className="hidden"
+							accept="image/png, image/gif, image/jpeg"
+							onChange={handleImageChange}
+						/>
 						<img
 							src="https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
 							alt="User pfp"
-							className="object-cover rounded-md"
+							className="object-cover w-full h-full"
+							ref={imageRef}
 						/>
 					</div>
 					<div className="border-2 border-black w-full p-2 ml-5">
@@ -119,6 +178,11 @@ export default function Account() {
 							<h1 className="font-semibold text-xl">Hairum Qureshi</h1>
 						</div>
 						<div>Test X</div>
+						<div>
+							<button onClick={reportAccount}>
+								Report Inappropriate Profile Picture
+							</button>
+						</div>
 					</div>
 				</div>
 				<div className="bg-slate-300 h-full p-2 w-full lg:flex">
@@ -144,6 +208,7 @@ export default function Account() {
 								filteredSurahs.map((surah: Surah) => {
 									return (
 										<div className="w-full p-2 hover:cursor-pointer bg-white border-2 border-blue-500 rounded-md my-2">
+											<Link to = {`/practice/surah/${surah.number}`}>
 											<div className="flex items-center" key={surah.number}>
 												<div className="flex items-center justify-center w-11 h-11 text-lg font-semibold text-white bg-sky-800 mr-3 rounded-md">
 													{surah.number}
@@ -160,6 +225,8 @@ export default function Account() {
 													</div>
 												</div>
 											</div>
+											
+											</Link>
 										</div>
 									);
 								})
