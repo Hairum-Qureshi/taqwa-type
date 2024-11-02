@@ -59,6 +59,7 @@ async function sendReport(
 	reporter: string,
 	frontend_base_url: string
 ) {
+	// TODO - NEED TO ADD 'REPORTER' VALUE!
 	try {
 		const transporter = callEmailAuth();
 		await transporter.sendMail({
@@ -90,9 +91,8 @@ async function sendReport(
                         </ul>
             
                         <p>Here is the image of the profile picture:</p>
-                        <img src = "${
-													report.pfp
-												}" alt = "reported profile picture">
+                        <img src="${report.pfp}" alt="reported pfp" width="100" height="100" style="object-fit: cover; border-radius: 10px;" />
+
                         <p>If you would like to ban this user, press the following button:</p>
                         <button style="background-color: #C11010; padding: 10px 20px; border: none; border-radius: 5px;"><a href = "${backend_base_url}/api/user/${
 				report._id
@@ -131,12 +131,12 @@ async function sendBanEmail(full_name: string, email: string, pfp: string) {
                     </head>
                     <body>
                     <h3>Salam, ${full_name}</h3>
-                    <p>
+                    <>
                         We are notifying you that your account has been banned due to an inappropriate profile picture. As Taqwa Type provides a platform for reading the words of Allah (God) while improving your typing skills, it is essential that all users uphold the principles of Islam. Images representing inappropriate content, immodesty, or any other offensive content is prohibited. 
-                        <br />
-                        The image in question we have on record that has been reported is the following: <br />
-                        <img src = "${pfp}" alt = "reported pfp" /> 
-                    </p>
+						<br />
+						Here is the image of the profile picture:
+                        <img src="${pfp}" alt="reported pfp" width="130" height="130" style="object-fit: cover; border-radius: 10px;" />
+					</p>
                     </p>
                         Please understand that adherence to these guidelines is expected when using our site. Attempts to evade this ban will result in consequences. <br />
                         <b>Your ban will end in one (1) month, however, repeated offenses will result in your account being <u>permanently</u> banned.</b> <br/>
@@ -159,6 +159,7 @@ async function sendAccountStatusEmail(email: string) {
 		await transporter.sendMail({
 			from: process.env.EMAIL,
 			to: email,
+			replyTo: "no-reply@taqwa-type.com",
 			subject: "[Taqwa Type] Ban Status Update",
 			html: `<!DOCTYPE html>
                     <head>
@@ -166,6 +167,8 @@ async function sendAccountStatusEmail(email: string) {
                     </head>
                     <body>
                         <h3>Salam, this is an email to let you know your ban has been lifted. Please note that if you are reported again, you will get permanently banned. </h3>
+
+						<p><i>Replies to this email will not be read. Please contact Taqwa Type if you have any questions/concerns.</i></p>
                     </body>
                     </html>`
 		});
@@ -181,6 +184,7 @@ async function sendWarningEmail(email: string, full_name: string) {
 		await transporter.sendMail({
 			from: process.env.EMAIL,
 			to: email,
+			replyTo: "no-reply@taqwa-type.com",
 			subject: "[Taqwa Type] - Warning",
 			html: `<!DOCTYPE html>
                     <head>
@@ -188,6 +192,8 @@ async function sendWarningEmail(email: string, full_name: string) {
                     </head>
                     <body>
                         <h3>Salam, ${full_name}, <br /> This is an email to let you know you are receiving a warning for having an inappropriate profile picture. You have two (2) days to change your profile picture. Failure to update it within these two days will result in your account being banned. Taqwa Type is not the kind of site to host inappropriate profile pictures as it's a site dedicated to remembering the words of Allah (God) and practicing your typing. Please understand that inappropriate content of any kind is prohibited. <br /> Thank you. </h3>
+
+						<p><i>Replies to this email will not be read. Please contact Taqwa Type if you have any questions/concerns.</i></p>
                     </body>
                     </html>`
 		});
