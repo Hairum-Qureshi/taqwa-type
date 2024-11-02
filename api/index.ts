@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import colors from "colors";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import authentication from "./routes/authentication";
+import user from "./routes/user";
 import mongoose from "mongoose";
 
 dotenv.config();
@@ -26,14 +27,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authentication);
-
-const client = new MongoClient(MONGO_URI, {
-	serverApi: {
-		version: ServerApiVersion.v1,
-		strict: true,
-		deprecationErrors: true
-	}
-});
+app.use("/api/user", user);
 
 mongoose
 	.connect(MONGO_URI)
