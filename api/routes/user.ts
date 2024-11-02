@@ -14,6 +14,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { jwtDecode } from "jwt-decode";
 import cloundinary_config from "./config/cloudinary";
 import { JwtPayload } from "jsonwebtoken";
+import User from "../models/user";
 
 colors.enable();
 router.get("/:user_id/progress", getUserProgress);
@@ -39,14 +40,19 @@ router.post(
 						if (err) {
 							console.error('<user.ts> POST route', (err as Error).toString().red.bold);
 						} else {
+							const uid = decoded_cookie.user_id;
 							cloudinary.uploader
 								.upload(uploadedImagePath, {
-									public_id: `${decoded_cookie.user_id}-profile_picture` // append the UID here so that each image remains unique per user
+									public_id: `${uid}-profile_picture` // append the UID here so that each image remains unique per user
 								})
-								.then(uploadResult => {
+								.then(async uploadResult => {
 									if (uploadResult?.url) {
 										fs.unlink(path.join(FOLDER_PATH, file), err => {
 											if (err) throw err;
+										});
+
+										await User.findByIdAndUpdate({_id: uid}, {
+											pfp: uploadResult.url || "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
 										});
 									}
 								})
@@ -56,7 +62,6 @@ router.post(
 						}
 					});
 				});
-				// TODO - need to save user's uploaded pfp to the database
 
 				res.status(200).send("Success");
 			}
