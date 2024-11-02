@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import colors from "colors";
-import { MongoClient, ServerApiVersion } from "mongodb";
 import authentication from "./routes/authentication";
 import user from "./routes/user";
 import mongoose from "mongoose";
