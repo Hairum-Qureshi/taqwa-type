@@ -13,6 +13,7 @@ import colors from "colors";
 import { v2 as cloudinary } from "cloudinary";
 import { jwtDecode } from "jwt-decode";
 import cloundinary_config from "./config/cloudinary";
+import { JwtPayload } from "jsonwebtoken";
 
 colors.enable();
 router.get("/:user_id/progress", getUserProgress);
@@ -27,7 +28,7 @@ router.post(
 			cloundinary_config; // need this here for the config to be recognized
 			const user_cookie: string | undefined = req.cookies["auth-session"];
 			if (user_cookie) {
-				const uid = jwtDecode(user_cookie);
+				const decoded_cookie: JwtPayload = jwtDecode(user_cookie);
 				fs.readdir(FOLDER_PATH, (err, files) => {
 					files.forEach(async file => {
 						const uploadedImagePath = path.resolve(
@@ -35,13 +36,27 @@ router.post(
 							`../temp_images/${file}`
 						);
 
-						cloudinary.uploader
-							.upload(uploadedImagePath, {
-								use_filename: true
-							})
-							.then((result: any) => console.log(result));
+						if (err) {
+							console.error('<user.ts> POST route', (err as Error).toString().red.bold);
+						} else {
+							cloudinary.uploader
+								.upload(uploadedImagePath, {
+									public_id: `${decoded_cookie.user_id}-profile_picture` // append the UID here so that each image remains unique per user
+								})
+								.then(uploadResult => {
+									if (uploadResult?.url) {
+										fs.unlink(path.join(FOLDER_PATH, file), err => {
+											if (err) throw err;
+										});
+									}
+								})
+								.catch(error => {
+									console.log('<user.ts> routes folder POST request ERROR'.red.bold, error);
+								});
+						}
 					});
 				});
+				// TODO - need to save user's uploaded pfp to the database
 
 				res.status(200).send("Success");
 			}
