@@ -1,6 +1,7 @@
 import express from "express";
 import {
 	banUser,
+	getCurrentUser,
 	getUserProgress,
 	reportUser,
 	warnUser
@@ -13,8 +14,8 @@ import colors from "colors";
 import { v2 as cloudinary } from "cloudinary";
 import { jwtDecode } from "jwt-decode";
 import cloundinary_config from "./config/cloudinary";
-import { JwtPayload } from "jsonwebtoken";
 import User from "../models/user";
+import { UserJWTPayload } from "../interfaces";
 
 colors.enable();
 router.get("/:user_id/progress", getUserProgress);
@@ -29,7 +30,7 @@ router.post(
 			cloundinary_config; // need this here for the config to be recognized
 			const user_cookie: string | undefined = req.cookies["auth-session"];
 			if (user_cookie) {
-				const decoded_cookie: JwtPayload = jwtDecode(user_cookie);
+				const decoded_cookie: UserJWTPayload = jwtDecode(user_cookie);
 				fs.readdir(FOLDER_PATH, (err, files) => {
 					files.forEach(async file => {
 						const uploadedImagePath = path.resolve(
@@ -38,12 +39,12 @@ router.post(
 						);
 
 						if (err) {
-							console.error('<user.ts> POST route', (err as Error).toString().red.bold);
+							console.error('<user.ts> POST route error', (err as Error).toString().red.bold);
 						} else {
 							const uid = decoded_cookie.user_id;
 							cloudinary.uploader
 								.upload(uploadedImagePath, {
-									public_id: `${uid}-profile_picture` // append the UID here so that each image remains unique per user
+									public_id: `${uid}-profile_picture` 
 								})
 								.then(async uploadResult => {
 									if (uploadResult?.url) {
@@ -77,5 +78,9 @@ router.post("/report", reportUser);
 router.get("/:user_id/ban", banUser);
 
 router.get("/:user_id/email", warnUser);
+
+// router.get(":user_id/user", getUser);
+
+router.get('/current', getCurrentUser);
 
 export default router;
