@@ -81,6 +81,34 @@ export default function useAccount(): AccountHandlers {
         }
     }, [user_id]);
 
+	function uploadPfp(fileInputRef:React.RefObject<HTMLInputElement>) {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	}
+
+    function handleImageChange(event: React.ChangeEvent<HTMLInputElement>, imageRef:React.RefObject<HTMLImageElement | null>) {
+		if (event.target.files && imageRef.current) {
+			const imageFile: File = event.target.files[0];
+			const formData = new FormData();
+			formData.append("profile_picture", imageFile);
+
+			axios
+				.post("http://localhost:4000/api/user/upload/pfp", formData, {
+					withCredentials: true
+				})
+				.then(response => {
+					console.log(response);
+					if (imageRef.current && event.target.files) {
+						imageRef.current.src = window.URL.createObjectURL(
+							event.target.files[0]
+						);
+					}
+				})
+				.catch(error => console.log(error));
+		}
+	}
+
     useEffect(() => {
         if (surahToSearch) {
             setFilteredSurahs(filtered_surahs);
@@ -90,11 +118,28 @@ export default function useAccount(): AccountHandlers {
         }
     }, [surahToSearch, surahs]);
 
+    function reportAccount() {
+		axios
+			.post("http://localhost:4000/api/user/report", {
+				user_id,
+				withCredentials: true
+			})
+			.then(response => {
+				alert(response.data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	}
+
     return {
         getAccountDataByID,
         searchSurah,
         filteredSurahs,
         isLoadingSurahs,
-        isProgressLoading
+        isProgressLoading,
+        handleImageChange,
+        uploadPfp,
+        reportAccount
     };
 }
