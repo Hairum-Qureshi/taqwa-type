@@ -42,4 +42,7 @@ export interface AccountHandlers {
     filteredSurahs: Surah[];
     isLoadingSurahs: boolean;
     isProgressLoading: boolean;
+    handleImageChange: (event: React.ChangeEvent<HTMLInputElement>, imageRef:React.RefObject<HTMLImageElement | null>) => void;
+    uploadPfp: (fileInputRef:React.RefObject<HTMLInputElement>) => void;
+    reportAccount: () => void;
 }
