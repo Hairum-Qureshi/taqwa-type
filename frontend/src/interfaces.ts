@@ -30,3 +30,16 @@ export interface Surah {
 export interface SurahResponse {
     data: Surah[];
 };
+ 
+export interface SPTChildren { // SPT = SurahProgressTracker
+    user: UserData | null;
+    userData: UserData | null;
+}
+
+export interface AccountHandlers {
+    getAccountDataByID: (user_id: string) => Promise<UserData | null>;
+    searchSurah: (surah: string) => void;
+    filteredSurahs: Surah[];
+    isLoadingSurahs: boolean;
+    isProgressLoading: boolean;
+}
