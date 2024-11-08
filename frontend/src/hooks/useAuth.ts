@@ -15,6 +15,7 @@ interface AuthTools {
 		email: string,
 		password: string
 	) => void;
+	login: (e: React.FormEvent, email: string, password: string) => void;
 }
 
 export default function useAuth(): AuthTools {
@@ -40,7 +41,7 @@ export default function useAuth(): AuthTools {
 				}
 			)
 			.then(response => {
-				console.log(response.data);
+				window.location.href = `http://localhost:5173/user/${response.data._id}/account`;
 			})
 			.catch(error => {
 				console.error(error);
@@ -81,6 +82,7 @@ export default function useAuth(): AuthTools {
 					)
 					.then(response => {
 						console.log(response.data);
+						window.location.href = `http://localhost:5173/user/${response.data._id}/account`;
 					})
 					.catch(error => {
 						console.log(error);
@@ -89,5 +91,36 @@ export default function useAuth(): AuthTools {
 		}
 	}
 
-	return { googleAuth, signUp };
+	function login(e: React.FormEvent, email: string, password: string) {
+		e.preventDefault();
+		if (!email || !password) {
+			alert("Please fill in all fields");
+		} else {
+			if (email.endsWith("@gmail.com")) {
+				alert(
+					"It looks like this email is tied to a Gmail account. Consider logging in through Google"
+				);
+			} else {
+				axios
+					.post(
+						"http://localhost:4000/api/auth/sign-in",
+						{
+							email,
+							password
+						},
+						{
+							withCredentials: true
+						}
+					)
+					.then(response => {
+						window.location.href = `http://localhost:5173/user/${response.data._id}/account`;
+					})
+					.catch(error => {
+						console.log(error);
+					});
+			}
+		}
+	}
+
+	return { googleAuth, signUp, login };
 }
