@@ -2,6 +2,7 @@ import express from "express";
 import {
 	banUser,
 	getCurrentUser,
+	getUserData,
 	getUserProgress,
 	reportUser,
 	warnUser
@@ -9,13 +10,15 @@ import {
 import upload from "./config/handle_uploads";
 import fs from "fs";
 import path from "path";
-const router = express.Router();
 import colors from "colors";
 import { v2 as cloudinary } from "cloudinary";
 import { jwtDecode } from "jwt-decode";
 import cloundinary_config from "./config/cloudinary";
 import User from "../models/user";
 import { UserJWTPayload } from "../interfaces";
+import { authenticated } from "../middleware/authentication";
+
+const router = express.Router();
 
 colors.enable();
 router.get("/:user_id/progress", getUserProgress);
@@ -63,7 +66,7 @@ router.post(
 						}
 					});
 				});
-
+      
 				res.status(200).send("Success");
 			}
 		} catch (error) {
@@ -81,6 +84,8 @@ router.get("/:user_id/email", warnUser);
 
 // router.get(":user_id/user", getUser);
 
-router.get('/current', getCurrentUser);
+router.get('/current', authenticated, getCurrentUser);
+
+router.get('/:user_id', authenticated, getUserData);
 
 export default router;
