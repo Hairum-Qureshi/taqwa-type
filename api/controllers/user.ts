@@ -3,6 +3,10 @@ import Progress from "../models/progress";
 import User from "../models/user";
 import { sendReport, sendBanEmail, sendWarningEmail } from "../nodemailer";
 import { UserReport } from "../types";
+import { jwtDecode, JwtDecodeOptions, JwtPayload } from "jwt-decode";
+import { UserJWTPayload } from "../interfaces";
+const schedule = require("node-schedule");
+
 
 const getUserProgress = async (req: Request, res: Response) => {
 	const uid = req.params.user_id;
@@ -37,8 +41,15 @@ const reportUser = async (req: Request, res: Response) => {
 		const user = await User.findById({ _id: user_id }).lean();
 		const reporter = "";
 		if (user) {
-			const { _id, full_name, email, pfp, createdAt, hasBeenBannedBefore } =
-				user;
+			const {
+				_id,
+				full_name,
+				email,
+				pfp,
+				createdAt,
+				hasBeenBannedBefore,
+				hasBeenWarnedBefore
+			} = user;
 
 			const report: UserReport = {
 				_id: _id!,
@@ -46,7 +57,8 @@ const reportUser = async (req: Request, res: Response) => {
 				email,
 				pfp,
 				createdAt: createdAt.toString(),
-				hasBeenBannedBefore
+				hasBeenBannedBefore,
+				hasBeenWarnedBefore
 			};
 
 			// TODO - convert these to ENV variables:
@@ -108,14 +120,17 @@ const warnUser = async (req: Request, res: Response) => {
 		const user = await User.findById({ _id: user_id });
 
 		if (user) {
-			sendWarningEmail(user.email, user.full_name);
-			// TODO - schedule email reminder to send to admin to check if the user changed their pfp or not
-
-			res
-				.status(200)
-				.send(
-					"<h1>Warning email has been sent to user. You will also receive a follow-up email in 2 days that will contain information about this user to see if they have changed their profile picture within these 2 days.</h1>"
-				);
+			User.findByIdAndUpdate(user_id, {
+				hasBeenWarnedBefore: true
+			}).then(() => {
+				// TODO - schedule email reminder to send to admin to check if the user changed their pfp or not
+				sendWarningEmail(user.email, user.full_name);
+				res
+					.status(200)
+					.send(
+						"<h1>Warning email has been sent to user. You will also receive a follow-up email in 2 days that will contain information about this user to see if they have changed their profile picture within these 2 days.</h1>"
+					);
+			});
 		}
 	} catch (error) {
 		console.log(
@@ -125,4 +140,19 @@ const warnUser = async (req: Request, res: Response) => {
 	}
 };
 
-export { getUserProgress, reportUser, banUser, warnUser };
+async function returnUserData(uid:string) {
+	// use this as a helper function to return the user data by ID from Mongo to prevent duplicate code
+}
+
+const getCurrentUser = async (req:Request, res:Response) => {
+	const uid: string = req.cookies.decoded_uid;
+	const user = await User.findById(uid).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt");
+	res.status(200).send(user);
+}
+
+const getUserData = async (req:Request, res:Response) => {
+	const user = await User.findById(req.params.user_id).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt");
+	res.status(200).send(user);
+}
+
+export { getUserProgress, reportUser, banUser, warnUser, getCurrentUser, getUserData };
