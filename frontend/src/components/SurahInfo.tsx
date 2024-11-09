@@ -1,48 +1,17 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { SurahInfo as SurahInfoI } from "../interfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
-interface Verse {
-    chapter: number,
-    verse: number,
-    text: string
-}
-
 export default function SurahInfo() {
     const { surah_no } = useParams();
     const [chapterInfo, setChapterInfo] = useState<SurahInfoI>();
     const [englishSurah, setEnglishSurah] = useState<Verse[]>([]);
-    const [scrollPosition, setSrollPosition] = useState(0);
-    const [showGoTop, setshowGoTop] = useState("goTopHidden");
-    const refScrollUp = useRef<HTMLDivElement>(null);
 
     // TODO - make the verse links in the info section work
     // TODO - see if you can have it so that the div on the right is the same height as the div on the left and that the content in the right div will utilize a scrollbar if the content on the right exceeds the left div's content
-
-    const handleScrollUp = () => {
-        if(refScrollUp.current) {
-            refScrollUp.current.scrollIntoView({ behavior: "smooth" });
-        }
-    };
-
-    const handleVisibleButton = () => {
-        const position = window.scrollY;
-        setSrollPosition(position);
-    
-        if (scrollPosition > 50) {
-          return setshowGoTop("goTop");
-        } 
-        else if (scrollPosition < 50) {
-          return setshowGoTop("goTopHidden");
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener("scroll", handleVisibleButton);
-     });    
 
     useEffect(() => {
         const getSurahInfo = async () => {
