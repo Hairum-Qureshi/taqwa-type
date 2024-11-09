@@ -5,6 +5,7 @@ import NotFound from "./NotFound";
 import Navbar from "./Navbar";
 import TypingPractice from "./TypingPractice";
 import SurahInfo from "./SurahInfo";
+import Reference from "./Reference";
 
 export default function App() {
 	return (
@@ -15,6 +16,7 @@ export default function App() {
 				<Route path="/user/:user_id/account" element={<Account />} />
 				<Route path="/practice/surah/:surah_no" element={<TypingPractice />} />
 				<Route path="/practice/surah/:surah_no/info" element={<SurahInfo />} />
+				<Route path="/:surah_no/:ayahs" element={<Reference />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</BrowserRouter>
