@@ -37,7 +37,8 @@ export interface SPTChildren { // SPT = SurahProgressTracker
 }
 
 export interface AccountHandlers {
-    getAccountDataByID: (user_id: string) => Promise<UserData | null>;
+    // getAccountDataByID: (user_id: string) => Promise<UserData | null>;
+    getAccountDataByID: () => void;
     searchSurah: (surah: string) => void;
     filteredSurahs: Surah[];
     isLoadingSurahs: boolean;
@@ -45,4 +46,15 @@ export interface AccountHandlers {
     handleImageChange: (event: React.ChangeEvent<HTMLInputElement>, imageRef:React.RefObject<HTMLImageElement | null>) => void;
     uploadPfp: (fileInputRef:React.RefObject<HTMLInputElement>) => void;
     reportAccount: () => void;
+    user: UserData | null;
+    userData: UserData | null;
+}
+
+export interface SurahInfo {
+    id: number,
+    chapter_id: number,
+    language_name: string,
+    short_text: string,
+    source: string,
+    text: string
 }
