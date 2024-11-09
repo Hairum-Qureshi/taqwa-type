@@ -1,10 +1,6 @@
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { AppDispatch, RootState } from "../app/store";
-import { useEffect } from "react";
-import { getUserInfo } from "../features/authentication/authSlice";
 import useAccount from "../hooks/useAccount";
 
 export default function Navbar() {
