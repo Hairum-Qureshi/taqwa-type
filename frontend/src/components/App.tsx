@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home";
-import Account from "./Account";
+import Account from "./account-related/Account";
 import NotFound from "./NotFound";
 import Navbar from "./Navbar";
 import TypingPractice from "./TypingPractice";
+import SurahInfo from "./SurahInfo";
 
 export default function App() {
 	return (
@@ -13,6 +14,7 @@ export default function App() {
 				<Route path="/" element={<Home />} />
 				<Route path="/user/:user_id/account" element={<Account />} />
 				<Route path="/practice/surah/:surah_no" element={<TypingPractice />} />
+				<Route path="/practice/surah/:surah_no/info" element={<SurahInfo />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</BrowserRouter>
