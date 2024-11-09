@@ -2,9 +2,13 @@
 export default {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
-		extend: {}
+		extend: {
+			fontFamily: {
+				amiri: ["Amiri", "serif"]
+			}
+		}
 	},
 	plugins: [
 		require('@tailwindcss/typography'),
-	]	  
+	]  
 };
