@@ -17,9 +17,11 @@ export default function Navbar() {
 				<h1 className="text-xl">Taqwa Type</h1>
 			</Link>
 			{user && <div className = "text-xl ml-auto mr-5 hover:cursor-pointer">
-				<div className = "border border-white rounded-md p-0.5 w-10 text-center bg-slate-700">
-					<Link to={`/user/${user._id}/account`}><FontAwesomeIcon icon={faUser} /></Link>
-				</div>
+				<Link to={`/user/${user._id}/account`}>
+					<div className = "border border-white rounded-md p-0.5 w-10 text-center bg-slate-700">
+						<FontAwesomeIcon icon={faUser} />
+					</div>
+				</Link>
 			</div>}
 		</div>
 	);
