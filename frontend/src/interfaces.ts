@@ -58,3 +58,9 @@ export interface SurahInfo {
     source: string,
     text: string
 }
+
+export interface Verse {
+    chapter: number,
+    verse: number,
+    text: string
+}
