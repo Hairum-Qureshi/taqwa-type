@@ -3,32 +3,48 @@ import { AccountHandlers, Surah, SurahResponse, UserData } from "../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { getUserInfo } from "../features/authentication/authSlice";
+import { AppDispatch, RootState } from "../app/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function useAccount(): AccountHandlers {
     const [surahs, setSurahs] = useState<Surah[]>([]);
     const [filteredSurahs, setFilteredSurahs] = useState<Surah[]>(surahs);
     const [surahToSearch, setSurahToSearch] = useState("");
     const [isProgressLoading, setIsProgressLoading] = useState(false);
+    const [userData, setUserData] = useState<UserData | null>();
     const queryClient = useQueryClient();
     const { user_id } = useParams();
 
-    async function getAccountDataByID(user_id: string): Promise<UserData | null> {
-        let userData: UserData | null = null;
+    const { user } = useSelector((state:RootState) => state.auth); 
 
-        await axios
-            .get(`http://localhost:4000/api/user/${user_id}`, {
+	const dispatch = useDispatch<AppDispatch>();
+
+	useEffect(() => {
+		dispatch(getUserInfo());
+	}, [dispatch]);
+
+    async function getAccountDataByID() {
+        try {
+            const response = await axios.get(`http://localhost:4000/api/user/${user_id}`, {
                 withCredentials: true
-            })
-            .then(response => {
-                userData = response.data;
-            })
-            .catch(error => {
-                console.log(error);
-                return null;
             });
-
-        return userData;
+            setUserData(response.data);
+        } catch (error) {
+            console.log(error);
+            setUserData(null); 
+        }
     }
+
+    useEffect(() => {
+        // When the user ID in the profile URL changes, it will refetch the updated user profile data and render it on the page (so you don't have to refetch the page to see the changes)
+        async function refetchUserData() {
+            if (user_id) {
+                getAccountDataByID();       
+            }
+        }
+        refetchUserData();
+    }, [user_id]);
 
     const { isLoading: isLoadingSurahs } = useQuery({
         queryKey: ["surahs"],
@@ -140,6 +156,8 @@ export default function useAccount(): AccountHandlers {
         isProgressLoading,
         handleImageChange,
         uploadPfp,
-        reportAccount
+        reportAccount,
+        user,
+        userData
     };
 }
