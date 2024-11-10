@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { AccountHandlers, Surah, SurahResponse, UserData } from "../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,7 +12,8 @@ export default function useAccount(): AccountHandlers {
     const [filteredSurahs, setFilteredSurahs] = useState<Surah[]>(surahs);
     const [surahToSearch, setSurahToSearch] = useState("");
     const [isProgressLoading, setIsProgressLoading] = useState(false);
-    const [userData, setUserData] = useState<UserData | null>();
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const [errorMessage, setErrorMessage] = useState("");
     const queryClient = useQueryClient();
     const { user_id } = useParams();
 
@@ -32,7 +33,8 @@ export default function useAccount(): AccountHandlers {
             setUserData(response.data);
         } catch (error) {
             console.log(error);
-            setUserData(null); 
+            const errMsg = error.response.data || "There was a problem with your request";
+            setErrorMessage(errMsg); 
         }
     }
 
@@ -158,6 +160,7 @@ export default function useAccount(): AccountHandlers {
         uploadPfp,
         reportAccount,
         user,
-        userData
+        userData,
+        errorMessage
     };
 }
