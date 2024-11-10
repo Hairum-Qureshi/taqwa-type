@@ -152,7 +152,12 @@ const getCurrentUser = async (req:Request, res:Response) => {
 
 const getUserData = async (req:Request, res:Response) => {
 	const user = await User.findById(req.params.user_id).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt");
-	res.status(200).send(user);
+	if(user) {
+		res.status(200).send(user);
+	}
+	else {
+		res.status(404).send("User not found");
+	}
 }
 
 export { getUserProgress, reportUser, banUser, warnUser, getCurrentUser, getUserData };
