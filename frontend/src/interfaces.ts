@@ -48,6 +48,7 @@ export interface AccountHandlers {
     reportAccount: () => void;
     user: UserData | null;
     userData: UserData | null;
+    errorMessage: string;
 }
 
 export interface SurahInfo {
