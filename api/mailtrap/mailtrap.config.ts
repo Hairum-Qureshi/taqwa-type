@@ -22,12 +22,3 @@ export const sender = {
 // const recipients = [
 //   "autk3blmkd@zvvzuv.com",
 // ];
-
-// transport
-//   .sendMail({
-//     from: sender,
-//     to: recipients,
-//     subject: "You are awesome!",
-//     text: "Congrats for sending test email with Mailtrap!"
-//   })
-//   .then(console.log, console.error);
