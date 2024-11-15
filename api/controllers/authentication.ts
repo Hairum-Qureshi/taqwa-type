@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendAccountStatusEmail } from "../nodemailer";
 import VerificationCode from "../models/verification";
+import sendVerificationEmail from "../mailtrap/emails";
 
 async function checkIfUserExists(email: string): Promise<boolean> {
 	const user: Document[] = await User.find({ email });
@@ -34,7 +35,12 @@ function createCookie(user_id: string, res: Response) {
 	};
 	const secretKey: string = process.env.JWT_SECRET!;
 	const token = jwt.sign(payload, secretKey, { expiresIn: "7d" });
-	res.cookie("auth-session", token, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week in milliseconds
+	res.cookie("auth-session", token, { 
+		httpOnly: true, 
+		secure: process.env.NODE_ENV === "production", 
+		sameSite: 'strict', 
+		maxAge: 7 * 24 * 60 * 60 * 1000 
+	}); // 1 week in milliseconds
 }
 
 async function checkAndUnbanUser(user_id: string): Promise<boolean> {
@@ -159,7 +165,7 @@ const signUp = async (req: Request, res: Response) => {
 
 			if (createdUser && createdVerificationCode && createdUser._id) {
 				createCookie(createdUser._id, res);
-
+				await sendVerificationEmail(createdUser.email, verificationCode);
 				res.status(201).send(createdUser);
 			}
 		} else {
