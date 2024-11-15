@@ -33,8 +33,8 @@ function createCookie(user_id: string, res: Response) {
 		user_id
 	};
 	const secretKey: string = process.env.JWT_SECRET!;
-	const token = jwt.sign(payload, secretKey, { expiresIn: "3d" });
-	res.cookie("auth-session", token, { httpOnly: true, maxAge: 259200000 }); // 3 days in milliseconds
+	const token = jwt.sign(payload, secretKey, { expiresIn: "7d" });
+	res.cookie("auth-session", token, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 }); // 1 week in milliseconds
 }
 
 async function checkAndUnbanUser(user_id: string): Promise<boolean> {
@@ -151,13 +151,13 @@ const signUp = async (req: Request, res: Response) => {
 				password: hashedPassword,
 			});
 
-			await VerificationCode.create({
+			const createdVerificationCode = await VerificationCode.create({
 				user_id: uuid,
 				verificationCode,
 				expires: Date.now() + 24 * 60 * 60 * 1000 // expires in 24 hours
 			});
 
-			if (createdUser && createdUser._id) {
+			if (createdUser && createdVerificationCode && createdUser._id) {
 				createCookie(createdUser._id, res);
 
 				res.status(201).send(createdUser);
