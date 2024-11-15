@@ -2,7 +2,7 @@ import { VERIFICATION_TEMPLATE } from "./email-templates/verification";
 import { WELCOME_TEMPLATE } from "./email-templates/welcome";
 import { sender, transport } from "./mailtrap.config";
 
-export default async function sendVerificationEmail(user_email:string, verification_code:string) {
+export async function sendVerificationEmail(user_email:string, verification_code:string) {
     try {
         const response = await transport.sendMail({
           from: sender,
