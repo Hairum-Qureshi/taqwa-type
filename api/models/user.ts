@@ -73,10 +73,6 @@ const userSchema = new Schema(
 		hasBeenWarnedBefore: {
 			type: Boolean,
 			default: false
-		},
-		verificationCode: {
-			type: String,
-			default: null
 		}
 	},
 	{
