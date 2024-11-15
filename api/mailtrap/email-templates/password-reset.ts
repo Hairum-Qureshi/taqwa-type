@@ -1,4 +1,4 @@
-export const PASSWORD_RESET = `<!DOCTYPE html>
+export const PASSWORD_RESET_TEMPLATE = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
