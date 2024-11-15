@@ -1,4 +1,4 @@
-export const WELCOME = `<!DOCTYPE html>
+export const WELCOME_TEMPLATE = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
