@@ -1,4 +1,4 @@
-export const VERIFICATION_EMAIL = `<!DOCTYPE html>
+export const VERIFICATION_TEMPLATE = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
