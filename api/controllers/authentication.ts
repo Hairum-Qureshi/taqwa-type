@@ -5,29 +5,29 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendAccountStatusEmail } from "../nodemailer";
 import VerificationCode from "../models/verification";
-import sendVerificationEmail from "../mailtrap/emails";
+import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails";
 
 async function checkIfUserExists(email: string): Promise<boolean> {
 	const user: Document[] = await User.find({ email });
 	return user.length !== 0;
 }
 
-// interface IUser {
-// 	_id: string;
-// 	first_name: string;
-// 	last_name: string;
-// 	full_name: string;
-// 	isGoogleAccount: boolean;
-// 	email: string;
-// 	pfp: string;
-// 	password: string;
-// 	experience: number;
-// 	mostPracticedSurah: string;
-// 	totalSurahsCompleted: string;
-// 	wordsPerMinute: string;
-// 	accuracy: number;
-// 	streak: string;
-// }
+interface IUser {
+	_id: string;
+	first_name: string;
+	last_name: string;
+	full_name: string;
+	isGoogleAccount: boolean;
+	email: string;
+	pfp: string;
+	password: string;
+	experience: number;
+	mostPracticedSurah: string;
+	totalSurahsCompleted: string;
+	wordsPerMinute: string;
+	accuracy: number;
+	streak: string;
+}
 
 function createCookie(user_id: string, res: Response) {
 	const payload = {
@@ -165,7 +165,7 @@ const signUp = async (req: Request, res: Response) => {
 			});
 
 			if (createdUser && createdVerificationCode && createdUser._id) {
-				createCookie(createdUser._id, res);
+				// createCookie(createdUser._id, res);
 				await sendVerificationEmail(createdUser.email, verificationCode);
 				if(createdUser.isVerified) {
 					res.status(201).send(createdUser);
@@ -194,6 +194,37 @@ const signUp = async (req: Request, res: Response) => {
 		});
 	}
 };
+
+const verifyEmail = async (req:Request, res:Response) => {
+	const { code } = req.body;
+	try {
+		const user_verification = await VerificationCode.findOne({
+			verificationCode: code,
+			expires: { $gt: Date.now() }
+		}).populate("user_id").lean();
+		  
+		if (!user_verification) {
+			res.status(400).json({ message: "This verification code might have expired or is invalid" });
+		} 
+		else {
+			// TODO - *might* want to come back to this part and look over the type-casting and verify everything works fine
+			const user = user_verification.user_id as unknown as IUser;  
+			await User.findByIdAndUpdate({ _id: user._id }, { isVerified: true });
+			createCookie(user._id, res);
+			await VerificationCode.findByIdAndDelete({ _id: user_verification._id });
+			await sendWelcomeEmail(user.email);
+			res.status(200).json({ message: "Email verified successfully!" });
+		}  
+	} catch (error) {
+		console.error(
+			"<authentication.ts> (controllers folder) verifyEmail function ERROR".red.bold,
+			(error as Error).toString()
+		);
+		res.status(500).json({
+			message: (error as Error).toString()
+		});
+	}
+}
 
 const signIn = async (req: Request, res: Response) => {
 	try {
@@ -248,4 +279,4 @@ const signIn = async (req: Request, res: Response) => {
 	}
 };
 
-export { googleAuth, signUp, signIn };
+export { googleAuth, signUp, verifyEmail, signIn };
