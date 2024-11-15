@@ -3,8 +3,8 @@ import { nanoid } from "nanoid";
 import User from "../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import { sendAccountStatusEmail } from "../nodemailer";
+import VerificationCode from "../models/verification";
 
 async function checkIfUserExists(email: string): Promise<boolean> {
 	const user: Document[] = await User.find({ email });
@@ -32,9 +32,7 @@ function createCookie(user_id: string, res: Response) {
 	const payload = {
 		user_id
 	};
-	const secretKey: string = Math.floor(
-		Math.random() * Number(new Date())
-	).toString();
+	const secretKey: string = process.env.JWT_SECRET!;
 	const token = jwt.sign(payload, secretKey, { expiresIn: "3d" });
 	res.cookie("auth-session", token, { httpOnly: true, maxAge: 259200000 }); // 3 days in milliseconds
 }
@@ -141,6 +139,7 @@ const signUp = async (req: Request, res: Response) => {
 		const userExists: boolean = await checkIfUserExists(email);
 		if (!userExists) {
 			const hashedPassword = await bcrypt.hash(password, 10);
+			const verificationCode:string = Math.floor(100000 + Math.random() * 900000).toString();
 
 			const createdUser = await User.create({
 				_id: uuid,
@@ -149,7 +148,13 @@ const signUp = async (req: Request, res: Response) => {
 				full_name,
 				isGoogleAccount: false,
 				email,
-				password: hashedPassword
+				password: hashedPassword,
+			});
+
+			await VerificationCode.create({
+				user_id: uuid,
+				verificationCode,
+				expires: Date.now() + 24 * 60 * 60 * 1000 // expires in 24 hours
 			});
 
 			if (createdUser && createdUser._id) {
@@ -177,8 +182,6 @@ const signUp = async (req: Request, res: Response) => {
 };
 
 const signIn = async (req: Request, res: Response) => {
-	// TODO - check if email is valid
-
 	try {
 		const { email, password } = req.body;
 		const userExists: boolean = await checkIfUserExists(email);
