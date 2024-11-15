@@ -96,7 +96,8 @@ const googleAuth = async (req: Request, res: Response) => {
 				full_name,
 				isGoogleAccount: true,
 				email,
-				pfp
+				pfp,
+				isVerified: true
 			});
 
 			if (createdUser && createdUser._id) {
@@ -166,7 +167,14 @@ const signUp = async (req: Request, res: Response) => {
 			if (createdUser && createdVerificationCode && createdUser._id) {
 				createCookie(createdUser._id, res);
 				await sendVerificationEmail(createdUser.email, verificationCode);
-				res.status(201).send(createdUser);
+				if(createdUser.isVerified) {
+					res.status(201).send(createdUser);
+				}
+				else {
+					res.status(201).send({
+						message: "Please check your inbox for a verification code"
+					});
+				}
 			}
 		} else {
 			const [user] = await User.find({ email }).lean();
@@ -202,7 +210,7 @@ const signIn = async (req: Request, res: Response) => {
 				password,
 				user.password!
 			);
-			if (isPassword && !user.isBanned) {
+			if (isPassword && !user.isBanned && user.isVerified) {
 				if (user && user._id) {
 					createCookie(user._id, res);
 
@@ -220,7 +228,11 @@ const signIn = async (req: Request, res: Response) => {
 							data: user
 						});
 					}
-				} else {
+				} 
+				else if(isPassword && !user.isVerified) {
+					res.status(403).send({ message: "Your account is not verified. Please check your inbox for a verification code" });
+				}
+				else {
 					res.status(401).json({ message: "Incorrect password" });
 				}
 			}
