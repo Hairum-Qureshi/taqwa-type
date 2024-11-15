@@ -18,4 +18,4 @@ const verificationSchema = new Schema(
 );
 
 type VerificationCode = InferSchemaType<typeof verificationSchema>;
-export default model<VerificationCode>("Verification", verificationSchema);
+export default model<VerificationCode>("verification-code", verificationSchema);
