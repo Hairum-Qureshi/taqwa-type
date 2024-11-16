@@ -273,7 +273,11 @@ const signIn = async (req: Request, res: Response) => {
 };
 
 const resetPassword = async (req:Request, res:Response) => {
+	const { email } = req.body;
+}
+
+const signOut = (req:Request, res:Response) => {
 
 }
 
-export { googleAuth, signUp, verifyEmail, signIn, resetPassword };
+export { googleAuth, signUp, verifyEmail, signIn, resetPassword, signOut };
