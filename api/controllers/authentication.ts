@@ -6,31 +6,12 @@ import jwt from "jsonwebtoken";
 import { sendAccountStatusEmail } from "../nodemailer";
 import VerificationCode from "../models/verification";
 import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails";
+import { IUser } from "../interfaces";
 
 async function checkIfUserExists(email: string): Promise<boolean> {
 	const user: Document[] = await User.find({ email });
 	return user.length !== 0;
 }
-
-// TODO - if the email verification function works, move this to interfaces.ts file
-interface IUser {
-	_id: string;
-	first_name: string;
-	last_name: string;
-	full_name: string;
-	isGoogleAccount: boolean;
-	email: string;
-	pfp: string;
-	password: string;
-	experience: number;
-	mostPracticedSurah: string;
-	totalSurahsCompleted: string;
-	wordsPerMinute: string;
-	accuracy: number;
-	streak: string;
-	createdAt: string;
-}
-
 
 function createCookie(user_id: string, res: Response) {
 	const payload = {
@@ -217,7 +198,6 @@ const verifyEmail = async (req:Request, res:Response) => {
 			res.status(400).json({ message: "This verification code might have expired or is invalid" });
 		} 
 		else {
-			// TODO - *might* want to come back to this part and look over the type-casting and verify everything works fine
 			const user = user_verification.user_id as unknown as IUser;
 			await User.findByIdAndUpdate({ _id: user._id }, { isVerified: true });
 			createCookie(user._id, res);
