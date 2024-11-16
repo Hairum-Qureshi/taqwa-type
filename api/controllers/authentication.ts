@@ -12,6 +12,7 @@ async function checkIfUserExists(email: string): Promise<boolean> {
 	return user.length !== 0;
 }
 
+// TODO - if the email verification function works, move this to interfaces.ts file
 interface IUser {
 	_id: string;
 	first_name: string;
@@ -139,49 +140,57 @@ const googleAuth = async (req: Request, res: Response) => {
 
 const signUp = async (req: Request, res: Response) => {
 	const { first_name, last_name, full_name, email, password } = req.body;
-	// TODO - check if email is valid
 
 	try {
 		const uuid: string = nanoid().replace(/-/g, "").replace(/_/g, "");
-		const userExists: boolean = await checkIfUserExists(email);
-		if (!userExists) {
-			const hashedPassword = await bcrypt.hash(password, 10);
-			const verificationCode:string = Math.floor(100000 + Math.random() * 900000).toString();
 
-			const createdUser = await User.create({
-				_id: uuid,
-				first_name,
-				last_name,
-				full_name,
-				isGoogleAccount: false,
-				email,
-				password: hashedPassword,
+		const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+		if(!emailRegex.test(email)) {
+			res.status(400).json({
+				message: "Invalid email"
 			});
+		}
+		else {
+			const userExists: boolean = await checkIfUserExists(email);
+			if (!userExists) {
+				const hashedPassword = await bcrypt.hash(password, 10);
+				const verificationCode:string = Math.floor(100000 + Math.random() * 900000).toString();
 
-			const createdVerificationCode = await VerificationCode.create({
-				user_id: uuid,
-				verificationCode,
-				expires: Date.now() + 24 * 60 * 60 * 1000 // expires in 24 hours
-			});
+				const createdUser = await User.create({
+					_id: uuid,
+					first_name,
+					last_name,
+					full_name,
+					isGoogleAccount: false,
+					email,
+					password: hashedPassword,
+				});
 
-			if (createdUser && createdVerificationCode && createdUser._id) {
-				// createCookie(createdUser._id, res);
-				await sendVerificationEmail(createdUser.email, verificationCode);
-				if(createdUser.isVerified) {
-					res.status(201).send(createdUser);
+				const createdVerificationCode = await VerificationCode.create({
+					user_id: uuid,
+					verificationCode,
+					expires: Date.now() + 24 * 60 * 60 * 1000 // expires in 24 hours
+				});
+
+				if (createdUser && createdVerificationCode && createdUser._id) {
+					// createCookie(createdUser._id, res);
+					await sendVerificationEmail(createdUser.email, verificationCode);
+					if(createdUser.isVerified) {
+						res.status(201).send(createdUser);
+					}
+					else {
+						res.status(201).send({
+							message: "Please check your inbox for a verification code"
+						});
+					}
 				}
-				else {
-					res.status(201).send({
-						message: "Please check your inbox for a verification code"
-					});
-				}
-			}
-		} else {
-			const [user] = await User.find({ email }).lean();
-			if (user.email.endsWith("@gmail.com")) {
-				res.status(200).json({ message: "Login with Google" });
 			} else {
-				res.status(200).json({ message: "User already exists" });
+				const [user] = await User.find({ email }).lean();
+				if (user.email.endsWith("@gmail.com")) {
+					res.status(200).json({ message: "Login with Google" });
+				} else {
+					res.status(200).json({ message: "User already exists" });
+				}
 			}
 		}
 	} catch (error) {
