@@ -14,6 +14,7 @@ async function checkIfUserExists(email: string): Promise<boolean> {
 }
 
 // TODO - need to implement code that will delete the verification code in 24hrs if the user hasn't verified their account within that time frame
+// TODO - also consider where if the user hasn't verified their email in 24hrs, delete their account info from MongoDB 
 
 function createCookie(user_id: string, res: Response) {
 	const payload = {
@@ -271,4 +272,8 @@ const signIn = async (req: Request, res: Response) => {
 	}
 };
 
-export { googleAuth, signUp, verifyEmail, signIn };
+const resetPassword = async (req:Request, res:Response) => {
+
+}
+
+export { googleAuth, signUp, verifyEmail, signIn, resetPassword };
