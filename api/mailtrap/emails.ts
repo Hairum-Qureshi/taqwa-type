@@ -1,5 +1,4 @@
-import { VERIFICATION_TEMPLATE } from "./email-templates/verification";
-import { WELCOME_TEMPLATE } from "./templates";
+import { VERIFICATION_TEMPLATE, WELCOME_TEMPLATE } from "./templates";
 import { sender, transport } from "./mailtrap.config";
 
 export async function sendVerificationEmail(user_email:string, verification_code:string) {
