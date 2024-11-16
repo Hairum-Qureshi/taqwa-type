@@ -6,7 +6,7 @@ export const PASSWORD_RESET_TEMPLATE = `<!DOCTYPE html>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; margin: 0;">
   <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 30px; border: 1px solid #ddd;">
-    <h2 style="color: #2c3e50; text-align: center;">As-salamu alaykum,</h2>
+    <h2 style="color: #2c3e50; text-align: center;">Asalamualaykum</h2>
     <p style="color: #555; line-height: 1.6;">
       You recently requested to reset your password for your <strong>Taqwa Type</strong> account. Click the button below to reset it:
     </p>
@@ -58,7 +58,7 @@ export const WELCOME_TEMPLATE = `<!DOCTYPE html>
   <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 30px; border: 1px solid #ddd;">
     <h2 style="color: #2c3e50; text-align: center;">Welcome to Taqwa Type!</h2>
     <p style="color: #555; line-height: 1.6;">
-      As-salamu alaykum! We’re thrilled to have you join <strong>Taqwa Type</strong>.
+      Asalamualaykum! We’re thrilled to have you join <strong>Taqwa Type</strong>.
     </p>
     <p style="color: #555; line-height: 1.6;">
       Our mission is to help you improve your typing skills while reflecting on the beautiful words of the Quran. Here are some tips to get started:
