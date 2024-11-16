@@ -10,7 +10,7 @@ export const PASSWORD_RESET_TEMPLATE = `<!DOCTYPE html>
     <p style="color: #555; line-height: 1.6;">
       You recently requested to reset your password for your <strong>Taqwa Type</strong> account. Click the button below to reset it:
     </p>
-    <a href="{{reset_link}}" style="display: block; text-align: center; background-color: #009688; color: #fff; padding: 12px; border-radius: 5px; text-decoration: none; margin: 20px 0;">Reset Password</a>
+    <a href="{reset_link}" style="display: block; text-align: center; background-color: #009688; color: #fff; padding: 12px; border-radius: 5px; text-decoration: none; margin: 20px 0;">Reset Password</a>
     <p style="color: #555; line-height: 1.6;">
       If you did not request a password reset, please ignore this email. <br />
       This link will expire in 1 hour
