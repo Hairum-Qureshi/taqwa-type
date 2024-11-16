@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState } from "react";
 
 interface AuthTools {
 	googleAuth: (
@@ -16,17 +17,21 @@ interface AuthTools {
 		password: string
 	) => void;
 	login: (e: React.FormEvent, email: string, password: string) => void;
+	showVerification: boolean
+	verifyUser: (digits:string) => void;
 }
 
 export default function useAuth(): AuthTools {
-	function googleAuth(
+	const [showVerification, setShowVerification] = useState(false);
+
+	async function googleAuth(
 		email: string,
 		first_name: string,
 		last_name: string,
 		full_name: string,
 		pfp: string
 	) {
-		axios
+		await axios
 			.post(
 				"http://localhost:4000/api/auth/sign-in/google",
 				{
@@ -48,7 +53,7 @@ export default function useAuth(): AuthTools {
 			});
 	}
 
-	function signUp(
+	async function signUp(
 		e: React.FormEvent,
 		first_name: string,
 		last_name: string,
@@ -66,7 +71,7 @@ export default function useAuth(): AuthTools {
 					"It looks like you're signing up with a Gmail account. Consider signing in with Google!"
 				);
 			} else {
-				axios
+				await axios
 					.post(
 						"http://localhost:4000/api/auth/sign-up",
 						{
@@ -82,7 +87,12 @@ export default function useAuth(): AuthTools {
 					)
 					.then(response => {
 						console.log(response.data);
-						window.location.href = `http://localhost:5173/user/${response.data._id}/account`;
+						if(response.data.message === "Please check your inbox for a verification code") {
+							setShowVerification(true);
+						} 
+						else {
+							window.location.href = `http://localhost:5173/user/${response.data._id}/account`;
+						}
 					})
 					.catch(error => {
 						console.log(error);
@@ -91,7 +101,7 @@ export default function useAuth(): AuthTools {
 		}
 	}
 
-	function login(e: React.FormEvent, email: string, password: string) {
+	async function login(e: React.FormEvent, email: string, password: string) {
 		e.preventDefault();
 		if (!email || !password) {
 			alert("Please fill in all fields");
@@ -101,7 +111,7 @@ export default function useAuth(): AuthTools {
 					"It looks like this email is tied to a Gmail account. Consider logging in through Google"
 				);
 			} else {
-				axios
+				await axios
 					.post(
 						"http://localhost:4000/api/auth/sign-in",
 						{
@@ -122,5 +132,24 @@ export default function useAuth(): AuthTools {
 		}
 	}
 
-	return { googleAuth, signUp, login };
+	async function verifyUser(digits:string) {
+		if(digits) {
+			await axios.post("http://localhost:4000/api/auth/verify-email", {
+				code: digits
+			}, {
+				withCredentials: true
+			}).then(response => {
+				if(response.data.message == "Email verified successfully!") {
+					window.location.href = `http://localhost:5173/user/${response.data.user._id}/account`;
+				}
+			}).catch(error => {
+				console.log(error);
+			})
+		}
+		else {
+			alert("Please enter the verification code");
+		}
+	}
+
+	return { googleAuth, signUp, login, showVerification, verifyUser };
 }
