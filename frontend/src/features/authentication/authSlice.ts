@@ -1,49 +1,56 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { AuthState } from "../../interfaces";
 
-interface UserData {
-    first_name: string;
-    last_name: string;
-    uid: string;
-    email: string;
-    pfp: string;
+const initialState: AuthState = {
+    user: null,
+    loading: false,
+    error: null
 }
 
-interface State {
-    user: UserData | null;
-}
+// TODO - implement logic to check when to call the backend API to retrieve the user info again. This should only happen when the user's session expires after like 3 days.
+export const getUserInfo = createAsyncThunk("auth/getUserInfo", async () => {
+    const response = await axios.get("http://localhost:4000/api/user/current", {
+        withCredentials: true
+    });
 
-const initialState: State = {
-    user: null
-};
-
-// Function to get user info - use GET request
-function getUserInfo(): UserData {
-    return {
-        first_name: 'John',
-        last_name: 'Doe',
-        uid: '12345',
-        email: 'john.doe@example.com',
-        pfp: 'profile.jpg'
-    };
-}
+    return response?.data; 
+});
 
 // Function that handles logging the user out
 function logoutUser(): null {
-    return null;
+    axios.post("http://localhost:4000/api/auth/sign-out", { }, {
+        withCredentials: true
+    }).then(response => {
+        console.log(response.data);
+    });
+    return null
 }
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        userData: (state) => {
-            state.user = getUserInfo(); 
-        },
         logout: (state) => {
             state.user = logoutUser();
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getUserInfo.pending, (state) => {
+                state.loading = true; // Set loading to true while fetching
+                state.error = null; // Reset error
+            })
+            .addCase(getUserInfo.fulfilled, (state, action) => {
+                state.loading = false; // Set loading to false when fetch is complete
+                state.user = action.payload; // Set user data from the action payload
+            })
+            .addCase(getUserInfo.rejected, (state, action) => {
+                state.loading = false; // Set loading to false on error
+                state.error = action.error.message || "Failed to fetch user data"; // Set error message
+            });
     }
 });
 
-export const { userData, logout } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;
