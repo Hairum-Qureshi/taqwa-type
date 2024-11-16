@@ -13,6 +13,8 @@ async function checkIfUserExists(email: string): Promise<boolean> {
 	return user.length !== 0;
 }
 
+// TODO - need to implement code that will delete the verification code in 24hrs if the user hasn't verified their account within that time frame
+
 function createCookie(user_id: string, res: Response) {
 	const payload = {
 		user_id
@@ -86,7 +88,7 @@ const googleAuth = async (req: Request, res: Response) => {
 
 			if (createdUser && createdUser._id) {
 				createCookie(createdUser._id, res);
-
+				await sendWelcomeEmail(createdUser.email);
 				res.status(201).send(createdUser);
 			}
 		} else {
