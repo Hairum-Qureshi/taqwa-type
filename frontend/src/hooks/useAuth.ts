@@ -1,25 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-
-interface AuthTools {
-	googleAuth: (
-		email: string,
-		first_name: string,
-		last_name: string,
-		full_name: string,
-		pfp: string
-	) => void;
-	signUp: (
-		e: React.FormEvent,
-		first_name: string,
-		last_name: string,
-		email: string,
-		password: string
-	) => void;
-	login: (e: React.FormEvent, email: string, password: string) => void;
-	showVerification: boolean
-	verifyUser: (digits:string) => void;
-}
+import { AuthTools } from "../interfaces";
 
 export default function useAuth(): AuthTools {
 	const [showVerification, setShowVerification] = useState(false);
