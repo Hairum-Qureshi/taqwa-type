@@ -5,15 +5,13 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
 import { useState } from "react";
+import SignUp from "./auth-related/SignUp";
+import SignIn from "./auth-related/SignIn";
 
 export default function AuthForm() {
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
 	const [showSignUp, setShowSignUp] = useState(true);
 
-	const { googleAuth, signUp } = useAuth();
+	const { googleAuth } = useAuth();
 
 	const login = useGoogleLogin({
 		onSuccess: async response => {
@@ -36,8 +34,6 @@ export default function AuthForm() {
 
 	function update() {
 		setShowSignUp(!showSignUp);
-		setEmail("");
-		setPassword("");
 	}
 
 	return (
@@ -75,67 +71,9 @@ export default function AuthForm() {
 					)}
 				</div>
 				{showSignUp ? (
-					<>
-						<div className="flex flex-row w-full mb-5 items-center justify-center">
-							<input
-								type="text"
-								placeholder="First Name"
-								className="w-full mr-2 p-2 text-md outline-none rounded-sm"
-								value={firstName}
-								onChange={e => setFirstName(e.target.value)}
-							/>
-							<input
-								type="text"
-								placeholder="Last Name"
-								className="w-full ml-2 p-2 text-md outline-none rounded-sm"
-								value={lastName}
-								onChange={e => setLastName(e.target.value)}
-							/>
-						</div>
-						<input
-							type="email"
-							placeholder="Email"
-							className="w-full mb-5 mt-5 p-2 text-md outline-none rounded-sm"
-							value={email}
-							onChange={e => setEmail(e.target.value)}
-						/>
-						<input
-							type="password"
-							placeholder="Password"
-							className="w-full p-2 mt-5 text-md outline-none rounded-sm"
-							value={password}
-							onChange={e => setPassword(e.target.value)}
-						/>
-						<button
-							className="bg-green-600 font-semibold text-white text-lg mt-10 py-2 p-2 w-full mb-10 rounded-sm"
-							onClick={e => signUp(e, firstName, lastName, email, password)}
-						>
-							Sign Up
-						</button>
-					</>
+					<SignUp />
 				) : (
-					<>
-						<input
-							type="email"
-							placeholder="Email"
-							className="w-full mb-5 mt-5 p-2 text-md outline-none rounded-sm"
-							value={email}
-							onChange={e => setEmail(e.target.value)}
-						/>
-						<input
-							type="password"
-							placeholder="Password"
-							className="w-full p-2 mt-5 text-md outline-none rounded-sm"
-							value={password}
-							onChange={e => setPassword(e.target.value)}
-						/>
-						<button
-							className="bg-green-600 font-semibold text-white text-lg mt-10 py-2 p-2 w-full mb-10 rounded-sm"
-							// onClick={e => signIn(e, firstName, lastName, email, password)}
-						>
-							Sign In
-						</button>
-					</>
+					<SignIn />
 				)}
 			</form>
 			<div className="flex items-center justify-center">
@@ -144,7 +82,7 @@ export default function AuthForm() {
 				<span className="border-t border-gray-300 w-60"></span>
 			</div>
 			<button
-				onClick={() => login()}
+				onClick={login}
 				className="mt-10 bg-sky-800 text-white border-2 border-sky-400 hover:bg-sky-700 hover:border-sky-300 active:bg-sky-500 active:border-sky-200 py-2 p-2 w-1/2 rounded-md flex items-center justify-left"
 			>
 				<span className="text-2xl mr-2">
