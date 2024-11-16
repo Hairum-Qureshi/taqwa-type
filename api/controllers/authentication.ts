@@ -277,7 +277,18 @@ const resetPassword = async (req:Request, res:Response) => {
 }
 
 const signOut = (req:Request, res:Response) => {
-
+	try {
+		res.clearCookie("auth-session");
+		res.status(200).send("Success");
+	} catch (error) {
+		console.error(
+			"<authentication.ts> (controllers folder) signIn function ERROR".red.bold,
+			(error as Error).toString()
+		);
+		res.status(500).json({
+			message: (error as Error).toString()
+		});
+	}
 }
 
 export { googleAuth, signUp, verifyEmail, signIn, resetPassword, signOut };
