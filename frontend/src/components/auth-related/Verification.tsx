@@ -6,6 +6,9 @@ export default function Verification() {
     const inputRefs = useRef<HTMLInputElement[]>([]); // Array of refs for each input
     const { verifyUser } = useAuth();
 
+    // TODO - add a button to resend verification code
+    // TODO - consider adding a cool-down to prevent brute-force attacks
+
     // Handle arrow key navigation and input changes
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
         if (e.key === "ArrowRight" && index < 5) {
