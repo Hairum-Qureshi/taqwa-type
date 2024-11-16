@@ -28,7 +28,9 @@ interface IUser {
 	wordsPerMinute: string;
 	accuracy: number;
 	streak: string;
+	createdAt: string;
 }
+
 
 function createCookie(user_id: string, res: Response) {
 	const payload = {
@@ -173,7 +175,6 @@ const signUp = async (req: Request, res: Response) => {
 				});
 
 				if (createdUser && createdVerificationCode && createdUser._id) {
-					// createCookie(createdUser._id, res);
 					await sendVerificationEmail(createdUser.email, verificationCode);
 					if(createdUser.isVerified) {
 						res.status(201).send(createdUser);
@@ -210,19 +211,19 @@ const verifyEmail = async (req:Request, res:Response) => {
 		const user_verification = await VerificationCode.findOne({
 			verificationCode: code,
 			expires: { $gt: Date.now() }
-		}).populate("user_id").lean();
+		}).populate("user_id");
 		  
 		if (!user_verification) {
 			res.status(400).json({ message: "This verification code might have expired or is invalid" });
 		} 
 		else {
 			// TODO - *might* want to come back to this part and look over the type-casting and verify everything works fine
-			const user = user_verification.user_id as unknown as IUser;  
+			const user = user_verification.user_id as unknown as IUser;
 			await User.findByIdAndUpdate({ _id: user._id }, { isVerified: true });
 			createCookie(user._id, res);
 			await VerificationCode.findByIdAndDelete({ _id: user_verification._id });
 			await sendWelcomeEmail(user.email);
-			res.status(200).json({ message: "Email verified successfully!" });
+			res.status(200).json({ message: "Email verified successfully!", user_id: user._id });
 		}  
 	} catch (error) {
 		console.error(
