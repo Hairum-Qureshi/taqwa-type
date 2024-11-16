@@ -2,20 +2,34 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import useAccount from "../hooks/useAccount";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { logout } from "../features/authentication/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function Navbar() {
 
 	const { user } = useAccount();
+
+	const dispatch = useDispatch();
+
+	const handleLogout = () => {
+		dispatch(logout()); 
+	};
 
 	return (
 		<div className="w-full h-auto text-white bg-slate-800 p-2 justify-center items-center flex">
 			<Link to="/" className = "mr-auto">
 				<h1 className="text-xl">Taqwa Type</h1>
 			</Link>
-			{user && <div className = "text-xl ml-auto mr-5 hover:cursor-pointer">
+			{user && <div className = "text-xl ml-auto hover:cursor-pointer flex">
 				<Link to={`/user/${user._id}/account`}>
-					<div className = "border border-white rounded-md p-0.5 w-10 text-center bg-slate-700">
+					<div className = "rounded-md p-0.5 w-10 text-center mr-2">
 						<FontAwesomeIcon icon={faUser} />
+					</div>
+				</Link>
+				<Link to = "/" onClick = {handleLogout}>
+					<div className = "rounded-md p-0.5 w-10 text-center mr-1">
+						<FontAwesomeIcon icon={faArrowRightFromBracket} />
 					</div>
 				</Link>
 			</div>}
