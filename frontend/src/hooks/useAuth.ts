@@ -132,5 +132,20 @@ export default function useAuth(): AuthTools {
 		}
 	}
 
-	return { googleAuth, signUp, login, showVerification, verifyUser };
+	async function forgotPassword(email:string) {
+		if(email) {
+			await axios.post("http://localhost:4000/api/auth/forgot-password", {
+				email
+			}).then(response => {
+				console.log(response.data);
+			}).catch(error => {
+				console.log(error);
+			})
+		}
+		else {
+			alert("Please enter your email");
+		}
+	}
+
+	return { googleAuth, signUp, login, showVerification, verifyUser, forgotPassword };
 }
