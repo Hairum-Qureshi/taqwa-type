@@ -121,7 +121,7 @@ export default function useAuth(): AuthTools {
 				withCredentials: true
 			}).then(response => {
 				if(response.data.message == "Email verified successfully!") {
-					window.location.href = `http://localhost:5173/user/${response.data.user._id}/account`;
+					window.location.href = `http://localhost:5173/user/${response.data.user_id}/account`;
 				}
 			}).catch(error => {
 				console.log(error);
