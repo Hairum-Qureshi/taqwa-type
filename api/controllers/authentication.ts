@@ -194,7 +194,7 @@ const verifyEmail = async (req:Request, res:Response) => {
 		const user_verification = await VerificationCode.findOne({
 			verificationCode: code,
 			expires: { $gt: Date.now() }
-		}).populate("user_id");
+		}).populate("user_id").lean();
 		  
 		if (!user_verification) {
 			res.status(400).json({ message: "This verification code might have expired or is invalid" });
