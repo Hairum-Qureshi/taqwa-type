@@ -76,3 +76,34 @@ export const WELCOME_TEMPLATE = `<!DOCTYPE html>
   </div>
 </body>
 </html>`;
+
+export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Password Reset Successful</title>
+  </head>
+  <body style="font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; margin: 0;">
+    <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 30px; border: 1px solid #ddd;">
+      <h2 style="color: #2c3e50; text-align: center;">Asalamualaykum</h2>
+      <p style="color: #555; line-height: 1.6;">
+        Alhamdulillah, your password for <strong>Taqwa Type</strong> has been successfully reset.
+      </p>
+      <p style="color: #555; line-height: 1.6;">
+        If you did not request this change, please contact our support team immediately to secure your account.
+      </p>
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="https://taqwatype.com/login" style="background-color: #009688; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 5px; display: inline-block;">
+          Sign in to your account
+        </a>
+      </div>
+      <hr style="border-top: 1px solid #ddd; margin-top: 40px;">
+      <p style="font-size: 14px; color: #999; text-align: center;">
+        May Allah make your journey with the Quran easier. <br>
+        <strong>Taqwa Type Team</strong>
+      </p>
+    </div>
+  </body>
+  </html>
+`;
