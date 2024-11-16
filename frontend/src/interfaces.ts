@@ -84,4 +84,5 @@ export interface AuthTools {
 	login: (e: React.FormEvent, email: string, password: string) => void;
 	showVerification: boolean
 	verifyUser: (digits:string) => void;
+    forgotPassword: (email:string) => void;
 }
