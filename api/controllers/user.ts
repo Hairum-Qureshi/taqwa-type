@@ -146,7 +146,7 @@ async function returnUserData(uid:string) {
 
 const getCurrentUser = async (req:Request, res:Response) => {
 	const uid: string = req.cookies.decoded_uid;
-	const user = await User.findById(uid).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt");
+	const user = await User.findById(uid).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak mostPracticedSurah createdAt");
 	res.status(200).send(user);
 }
 
