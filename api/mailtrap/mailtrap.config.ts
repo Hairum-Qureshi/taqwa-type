@@ -18,7 +18,3 @@ export const sender = {
   address: process.env.MAILTRAP_DOMAIN!,
   name: "Taqwa Type",
 };
-
-// const recipients = [
-//   "autk3blmkd@zvvzuv.com",
-// ];

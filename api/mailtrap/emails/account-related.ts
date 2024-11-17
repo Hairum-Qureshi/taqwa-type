@@ -1,5 +1,5 @@
-import { PASSWORD_RESET_TEMPLATE, VERIFICATION_TEMPLATE, WELCOME_TEMPLATE } from "./templates";
-import { sender, transport } from "./mailtrap.config";
+import { PASSWORD_RESET_SUCCESS_TEMPLATE, PASSWORD_RESET_TEMPLATE, VERIFICATION_TEMPLATE, WELCOME_TEMPLATE } from "../templates";
+import { sender, transport } from "../mailtrap.config";
 
 export async function sendVerificationEmail(user_email:string, verification_code:string) {
     try {
@@ -46,5 +46,21 @@ export async function sendPasswordResetEmail(user_email:string, token:string) {
         console.log('Email sent successfully!', response);
     } catch (error) {            
         console.log('<mailtrap.config.ts> sendPasswordResetEmail function ERROR', (error as Error).toString().red.bold);
+    }
+}
+
+export async function sendPasswordResetSuccessEmail(user_email: string) {
+    try {
+        const response = await transport.sendMail({
+          from: sender,
+          to: [user_email], // recipient is an array of user emails
+          subject: "Taqwa Type Password Reset Success Email",
+          html: PASSWORD_RESET_SUCCESS_TEMPLATE,
+          category: "Reset Success Email"
+        });
+       
+        console.log('Email sent successfully!', response);
+    } catch (error) {            
+        console.log('<mailtrap.config.ts> sendPasswordResetSuccessEmail function ERROR', (error as Error).toString().red.bold);
     }
 }
