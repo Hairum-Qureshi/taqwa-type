@@ -17,13 +17,13 @@ export async function sendVerificationEmail(user_email:string, verification_code
     }
 }
 
-export async function sendWelcomeEmail(user_email:string) {
+export async function sendWelcomeEmail(user_email:string, user_id:string) {
     try {
         const response = await transport.sendMail({
           from: sender,
           to: [user_email], // recipient is an array of user emails
           subject: "Taqwa Type Welcome Email",
-          html: WELCOME_TEMPLATE,
+          html: WELCOME_TEMPLATE.replace("{profile_link}", `http://localhost:5173/user/${user_id}/account`),
           category: "Welcome Email"
         });
        
