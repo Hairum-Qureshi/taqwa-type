@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Progress from "../models/progress";
 import User from "../models/user";
 import { sendReport, sendBanEmail, sendWarningEmail } from "../nodemailer";
-import { UserReport } from "../types";
+import { UserReport } from "../interfaces";
 import { jwtDecode, JwtDecodeOptions, JwtPayload } from "jwt-decode";
 import { UserJWTPayload } from "../interfaces";
 const schedule = require("node-schedule");
