@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import colors from "colors";
-import { UserReport } from "./types";
+import { UserReport } from "./interfaces";
 import daysFromNow from "./utils/date-tool";
 
 colors.enable();

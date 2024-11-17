@@ -1,13 +1,12 @@
-// import upload from "../uploading"; // handles logic regarding uploading images from client to server
 import { v2 as cloudinary } from "cloudinary";
-// import fs from "fs"; // already a part of Node.js - no need to install
-// import path from "path";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-cloudinary.config({
+const cloundinary_config = cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET
+	api_secret: process.env.CLOUDINARY_SECRET
 });
+
+export default cloundinary_config;
