@@ -83,7 +83,7 @@ export const WELCOME_TEMPLATE = `<!DOCTYPE html>
         Let us all strive to seek Allah's pleasure through our actions. May this platform be a source of knowledge and blessings for you.
       </p>
     </div>
-    <a href="{{profile_link}}" style="display: block; text-align: center; background-color: #009688; color: #ffffff; padding: 12px; border-radius: 5px; text-decoration: none; margin: 30px 0;">
+    <a href="{profile_link}" style="display: block; text-align: center; background-color: #009688; color: #ffffff; padding: 12px; border-radius: 5px; text-decoration: none; margin: 30px 0;">
       Go to your profile
     </a>
 
