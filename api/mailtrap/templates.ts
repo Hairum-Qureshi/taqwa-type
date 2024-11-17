@@ -68,8 +68,25 @@ export const WELCOME_TEMPLATE = `<!DOCTYPE html>
       <li>Choose a Surah to read and type along.</li>
       <li>Track your progress and improve your typing speed.</li>
       <li>Connect with others on the journey to increase Taqwa.</li>
-    </ul>
-    <a href="{{welcome_link}}" style="display: block; text-align: center; background-color: #009688; color: #fff; padding: 12px; border-radius: 5px; text-decoration: none; margin: 20px 0;">Get Started</a>
+    </ul>    
+    <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin-top: 20px;">
+      <h3 style="color: #2c3e50;">Important Etiquette Guidelines</h3>
+      <p style="color: #555; line-height: 1.6;">
+        As we embark on this journey together, we kindly remind you to maintain Islamic etiquette while using Taqwa Type:
+      </p>
+      <ul style="color: #555; line-height: 1.6; padding-left: 20px;">
+        <li>Ensure your <strong>profile picture is modest</strong> and respectful, in accordance with Islamic values.</li>
+        <li>Be mindful of your interactions with others, upholding good character and manners (<em>akhlaq</em>).</li>
+        <li>Use this platform to benefit yourself and others by deepening your connection with the Quran.</li>
+      </ul>
+      <p style="color: #777; font-size: 14px;">
+        Let us all strive to seek Allah's pleasure through our actions. May this platform be a source of knowledge and blessings for you.
+      </p>
+    </div>
+    <a href="{{profile_link}}" style="display: block; text-align: center; background-color: #009688; color: #ffffff; padding: 12px; border-radius: 5px; text-decoration: none; margin: 30px 0;">
+      Go to your profile
+    </a>
+
     <hr style="border-top: 1px solid #ddd;">
     <p style="font-size: 14px; color: #999; text-align: center;">
       May Allah bless you with knowledge and understanding. <br><strong>Taqwa Type Team</strong>
