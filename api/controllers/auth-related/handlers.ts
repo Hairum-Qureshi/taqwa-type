@@ -8,6 +8,7 @@ import { IUser } from "../../interfaces";
 import User from "../../models/user";
 import VerificationCode from "../../models/verification";
 import { sendAccountStatusEmail } from "../../nodemailer";
+import { EMAIL_REGEX } from "./authentication";
 
 function createCookie(user_id: string, res: Response) {
 	const payload = {
@@ -96,6 +97,11 @@ const resetPassword = async (req: Request, res: Response) => {
 	const { email } = req.body;
 
 	try {
+        if(!EMAIL_REGEX.test(email)) {
+			res.status(400).json({
+				message: "Invalid email"
+			});
+		}
 		// Check if the email is a Gmail account
 		if (email.endsWith("@gmail.com")) {
 			res.status(400).json({ message: "Sorry, you're not able to reset your password because you're using a Gmail account." });
@@ -129,7 +135,6 @@ const resetPassword = async (req: Request, res: Response) => {
 		res.status(500).json({ message: (error as Error).toString() });
 	}
 };
-
 
 const updatePassword = async (req: Request, res: Response) => {
     const { token } = req.params;

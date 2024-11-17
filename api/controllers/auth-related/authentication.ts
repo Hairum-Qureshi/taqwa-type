@@ -9,6 +9,8 @@ import { checkAndUnbanUser, checkIfUserExists, createCookie } from "./handlers";
 // TODO - need to implement code that will delete the verification code in 24hrs if the user hasn't verified their account within that time frame
 // TODO - also consider where if the user hasn't verified their email in 24hrs, delete their account info from MongoDB 
 
+export const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
 const googleAuth = async (req: Request, res: Response) => {
 	try {
 		const { email, first_name, last_name, full_name, pfp } = req.body;
@@ -72,8 +74,7 @@ const signUp = async (req: Request, res: Response) => {
 	try {
 		const uuid: string = nanoid().replace(/-/g, "").replace(/_/g, "");
 
-		const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-		if(!emailRegex.test(email)) {
+		if(!EMAIL_REGEX.test(email)) {
 			res.status(400).json({
 				message: "Invalid email"
 			});
