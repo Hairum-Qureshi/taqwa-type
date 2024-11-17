@@ -128,43 +128,48 @@ const resetPassword = async (req:Request, res:Response) => {
 }
 
 const updatePassword = async (req: Request, res: Response) => {
-	const { token } = req.params;
-	const { password } = req.body;
+    const { token } = req.params;
+    const { password } = req.body;
   
-	try {
-		const resetToken = await PasswordResetToken.findOne({ token });
+    try {
+        // Attempt to find a non-expired token
+        let resetToken = await PasswordResetToken.findOne({
+            token,
+            expires: { $gt: Date.now() }
+        }).populate("user_id");
+  
+        // If no valid token was found, check if an expired one exists
+        if (!resetToken) {
+            resetToken = await PasswordResetToken.findOne({ token });
+  
+            // If the token exists but is expired, delete it
+            if (resetToken) {
+                await PasswordResetToken.findByIdAndDelete(resetToken._id);
+            }
+            res.status(400).json({ message: "Token has expired or is invalid" });
+        }
+  
+        // If a valid token is found, proceed with password update
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await User.findByIdAndUpdate(resetToken!.user_id, { password: hashedPassword });
+  
+        // Send success email and delete the token after use
+        const user = resetToken!.user_id as unknown as IUser;
+        if (user) {
+            await sendPasswordResetSuccessEmail(user.email);
+            await PasswordResetToken.findByIdAndDelete(resetToken!._id);
+            res.status(200).json({ message: "Password updated successfully" });
+        }
+  
+        res.status(400).json({ message: "User not found" });
 
-		if (!resetToken) {
-			res.status(404).json({ message: "Invalid token" });
-		}
-  
-		const currentTime = Date.now();
-		if (currentTime >= resetToken!.expires) {
-			await PasswordResetToken.findByIdAndDelete(resetToken!._id);
-			res.status(400).json({ message: "Token has expired" });
-		}
-  
-		const hashedPassword = await bcrypt.hash(password, 10);
-		await User.findByIdAndUpdate(resetToken!.user_id, { password: hashedPassword });  
-		const user = await resetToken!.populate("user_id");
-		const user_data = user.user_id as unknown as IUser;
-  
-		if (user_data) {
-			await sendPasswordResetSuccessEmail(user_data.email);
-			await PasswordResetToken.findByIdAndDelete(resetToken!._id);
-			res.status(200).json({ message: "Password updated successfully" });
-		} 
-		else {
-			res.status(400).json({ message: "User not found" });
-	 	}
-  
-	} catch (error) {
-		console.error(
-			"<authentication.ts> (controllers folder) updatePassword function ERROR".red.bold,
-			(error as Error).toString()
-	    );
-		res.status(500).json({ message: (error as Error).toString() });
-	}
-};
+    } catch (error) {
+        console.error(
+            "<authentication.ts> updatePassword function ERROR".red.bold,
+            (error as Error).toString()
+        );
+        res.status(500).json({ message: (error as Error).toString() });
+    }
+};  
 
 export { verifyEmail, checkIfUserExists, createCookie, checkAndUnbanUser, resetPassword, updatePassword };
