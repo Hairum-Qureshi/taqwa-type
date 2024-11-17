@@ -31,7 +31,7 @@ const googleAuth = async (req: Request, res: Response) => {
 
 			if (createdUser && createdUser._id) {
 				createCookie(createdUser._id, res);
-				await sendWelcomeEmail(createdUser.email);
+				await sendWelcomeEmail(createdUser.email, createdUser._id);
 				res.status(201).send(createdUser);
 			}
 		} else {

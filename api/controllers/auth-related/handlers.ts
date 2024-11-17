@@ -78,7 +78,7 @@ const verifyEmail = async (req:Request, res:Response) => {
 			await User.findByIdAndUpdate({ _id: user._id }, { isVerified: true });
 			createCookie(user._id, res);
 			await VerificationCode.findByIdAndDelete({ _id: user_verification._id });
-			await sendWelcomeEmail(user.email);
+			await sendWelcomeEmail(user.email, user._id);
 			res.status(200).json({ message: "Email verified successfully!", user_id: user._id });
 		}  
 	} catch (error) {
