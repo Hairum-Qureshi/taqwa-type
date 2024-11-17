@@ -92,40 +92,44 @@ const verifyEmail = async (req:Request, res:Response) => {
 	}
 }
 
-const resetPassword = async (req:Request, res:Response) => {
+const resetPassword = async (req: Request, res: Response) => {
 	const { email } = req.body;
+
 	try {
-        if(email.endsWith("@gmail.com")) {
-            res.status(400).json({ message: "Sorry, you're not able to reset your password because you're using a Gmail account." });
-        }
+		// Check if the email is a Gmail account
+		if (email.endsWith("@gmail.com")) {
+			res.status(400).json({ message: "Sorry, you're not able to reset your password because you're using a Gmail account." });
+		} else {
+			const user_exists = await User.findOne({ email });
 
-		const user_exists = await User.findOne({ email });
-		if(user_exists) {
-			// const token = await generateToken(user_exists._id);
-			const resetToken = crypto.randomBytes(20).toString("hex");
-			const resetTokenExpiration = Date.now() + 1 * 60 * 60 * 1000 // 1 hour
+			if (user_exists) {
+				// Generate a reset token and set expiration
+				const resetToken = crypto.randomBytes(20).toString("hex");
+				const resetTokenExpiration = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
 
-			await PasswordResetToken.create({
-				token: resetToken,
-				expires: resetTokenExpiration,
-				user_id: user_exists._id
-			})
+				// Save the token to the database
+				await PasswordResetToken.create({
+					token: resetToken,
+					expires: resetTokenExpiration,
+					user_id: user_exists._id
+				});
 
-			await sendPasswordResetEmail(email, resetToken);
-		}
-		else {
-			res.status(404).json({ message: "User not found" });
+				// Send password reset email
+				await sendPasswordResetEmail(email, resetToken);
+				res.status(200).json({ message: "Password reset email sent successfully!" });
+			} else {
+				res.status(404).json({ message: "User not found with this email" });
+			}
 		}
 	} catch (error) {
 		console.error(
 			"<authentication.ts> (controllers folder) resetPassword function ERROR".red.bold,
 			(error as Error).toString()
 		);
-		res.status(500).json({
-			message: (error as Error).toString()
-		});
+		res.status(500).json({ message: (error as Error).toString() });
 	}
-}
+};
+
 
 const updatePassword = async (req: Request, res: Response) => {
     const { token } = req.params;
