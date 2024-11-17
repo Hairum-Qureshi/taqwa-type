@@ -1,71 +1,13 @@
 import { Request, Response } from "express";
 import { nanoid } from "nanoid";
-import User from "../models/user";
+import User from "../../models/user";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { sendAccountStatusEmail } from "../nodemailer";
-import VerificationCode from "../models/verification";
-import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails";
-import { IUser } from "../interfaces";
-
-async function checkIfUserExists(email: string): Promise<boolean> {
-	const user: Document[] = await User.find({ email });
-	return user.length !== 0;
-}
+import VerificationCode from "../../models/verification";
+import { sendVerificationEmail, sendWelcomeEmail } from "../../mailtrap/emails/account-related";
+import { checkAndUnbanUser, checkIfUserExists, createCookie } from "./handlers";
 
 // TODO - need to implement code that will delete the verification code in 24hrs if the user hasn't verified their account within that time frame
 // TODO - also consider where if the user hasn't verified their email in 24hrs, delete their account info from MongoDB 
-
-function createCookie(user_id: string, res: Response) {
-	const payload = {
-		user_id
-	};
-	const secretKey: string = process.env.JWT_SECRET!;
-	const token = jwt.sign(payload, secretKey, { expiresIn: "7d" });
-	res.cookie("auth-session", token, { 
-		httpOnly: true, 
-		secure: process.env.NODE_ENV === "production", 
-		sameSite: 'strict', 
-		maxAge: 7 * 24 * 60 * 60 * 1000 
-	}); // 1 week in milliseconds
-}
-
-async function checkAndUnbanUser(user_id: string): Promise<boolean> {
-	// If true -> account is still banned
-	// If false -> account is no longer (or never was) banned
-	try {
-		const user = await User.findById({ _id: user_id });
-
-		if (!user || !user.isBanned) {
-			console.log("User not found or not banned.");
-			return false;
-		}
-
-		const bannedDate = Number(new Date(user.bannedDate));
-		const currentDate = Number(new Date());
-
-		const hasBeenAMonth: boolean =
-			currentDate - bannedDate >= 30 * 24 * 60 * 60 * 1000; // 30 days in ms
-
-		if (hasBeenAMonth) {
-			// Unban the user and notify them
-			User.findByIdAndUpdate(user_id, {
-				isBanned: false,
-				bannedDate: null
-			}).then(() => {
-				// sendAccountStatusEmail(full_name, email, pfp);
-			});
-
-			// Send notification to the user (e.g., via email, SMS, etc.)
-			sendAccountStatusEmail(user.email);
-			return false;
-		}
-	} catch (err) {
-		console.error("Error checking and unbanning user:", err);
-	}
-
-	return true;
-}
 
 const googleAuth = async (req: Request, res: Response) => {
 	try {
@@ -189,36 +131,6 @@ const signUp = async (req: Request, res: Response) => {
 	}
 };
 
-const verifyEmail = async (req:Request, res:Response) => {
-	const { code } = req.body;
-	try {
-		const user_verification = await VerificationCode.findOne({
-			verificationCode: code,
-			expires: { $gt: Date.now() }
-		}).populate("user_id").lean();
-		  
-		if (!user_verification) {
-			res.status(400).json({ message: "This verification code might have expired or is invalid" });
-		} 
-		else {
-			const user = user_verification.user_id as unknown as IUser;
-			await User.findByIdAndUpdate({ _id: user._id }, { isVerified: true });
-			createCookie(user._id, res);
-			await VerificationCode.findByIdAndDelete({ _id: user_verification._id });
-			await sendWelcomeEmail(user.email);
-			res.status(200).json({ message: "Email verified successfully!", user_id: user._id });
-		}  
-	} catch (error) {
-		console.error(
-			"<authentication.ts> (controllers folder) verifyEmail function ERROR".red.bold,
-			(error as Error).toString()
-		);
-		res.status(500).json({
-			message: (error as Error).toString()
-		});
-	}
-}
-
 const signIn = async (req: Request, res: Response) => {
 	try {
 		const { email, password } = req.body;
@@ -272,10 +184,6 @@ const signIn = async (req: Request, res: Response) => {
 	}
 };
 
-const resetPassword = async (req:Request, res:Response) => {
-	const { email } = req.body;
-}
-
 const signOut = (req:Request, res:Response) => {
 	try {
 		res.clearCookie("auth-session");
@@ -290,5 +198,6 @@ const signOut = (req:Request, res:Response) => {
 		});
 	}
 }
+  
+export { googleAuth, signUp, signIn, signOut };
 
-export { googleAuth, signUp, verifyEmail, signIn, resetPassword, signOut };
