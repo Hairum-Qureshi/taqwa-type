@@ -1,2 +1,7 @@
 /api/node_modules/
 /frontend/node_modules/
+/api/.env
+/frontend/.env
+
+# macOS
+.DS_Store
