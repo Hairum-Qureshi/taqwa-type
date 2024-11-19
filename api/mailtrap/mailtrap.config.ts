@@ -16,5 +16,5 @@ export const transport = nodemailer.createTransport(
 
 export const sender = {
   address: process.env.MAILTRAP_DOMAIN!,
-  name: "Taqwa Type",
+  name: "Taqwa Type"
 };
