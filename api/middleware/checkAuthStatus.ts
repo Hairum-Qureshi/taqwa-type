@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-const authenticated = (req: Request, res: Response, next: NextFunction) => {
+const checkAuthStatus = (req: Request, res: Response, next: NextFunction) => {
 	const token: string | undefined = req.cookies["auth-session"];
 	const secret: string = process.env.JWT_SECRET!;
 	if (token) {
@@ -24,4 +24,4 @@ const authenticated = (req: Request, res: Response, next: NextFunction) => {
 	}
 };
 
-export { authenticated };
+export { checkAuthStatus };
