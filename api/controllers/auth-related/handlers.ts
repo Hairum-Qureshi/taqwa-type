@@ -155,7 +155,9 @@ const updatePassword = async (req: Request, res: Response) => {
             if (resetToken) {
                 await PasswordResetToken.findByIdAndDelete(resetToken._id);
             }
+            // Send the response and stop further execution by setting a flag
             res.status(400).json({ message: "Token has expired or is invalid" });
+            return;
         }
   
         // If a valid token is found, proceed with password update
@@ -168,8 +170,10 @@ const updatePassword = async (req: Request, res: Response) => {
             await sendPasswordResetSuccessEmail(user.email);
             await PasswordResetToken.findByIdAndDelete(resetToken!._id);
             res.status(200).json({ message: "Password updated successfully" });
+            return;
         }
   
+        // If no user is found, send an error response
         res.status(400).json({ message: "User not found" });
 
     } catch (error) {
@@ -179,6 +183,6 @@ const updatePassword = async (req: Request, res: Response) => {
         );
         res.status(500).json({ message: (error as Error).toString() });
     }
-};  
+};
 
 export { verifyEmail, checkIfUserExists, createCookie, checkAndUnbanUser, resetPassword, updatePassword };
