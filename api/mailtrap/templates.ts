@@ -125,3 +125,57 @@ export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
   </body>
   </html>
 `;
+
+export const REPORT_WARNING_TEMPLATE = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSFW Profile Picture Warning</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
+        <tr>
+            <td style="padding: 20px; text-align: center; background-color: #2a3d3f; color: #ffffff;">
+                <h1 style="margin: 0; font-size: 24px;">Taqwa Type</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px; color: #333;">
+                <h2 style="margin-top: 0; font-size: 20px; color: #2a3d3f;">NSFW Profile Picture Warning</h2>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Assalamualaykum
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    We have received a report regarding your current profile picture on Taqwa Type, which has been flagged as inappropriate and not in compliance with our platform's values. As this is an Islamic site, NSFW (Not Safe For Work) content, including inappropriate or explicit imagery, is strictly prohibited.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Below is the reported profile picture:
+                </p>
+                <div style="text-align: center; margin: 15px 0;">
+                    <img src="{image_src}" alt="Reported Profile Picture" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; background-color: #f9f9f9;">
+                </div>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    You have <strong>1 day</strong> to update your profile picture to an appropriate image that adheres to our guidelines. Failure to comply within the specified time frame will result in a ban from the platform.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    If you believe this report is a mistake, please contact our team at <span style="color: #2a3d3f; text-decoration: underline;">{support_email}</span> as soon as possible. We are here to address any concerns or misunderstandings.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    We encourage you to uphold the values of modesty and respect that Taqwa Type is built upon.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Jazakum Allahu Khairan for your understanding.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">- The Taqwa Type Team</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 15px; text-align: center; background-color: #2a3d3f; color: #ffffff; font-size: 12px;">
+                <p style="margin: 0;">© 2024 Taqwa Type. All Rights Reserved.</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
