@@ -5,8 +5,13 @@ import { sendReport, sendBanEmail, sendWarningEmail } from "../nodemailer";
 import { UserReport } from "../interfaces";
 import { jwtDecode, JwtDecodeOptions, JwtPayload } from "jwt-decode";
 import { UserJWTPayload } from "../interfaces";
-const schedule = require("node-schedule");
+import dotenv from "dotenv";
 
+dotenv.config();
+
+const sightengine = require('sightengine')(process.env.SIGHTENGINE_KEY, process.env.SIGHTENGINE_API_SECRET);
+
+const schedule = require("node-schedule");
 
 const getUserProgress = async (req: Request, res: Response) => {
 	const uid = req.params.user_id;
@@ -35,41 +40,26 @@ const getUserProgress = async (req: Request, res: Response) => {
 const reportUser = async (req: Request, res: Response) => {
 	// TODO - need to implement a check to see if a user has reported this user (to prevent them from reporting repeatedly)
 	const { user_id } = req.body;
-	// const { user_id } = req.cookies.auth_session; // get the UID of the current logged in user
-
 	try {
 		const user = await User.findById({ _id: user_id }).lean();
-		const reporter = "";
-		if (user) {
-			const {
-				_id,
-				full_name,
-				email,
-				pfp,
-				createdAt,
-				hasBeenBannedBefore,
-				hasBeenWarnedBefore
-			} = user;
-
-			const report: UserReport = {
-				_id: _id!,
-				full_name,
-				email,
-				pfp,
-				createdAt: createdAt.toString(),
-				hasBeenBannedBefore,
-				hasBeenWarnedBefore
-			};
-
-			// TODO - convert these to ENV variables:
-			const backend_base_url = "http://localhost:4000";
-			const frontend_base_url = "http://localhost:5173";
-
-			sendReport(report, backend_base_url, reporter, frontend_base_url);
-		} else {
-			console.log(
-				"User not found. This user may have deleted their account or the user ID may be incorrect"
-			);
+		if	(user) {
+			// Detect nudity, weapons, alcohol, drugs and faces in an image, along with image properties and type
+			// to detect faces, just add 'face' to the array
+			sightengine.check(['nudity', 'type', 'properties', 'wad']).set_url(user.pfp).then((result: any) => {
+				// 0.99 for nudity means it's SFW
+				if(result.nudity.safe < 0.85 || result.alcohol >= 1 || result.weapon >= 2) {
+					// report user because their pfp is NSFW
+					console.log("NSFW PFP");
+				}
+				else {
+					console.log("Safe PFP");
+				}
+			}).catch((error: any) => {
+				console.log(error);
+			});
+		} 
+		else {
+			res.status(404).send("User not found");
 		}
 	} catch (error) {
 		console.log(
@@ -77,6 +67,47 @@ const reportUser = async (req: Request, res: Response) => {
 			(error as Error).toString().red.bold
 		);
 	}
+
+	// try {
+	// 	const user = await User.findById({ _id: user_id }).lean();
+	// 	const reporter = "";
+	// 	if (user) {
+	// 		const {
+	// 			_id,
+	// 			full_name,
+	// 			email,
+	// 			pfp,
+	// 			createdAt,
+	// 			hasBeenBannedBefore,
+	// 			hasBeenWarnedBefore
+	// 		} = user;
+
+	// 		const report: UserReport = {
+	// 			_id: _id!,
+	// 			full_name,
+	// 			email,
+	// 			pfp,
+	// 			createdAt: createdAt.toString(),
+	// 			hasBeenBannedBefore,
+	// 			hasBeenWarnedBefore
+	// 		};
+
+	// 		// TODO - convert these to ENV variables:
+	// 		const backend_base_url = "http://localhost:4000";
+	// 		const frontend_base_url = "http://localhost:5173";
+
+	// 		sendReport(report, backend_base_url, reporter, frontend_base_url);
+	// 	} else {
+	// 		console.log(
+	// 			"User not found. This user may have deleted their account or the user ID may be incorrect"
+	// 		);
+	// 	}
+	// } catch (error) {
+		// console.log(
+		// 	"There was an error (user.ts file, reportUser function)",
+		// 	(error as Error).toString().red.bold
+		// );
+	// }
 };
 
 const banUser = async (req: Request, res: Response) => {
