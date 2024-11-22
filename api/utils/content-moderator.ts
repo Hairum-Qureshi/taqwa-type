@@ -1,15 +1,22 @@
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
-const sightengine = require('sightengine')(process.env.SIGHTENGINE_KEY, process.env.SIGHTENGINE_API_SECRET);
+const sightengine = require("sightengine")(process.env.SIGHTENGINE_KEY, process.env.SIGHTENGINE_API_SECRET);
 
-export default async function isNSFW(image_path: string): Promise<boolean> {
+export default async function isNSFW(image_src: string): Promise<boolean> {
     try {
-        // Detect nudity, weapons, alcohol, drugs, and faces in an image
-        const result = await sightengine
-            .check(['nudity', 'type', 'properties', 'wad'])
-            .set_url(image_path);
+        let result;
+
+        // Check if the image is a local file or a URL
+        if (path.isAbsolute(image_src)) {
+            // For local files
+            result = await sightengine.check(['nudity', 'type', 'properties', 'wad']).set_file(image_src);
+        } else {
+            // For URLs
+            result = await sightengine.check(['nudity', 'type', 'properties', 'wad']).set_url(image_src);
+        }
 
         // NSFW conditions
         const isNudityNSFW = result.nudity.safe < 0.85; // Adjust threshold as needed
@@ -19,8 +26,8 @@ export default async function isNSFW(image_path: string): Promise<boolean> {
         // Return true if any condition flags the image as NSFW
         return isNudityNSFW || isAlcoholNSFW || isWeaponNSFW;
     } catch (error) {
-        console.error('Error detecting NSFW content:', error);
-        // Consider logging or handling the error appropriately
-        return false; // Default to safe in case of an error
+        console.error("Error detecting NSFW content:", error);
+        // Default to safe in case of an error
+        return false;
     }
 }
