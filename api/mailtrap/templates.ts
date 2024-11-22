@@ -112,7 +112,7 @@ export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
         If you did not request this change, please contact our support team immediately to secure your account.
       </p>
       <div style="text-align: center; margin-top: 30px;">
-        <a href="https://taqwatype.com/login" style="background-color: #009688; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 5px; display: inline-block;">
+        <a href="https://taqwatype.com" style="background-color: #009688; color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 5px; display: inline-block;">
           Sign in to your account
         </a>
       </div>
