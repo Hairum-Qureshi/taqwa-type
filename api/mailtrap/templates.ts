@@ -256,3 +256,45 @@ export const BAN_TEMPLATE = `
     </table>
 </body>
 </html>`;
+
+export const TEMP_BAN_TEMPLATE = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Temporarily Banned</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
+        <tr>
+            <td style="padding: 20px; text-align: center; background-color: #2a3d3f; color: #ffffff;">
+                <h1 style="margin: 0; font-size: 24px;">Taqwa Type</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px; color: #333;">
+                <h2 style="margin-top: 0; font-size: 20px; color: #2a3d3f;">Your Account Has Been Temporarily Banned</h2>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Asalamualaykum,
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    We regret to inform you that your Taqwa Type account has been temporarily banned for a period of 1 month due to a violation of our platform’s rules. We take the principles of respect, modesty, and Islamic values seriously, and your actions did not align with the community standards we uphold.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    During this time, you will not be able to access your account. However, please note that after the 1-month ban, your account will be unbanned. We strongly advise you to reflect on our guidelines and ensure that future behavior aligns with the standards of the Taqwa Type platform.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Please be aware that if any further violations of our rules occur after the ban period, your account will be permanently banned. We urge you to take this warning seriously.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    If you have any questions or believe this decision was made in error, please feel free to contact us at <span href="mailto:support@taqwatype.com" style="color: #2a3d3f; text-decoration: underline;">{support_email}</span>. We are here to assist you.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Jazakum Allahu Khairan for your understanding and cooperation.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">- The Taqwa Type Team</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
