@@ -28,6 +28,6 @@ export default async function isNSFW(image_src: string): Promise<boolean> {
     } catch (error) {
         console.error("Error detecting NSFW content:", error);
         // Default to safe in case of an error
-        return false;
+        return true;
     }
 }
