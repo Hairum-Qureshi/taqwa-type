@@ -1,11 +1,11 @@
 import express from "express";
 import {
-	banUser,
+	// banUser,
 	getCurrentUser,
 	getUserData,
 	getUserProgress,
 	reportUser,
-	warnUser
+	// warnUser
 } from "../controllers/user";
 import upload from "./config/handle_uploads";
 import fs from "fs";
@@ -90,10 +90,6 @@ router.post("/report", checkAuthStatus, reportUser);
 
 // TODO - implement middleware to double check that only the admin has access to this route; you may need to update your user model to include a 'isAdmin' property
 //! checkAdminStatus -> middleware to check if the user is an admin
-
-// router.get("/:user_id/ban", checkAdminStatus, banUser);
-
-// router.get("/:user_id/email", checkAdminStatus, warnUser);
 
 // router.get(":user_id/user", getUser);
 
