@@ -170,11 +170,6 @@ export const REPORT_WARNING_TEMPLATE = `<!DOCTYPE html>
                 <p style="font-size: 14px; line-height: 1.6;">- The Taqwa Type Team</p>
             </td>
         </tr>
-        <tr>
-            <td style="padding: 15px; text-align: center; background-color: #2a3d3f; color: #ffffff; font-size: 12px;">
-                <p style="margin: 0;">© 2024 Taqwa Type. All Rights Reserved.</p>
-            </td>
-        </tr>
     </table>
 </body>
 </html>
