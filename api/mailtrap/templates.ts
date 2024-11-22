@@ -144,7 +144,7 @@ export const REPORT_WARNING_TEMPLATE = `<!DOCTYPE html>
             <td style="padding: 20px; color: #333;">
                 <h2 style="margin-top: 0; font-size: 20px; color: #2a3d3f;">NSFW Profile Picture Warning</h2>
                 <p style="font-size: 14px; line-height: 1.6;">
-                    Assalamualaykum,
+                    Asalamualaykum,
                 </p>
                 <p style="font-size: 14px; line-height: 1.6;">
                     We have received a report regarding your current profile picture on Taqwa Type, which has been flagged as inappropriate and not in compliance with our platform's values. As this is an Islamic site, NSFW (Not Safe For Work) content, including inappropriate or explicit imagery, is strictly prohibited.
@@ -174,3 +174,85 @@ export const REPORT_WARNING_TEMPLATE = `<!DOCTYPE html>
 </body>
 </html>
 `;
+
+export const PERMANENT_BAN_ALERT_TEMPLATE = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Permanently Banned</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
+        <tr>
+            <td style="padding: 20px; text-align: center; background-color: #2a3d3f; color: #ffffff;">
+                <h1 style="margin: 0; font-size: 24px;">Taqwa Type</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px; color: #333;">
+                <h2 style="margin-top: 0; font-size: 20px; color: #2a3d3f;">Account Permanently Banned</h2>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Asalamualaykum,
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    We regret to inform you that your Taqwa Type account has been permanently banned due to a repeated violation of our platform's rules. Despite receiving a previous warning, it appears that the terms of conduct were not adhered to, which has led to this action.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Taqwa Type is a platform that values respect, modesty, and Islamic principles. It is essential for all users to follow these guidelines to maintain a positive and respectful environment for everyone. Unfortunately, due to the disregard for the final warning given, we are unable to continue your access to the platform.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    If you believe this decision was made in error, you may contact us at <span style="color: #2a3d3f; text-decoration: underline;">{support_email}</span>. However, please be advised that repeated violations will not be tolerated, and this decision is final.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Jazakum Allahu Khairan for your understanding and we appreciate your interest in trying our platform.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">- The Taqwa Type Team</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+
+export const BAN_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Temporarily Banned</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
+        <tr>
+            <td style="padding: 20px; text-align: center; background-color: #2a3d3f; color: #ffffff;">
+                <h1 style="margin: 0; font-size: 24px;">Taqwa Type</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px; color: #333;">
+                <h2 style="margin-top: 0; font-size: 20px; color: #2a3d3f;">Your Account Has Been Temporarily Banned</h2>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Assalamu Alaikum,
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    We regret to inform you that your Taqwa Type account has been temporarily banned for a period of 1 month due to a violation of our platform's rules. We take the principles of respect, modesty, and Islamic values seriously, and your actions did not align with the community standards we uphold.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    During this time, you will not be able to access your account. However, please note that after the 1-month ban, your account will be unbanned. We strongly advise you to reflect on our guidelines and ensure that future behavior aligns with the standards of the Taqwa Type platform.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Please be aware that if any further violations of our rules occur after the ban period, your account will be permanently banned. We urge you to take this warning seriously.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    If you have any questions or believe this decision was made in error, please feel free to contact us at <a href="mailto:support@taqwatype.com" style="color: #2a3d3f; text-decoration: underline;">support@taqwatype.com</a>. We are here to assist you.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Jazakum Allahu Khairan for your understanding and cooperation.
+                </p>
+                <p style="font-size: 14px; line-height: 1.6;">- The Taqwa Type Team</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
