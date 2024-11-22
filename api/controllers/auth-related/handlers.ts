@@ -7,7 +7,6 @@ import PasswordResetToken from "../../models/reset-token";
 import { IUser } from "../../interfaces";
 import User from "../../models/user";
 import VerificationCode from "../../models/verification";
-import { sendAccountStatusEmail } from "../../nodemailer";
 import { EMAIL_REGEX } from "./authentication";
 
 function createCookie(user_id: string, res: Response) {
@@ -27,40 +26,6 @@ function createCookie(user_id: string, res: Response) {
 async function checkIfUserExists(email: string): Promise<boolean> {
 	const user: Document[] = await User.find({ email });
 	return user.length !== 0;
-}
-
-async function checkAndUnbanUser(user_id: string): Promise<boolean> {
-	// If true -> account is still banned
-	// If false -> account is no longer (or never was) banned
-	try {
-		const user = await User.findById({ _id: user_id });
-
-		if (!user || !user.isBanned) {
-			console.log("User not found or not banned.");
-			return false;
-		}
-
-		const bannedDate = Number(new Date(user.bannedDate));
-		const currentDate = Number(new Date());
-
-		const hasBeenAMonth: boolean =
-			currentDate - bannedDate >= 30 * 24 * 60 * 60 * 1000; // 30 days in ms
-
-		if (hasBeenAMonth) {
-			// Unban the user and notify them
-			User.findByIdAndUpdate(user_id, {
-				isBanned: false,
-				bannedDate: null
-			});
-			// Send notification to the user (e.g., via email, SMS, etc.)
-			sendAccountStatusEmail(user.email);
-			return false;
-		}
-	} catch (err) {
-		console.error("Error checking and unbanning user:", err);
-	}
-
-	return true;
 }
 
 const verifyEmail = async (req:Request, res:Response) => {
@@ -185,4 +150,4 @@ const updatePassword = async (req: Request, res: Response) => {
     }
 };
 
-export { verifyEmail, checkIfUserExists, createCookie, checkAndUnbanUser, resetPassword, updatePassword };
+export { verifyEmail, checkIfUserExists, createCookie, resetPassword, updatePassword };
