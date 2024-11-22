@@ -144,7 +144,7 @@ export const REPORT_WARNING_TEMPLATE = `<!DOCTYPE html>
             <td style="padding: 20px; color: #333;">
                 <h2 style="margin-top: 0; font-size: 20px; color: #2a3d3f;">NSFW Profile Picture Warning</h2>
                 <p style="font-size: 14px; line-height: 1.6;">
-                    Assalamualaykum
+                    Assalamualaykum,
                 </p>
                 <p style="font-size: 14px; line-height: 1.6;">
                     We have received a report regarding your current profile picture on Taqwa Type, which has been flagged as inappropriate and not in compliance with our platform's values. As this is an Islamic site, NSFW (Not Safe For Work) content, including inappropriate or explicit imagery, is strictly prohibited.
