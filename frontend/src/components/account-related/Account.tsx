@@ -4,6 +4,8 @@ import useAccount from "../../hooks/useAccount";
 import SurahProgressTracker from "./SurahProgressTracker";
 import LoadingSpinner from "../LoadingSpinner";
 import NotFound from "../NotFound";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFlag } from "@fortawesome/free-regular-svg-icons";
 // import { logout } from "../features/authentication/authSlice";
 
 export default function Account() {
@@ -28,7 +30,7 @@ export default function Account() {
 			<div className="w-full h-full bg-gray-200">
 				<div className="flex-grow bg-slate-300 p-5 h-1/4 flex items-center justify-left">
 					<div
-						className={`border-2 border-black lg:w-40 lg:h-40 w-32 h-32 rounded-md flex-shrink-0 ${user._id === userData._id ? "hover:cursor-pointer" : ""}`}
+						className={`border-2 border-black lg:w-40 lg:h-40 w-32 h-32 rounded-md flex-shrink-0 relative ${user._id === userData._id ? "hover:cursor-pointer" : ""}`}
 						onClick={user._id === userData._id ? () => uploadPfp(fileInputRef) : undefined }
 					>
 						<label htmlFor="file-upload" className = "hidden">File upload</label>
@@ -47,18 +49,15 @@ export default function Account() {
 							className="object-cover w-full h-full"
 							ref={imageRef}
 						/>
+						{user._id !== userData._id && <div className = "w-8 h-8 flex justify-center p-2 absolute top-0 right-0 bg-red-600 rounded-md opacity-30 hover:opacity-60 text-white active:opacity-85 hover:cursor-pointer" title = "Report this profile picture" onClick = {e => { e.stopPropagation(); reportAccount() }}>
+							<FontAwesomeIcon icon={faFlag} />
+						</div>}
 					</div>
 					<div className="border-2 border-black w-full p-2 ml-5">
 						<div>
 							<h1 className="font-semibold text-xl">{`${userData.first_name} ${userData.last_name}`}</h1>
 						</div>
 						<div>Test X</div>
-						{user._id !== userData._id && 
-						<div>
-							<button onClick={reportAccount} className = "border-2 border-black rounded-md bg-red-600 text-white px-2 py-1">
-								Report Inappropriate Profile Picture
-							</button>
-						</div>}
 					</div>
 				</div>
 				<div className="bg-slate-300 h-full p-2 w-full lg:flex">
