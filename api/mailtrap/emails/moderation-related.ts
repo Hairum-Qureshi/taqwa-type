@@ -1,5 +1,5 @@
 import { sender, transport } from "../mailtrap.config";
-import { PERMANENT_BAN_ALERT_TEMPLATE, REPORT_WARNING_TEMPLATE } from "../templates";
+import { PERMANENT_BAN_ALERT_TEMPLATE, REPORT_WARNING_TEMPLATE, TEMP_BAN_TEMPLATE } from "../templates";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -21,13 +21,29 @@ export async function sendWarningEmail(user_email:string, reported_pfp:string) {
     }
 }
 
+export async function sendBanEmail(user_email:string) {
+    try {
+        const response = await transport.sendMail({
+          from: sender,
+          to: [user_email], // recipient is an array of user emails
+          subject: "Taqwa Type Permanent Ban Email",
+          html: TEMP_BAN_TEMPLATE.replace('{support_email}', SUPPORT_EMAIL),
+          category: "Warning Email"
+        });
+       
+        console.log('Email sent successfully!', response);
+    } catch (error) {
+        console.log('<mailtrap/emails/moderation-related.ts> sendWarningEmail ERROR', (error as Error).toString().red.bold);
+    }
+}
+
 export async function sendPermanentBanEmail(user_email:string) {
     try {
         const response = await transport.sendMail({
           from: sender,
           to: [user_email], // recipient is an array of user emails
-          subject: "Taqwa Type Permanent Ban Email".replace('{support_email}', SUPPORT_EMAIL),
-          html: PERMANENT_BAN_ALERT_TEMPLATE,
+          subject: "Taqwa Type Permanent Ban Email",
+          html: PERMANENT_BAN_ALERT_TEMPLATE.replace('{support_email}', SUPPORT_EMAIL),
           category: "Warning Email"
         });
        
