@@ -5,7 +5,7 @@ import { UserReport } from "../interfaces";
 import { jwtDecode, JwtDecodeOptions, JwtPayload } from "jwt-decode";
 import { UserJWTPayload } from "../interfaces";
 import checkNSFW from "../utils/content-moderator";
-import { sendWarningEmail } from "../mailtrap/emails/moderation-related";
+import { sendBanEmail, sendPermanentBanEmail, sendWarningEmail } from "../mailtrap/emails/moderation-related";
 
 const getUserProgress = async (req: Request, res: Response) => {
 	const uid = req.params.user_id;
@@ -35,7 +35,7 @@ const reportUser = async (req: Request, res: Response) => {
 	const { user_id } = req.body;
 	try {
 		const user = await User.findById({ _id: user_id }).lean();
-		if	(user) {
+		if(user) {
 			const isNSFW:boolean = await checkNSFW(user.pfp);
 			if(isNSFW) {
 				// check if the user has been warned before
@@ -46,15 +46,23 @@ const reportUser = async (req: Request, res: Response) => {
 						// let the user know they've been permanently banned
 						User.findByIdAndUpdate({ _id: user_id }, {
 							$set: {
-								hasBeenPermanentlyBanned: true							}
+								hasBeenPermanentlyBanned: true		
+							}
 						});
 						// delete their auth token
+						res.clearCookie("auth-session");
 						// send them an email
+						sendPermanentBanEmail(user.email);
 					}
 					else {
 						const ban = await User.findByIdAndUpdate(user_id, { $set: { banned: true } });
-						// send email letting the user know they've been banned
 						// delete their auth token
+						res.clearCookie("auth-session");
+
+						// send email letting the user know they've been banned
+						sendBanEmail(user.email);
+
+						res.status(200).send("Your account has been banned");
 					}
 				}
 				else {
