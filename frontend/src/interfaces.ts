@@ -85,4 +85,5 @@ export interface AuthTools {
 	showVerification: boolean
 	verifyUser: (digits:string) => void;
     forgotPassword: (email:string) => void;
+    resetPassword: (password:string, retypedPassword:string, token:string) => void;
 }
