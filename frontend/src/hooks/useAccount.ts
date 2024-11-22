@@ -52,8 +52,10 @@ export default function useAccount(): AccountHandlers {
         queryKey: ["surahs"],
         queryFn: async () => {
             const response = await axios.get("https://api.alquran.cloud/v1/surah");
+            localStorage.setItem("surahs", JSON.stringify([response.data]));
             return response.data;
         },
+        
     });
 
     function searchSurah(surah: string) {
@@ -139,9 +141,10 @@ export default function useAccount(): AccountHandlers {
     function reportAccount() {
 		axios
 			.post("http://localhost:4000/api/user/report", {
-				user_id,
-				withCredentials: true
-			})
+				user_id
+			}, {
+                withCredentials: true
+            })
 			.then(response => {
 				alert(response.data);
 			})
