@@ -62,6 +62,10 @@ const userSchema = new Schema(
 			type: Boolean,
 			default: false
 		},
+		isPermanentlyBanned: {
+			type: Boolean,
+			default: false
+		},
 		bannedDate: {
 			type: Date,
 			default: null
