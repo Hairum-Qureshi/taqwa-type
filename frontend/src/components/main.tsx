@@ -15,7 +15,7 @@ createRoot(document.getElementById("root")!).render(
 		<GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
 			<QueryClientProvider client={queryClient}>
 				<Provider store={store}>
-					<FpjsProvider loadOptions={{ apiKey: import.meta.env.FINGERPRINT_JS_API_KEY }}>
+					<FpjsProvider loadOptions={{ apiKey: import.meta.env.VITE_FINGERPRINT_JS_API_KEY }}>
 						<App />
 					</FpjsProvider>
 				</Provider>
