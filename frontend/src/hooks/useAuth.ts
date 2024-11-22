@@ -147,5 +147,27 @@ export default function useAuth(): AuthTools {
 		}
 	}
 
-	return { googleAuth, signUp, login, showVerification, verifyUser, forgotPassword };
+	async function resetPassword(password:string, retypedPassword:string, token:string) {
+		if (!password || !retypedPassword) {
+			alert("Please make sure you fill in all fields");
+		}
+		else {
+			if (password === retypedPassword) {
+				await axios.post(`http://localhost:4000/api/auth/reset-password/${token}`, {
+					password
+				}).then(response => {
+					if(response.data.message === "Password updated successfully") {
+						window.location.href = "http://localhost:5173";
+					}
+				}).catch(error => {
+					console.log(error);
+				});
+			}
+			else {
+				alert("Passwords do not match");
+			}
+		}
+	}
+
+	return { googleAuth, signUp, login, showVerification, verifyUser, forgotPassword, resetPassword };
 }
