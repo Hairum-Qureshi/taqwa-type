@@ -46,10 +46,10 @@ export default function Account() {
 							src={userData.pfp || "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"}
 							alt="User pfp"
 							referrerPolicy="no-referrer"
-							className="object-cover w-full h-full"
+							className="object-cover w-full h-full rounded-sm"
 							ref={imageRef}
 						/>
-						{user._id !== userData._id && <div className = "w-8 h-8 flex justify-center p-2 absolute top-0 right-0 bg-red-600 rounded-md opacity-30 hover:opacity-60 text-white active:opacity-85 hover:cursor-pointer" title = "Report this profile picture" onClick = {e => { e.stopPropagation(); reportAccount() }}>
+						{user._id !== userData._id && <div className = "w-8 h-8 flex justify-center p-2 absolute top-0 right-0 bg-red-600 rounded-tr-sm opacity-30 hover:opacity-60 text-white active:opacity-85 hover:cursor-pointer" title = "Report this profile picture" onClick = {e => { e.stopPropagation(); reportAccount() }}>
 							<FontAwesomeIcon icon={faFlag} />
 						</div>}
 					</div>
