@@ -16,7 +16,7 @@ import { jwtDecode } from "jwt-decode";
 import cloundinary_config from "./config/cloudinary";
 import User from "../models/user";
 import { UserJWTPayload } from "../interfaces";
-import { authenticated } from "../middleware/authentication";
+import { checkAuthStatus } from "../middleware/checkAuthStatus";
 
 const router = express.Router();
 
@@ -25,6 +25,7 @@ router.get("/:user_id/progress", getUserProgress);
 
 router.post(
 	"/upload/pfp",
+	checkAuthStatus,
 	upload.single("profile_picture"),
 	async (req, res) => {
 		const FOLDER_PATH = path.join(__dirname, "..", "/temp_images");
@@ -75,17 +76,19 @@ router.post(
 	}
 );
 
-router.post("/report", reportUser);
+router.post("/report", checkAuthStatus, reportUser);
 
 // TODO - implement middleware to double check that only the admin has access to this route; you may need to update your user model to include a 'isAdmin' property
-router.get("/:user_id/ban", banUser);
+//! checkAdminStatus -> middleware to check if the user is an admin
 
-router.get("/:user_id/email", warnUser);
+// router.get("/:user_id/ban", checkAdminStatus, banUser);
+
+// router.get("/:user_id/email", checkAdminStatus, warnUser);
 
 // router.get(":user_id/user", getUser);
 
-router.get('/current', authenticated, getCurrentUser);
+router.get('/current', checkAuthStatus, getCurrentUser);
 
-router.get('/:user_id', authenticated, getUserData);
+router.get('/:user_id', checkAuthStatus, getUserData);
 
 export default router;
