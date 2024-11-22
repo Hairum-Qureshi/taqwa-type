@@ -4,7 +4,8 @@ import User from "../../models/user";
 import bcrypt from "bcrypt";
 import VerificationCode from "../../models/verification";
 import { sendVerificationEmail, sendWelcomeEmail } from "../../mailtrap/emails/account-related";
-import { checkAndUnbanUser, checkIfUserExists, createCookie } from "./handlers";
+import { checkIfUserExists, createCookie } from "./handlers";
+import { checkAndUnbanUser } from "../auth-related/moderation/handle-bans";
 
 // TODO - need to implement code that will delete the verification code in 24hrs if the user hasn't verified their account within that time frame
 // TODO - also consider where if the user hasn't verified their email in 24hrs, delete their account info from MongoDB 
