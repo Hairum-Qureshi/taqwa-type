@@ -13,7 +13,7 @@ export async function sendVerificationEmail(user_email:string, verification_code
        
         console.log('Email sent successfully!', response);
     } catch (error) {
-        console.log('<mailtrap.config.ts> sendVerificationEmail ERROR', (error as Error).toString().red.bold);
+        console.log('<mailtrap/emails/account-related.ts> sendVerificationEmail ERROR', (error as Error).toString().red.bold);
     }
 }
 
@@ -29,7 +29,7 @@ export async function sendWelcomeEmail(user_email:string, user_id:string) {
        
         console.log('Email sent successfully!', response);
     } catch (error) {
-        console.log('<mailtrap.config.ts> sendWelcomeEmail function ERROR', (error as Error).toString().red.bold);
+        console.log('<mailtrap/mailtrap/emails/account-related.ts> sendWelcomeEmail function ERROR', (error as Error).toString().red.bold);
     }
 }
 
@@ -45,7 +45,7 @@ export async function sendPasswordResetEmail(user_email:string, token:string) {
        
         console.log('Email sent successfully!', response);
     } catch (error) {            
-        console.log('<mailtrap.config.ts> sendPasswordResetEmail function ERROR', (error as Error).toString().red.bold);
+        console.log('<mailtrap/mailtrap/emails/account-related.ts> sendPasswordResetEmail function ERROR', (error as Error).toString().red.bold);
     }
 }
 
@@ -61,6 +61,6 @@ export async function sendPasswordResetSuccessEmail(user_email: string) {
        
         console.log('Email sent successfully!', response);
     } catch (error) {            
-        console.log('<mailtrap.config.ts> sendPasswordResetSuccessEmail function ERROR', (error as Error).toString().red.bold);
+        console.log('<mailtrap/mailtrap/emails/account-related.ts> sendPasswordResetSuccessEmail function ERROR', (error as Error).toString().red.bold);
     }
 }
