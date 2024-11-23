@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { Surah } from "../../interfaces";
+import { Section, Surah } from "../../interfaces";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../LoadingSpinner";
 import useSurah from "../../hooks/useSurah";
@@ -10,8 +10,10 @@ export default function TypingPractice() {
     const [surahData, setSurahData] = useState<Surah>(surahs ? JSON.parse(surahs)[0].data[Number(surah_no) - 1] : {});
     
     const { sections } = useSurah();
-    console.log('x', sections);
 
+    console.log(sections);
+
+    // TODO - loop over 'sections'
     // TODO - if you remove "surahs" from localStorage, you'll need to refresh the page again in order to get the updated data
     
     useEffect(() => {
@@ -47,42 +49,16 @@ export default function TypingPractice() {
             </div>
             }
             <div className = "w-3/4 m-auto text-sm">
-                <div className = "border border-slate-400 rounded-md mb-2 w-full p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
-                    <div className = "flex">
-                        <p><b>Section 1:</b> Verses 1-50</p>
-                        <p className = "ml-auto">WPM: N/A</p>
-                    </div>
-                </div>
-                <div className = "border border-slate-400 rounded-md mb-2 w-full p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
-                    <div className = "flex">
-                        <p><b>Section 2:</b> Verses 51-101</p>
-                        <p className = "ml-auto">WPM: N/A</p>
-                    </div>
-                </div>
-                <div className = "border border-slate-400 rounded-md mb-2 w-full p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
-                    <div className = "flex">
-                        <p><b>Section 3:</b> Verses 102-152</p>
-                        <p className = "ml-auto">WPM: N/A</p>
-                    </div>
-                </div>
-                <div className = "border border-slate-400 rounded-md mb-2 w-full p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
-                    <div className = "flex">
-                        <p><b>Section 4:</b> Verses 153-202</p>
-                        <p className = "ml-auto">WPM: N/A</p>
-                    </div>
-                </div>
-                <div className = "border border-slate-400 rounded-md mb-2 w-full p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
-                    <div className = "flex">
-                        <p><b>Section 5:</b> Verses 203-252</p>
-                        <p className = "ml-auto">WPM: N/A</p>
-                    </div>
-                </div>
-                <div className = "border border-slate-400 rounded-md mb-2 w-full p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
-                    <div className = "flex">
-                        <p><b>Section 6:</b> Verses 253-286</p>
-                        <p className = "ml-auto">WPM: N/A</p>
-                    </div>
-                </div>
+                {sections.length > 1 ? sections.map((section:Section) => {
+                    return <Link to = {section.url}>
+                        <div className = "border border-slate-400 rounded-md mb-2 lg:w-3/4 w-full m-auto p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
+                            <div className = "flex">
+                                <p><b>Section {section.section_no}:</b> Verses {section.verses}</p>
+                                <p className = "ml-auto">WPM: N/A</p>
+                            </div>
+                        </div>
+                    </Link>
+                }) : undefined}
             </div>
         </>
     );
