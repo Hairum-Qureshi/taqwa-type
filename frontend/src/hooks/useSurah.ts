@@ -52,7 +52,6 @@ export default function useSurah(): SurahTools {
         const sections:Section[] = [];
         while (sectionCounter < numSections) {
             if (endingVerse > numVerses) {
-                console.log('ran')
                 endingVerse = endingVerse - (endingVerse - numVerses);
             }
 
