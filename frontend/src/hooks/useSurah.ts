@@ -8,7 +8,6 @@ export default function useSurah(): SurahTools {
     const { surah_no, ayahs, section_no } = useParams();
     const surahs = localStorage.getItem("surahs");
     const [surahData, setSurahData] = useState<Surah>(surahs ? JSON.parse(surahs)[0].data[Number(surah_no) - 1] : {});
-    const numSections = Math.floor(surahData.numberOfAyahs / 50) + (surahData.numberOfAyahs % 50 >= 20 ? 1 : 0);
     const [sections, setSections] = useState<Section[]>([]);
 
     useEffect(() => {
