@@ -3,12 +3,24 @@ import { useEffect, useState } from "react";
 import { Surah, Verse } from "../interfaces";
 import { useParams } from "react-router-dom";
 
-export default function useSurah() {
+interface Section {
+    section_no: number,
+    verses: string, // etc. in the form: 1-55
+    url: string
+}
+
+interface SurahTools {
+    englishSurahData: Verse[];
+    sections: Section[]
+}
+
+export default function useSurah(): SurahTools {
     const [englishSurahData, setEnglishSurahData] = useState<Verse[]>([]);
     const { surah_no, ayahs, section_no } = useParams();
     const surahs = localStorage.getItem("surahs");
     const [surahData, setSurahData] = useState<Surah>(surahs ? JSON.parse(surahs)[0].data[Number(surah_no) - 1] : {});
     const numSections = Math.floor(surahData.numberOfAyahs / 50) + (surahData.numberOfAyahs % 50 >= 20 ? 1 : 0);
+    const [sections, setSections] = useState<Section[]>([]);
 
     useEffect(() => {
         const getSurahInfo = async () => {
@@ -33,19 +45,13 @@ export default function useSurah() {
         getSurahInfo();
     }, [surah_no]); 
 
-    interface Section {
-        section_no: number,
-        verses: string, // etc. in the form: 1-55
-        url: string
-    }
-
     // Algorithm that will handle breaking down a surah into chunks
     async function makeSections() {
         let sectionCounter = 0;
         let currentVerse = 1;
-        const numSections = Math.floor(surahData.numberOfAyahs / 50) + (surahData.numberOfAyahs % 50 >= 20 ? 1 : 0);
+        const numSections = Math.ceil(surahData.numberOfAyahs / 50);
         let endingVerse = 50;
-        const englishSurahRes = await axios.get(`https://raw.githubusercontent.com/risan/quran-json/refs/heads/main/data/editions/en.json`);
+        // const englishSurahRes = await axios.get(`https://raw.githubusercontent.com/risan/quran-json/refs/heads/main/data/editions/en.json`);
         const numVerses = surahData.numberOfAyahs;
 
         // interface Chunk {
@@ -55,21 +61,25 @@ export default function useSurah() {
         //         verse: string
         //     }]
         // }
-
         const sections:Section[] = [];
         while (sectionCounter < numSections) {
+            if (endingVerse > numVerses) {
+                console.log('ran')
+                endingVerse = endingVerse - (endingVerse - numVerses);
+            }
+
             sections.push({
                 section_no: sectionCounter + 1,
-                verses: `${currentVerse}-${Math.min(endingVerse, numVerses)}`,
+                verses: `${currentVerse}-${endingVerse}`,
                 url: ""
             });
-
+        
             currentVerse += 50;
             endingVerse += 50;
             sectionCounter++;
         }
 
-        console.log(sections);
+        setSections(sections);
 
         // const chunks: Chunk[] = [];
         // while(sectionCounter < numSections) {
@@ -87,7 +97,9 @@ export default function useSurah() {
         // }
     }
 
-    makeSections();
+    useEffect(() => {
+        makeSections();
+    }, [surah_no]);
 
-    return { englishSurahData };
+    return { englishSurahData, sections };
 }
