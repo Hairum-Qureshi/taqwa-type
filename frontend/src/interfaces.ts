@@ -87,3 +87,14 @@ export interface AuthTools {
     forgotPassword: (email:string) => void;
     resetPassword: (password:string, retypedPassword:string, token:string) => void;
 }
+
+export interface Section {
+    section_no: number,
+    verses: string, // etc. in the form: 1-55
+    url: string
+}
+
+export interface SurahTools {
+    englishSurahData: Verse[];
+    sections: Section[]
+}
