@@ -8,7 +8,7 @@ import SurahInfo from "./quran-related/SurahInfo";
 import Reference from "./quran-related/Reference";
 import About from "./About";
 import TypingPracticeSection from "./typing-related/TypingPracticeSection";
-import PasswordReset from "./PasswordReset";
+import PasswordReset from "./auth-related/PasswordReset";
 
 export default function App() {
 	return (
@@ -18,7 +18,7 @@ export default function App() {
 				<Route path="/" element={<Home />} />
 				<Route path="/user/:user_id/account" element={<Account />} />
 				<Route path="/practice/surah/:surah_no" element={<TypingPractice />} />
-				<Route path="/practice/surah/:surah_no/section/:section_no" element={<TypingPracticeSection />} />
+				<Route path="/practice/surah/:surah_no/section/:section_no/:surah_no" element={<TypingPracticeSection />} />
 				<Route path="/practice/surah/:surah_no/info" element={<SurahInfo />} />
 				<Route path="/:surah_no/:ayahs" element={<Reference />} />
 				<Route path="/about" element={<About />} />
