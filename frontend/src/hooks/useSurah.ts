@@ -1,18 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Surah, Verse } from "../interfaces";
+import { Section, Surah, SurahTools, Verse } from "../interfaces";
 import { useParams } from "react-router-dom";
-
-interface Section {
-    section_no: number,
-    verses: string, // etc. in the form: 1-55
-    url: string
-}
-
-interface SurahTools {
-    englishSurahData: Verse[];
-    sections: Section[]
-}
 
 export default function useSurah(): SurahTools {
     const [englishSurahData, setEnglishSurahData] = useState<Verse[]>([]);
