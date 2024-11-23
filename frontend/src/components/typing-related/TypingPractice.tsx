@@ -30,7 +30,7 @@ export default function TypingPractice() {
         }
     }, [surah_no, surahs]);
 
-    const numSections = Math.ceil(surahData.numberOfAyahs / 50);
+    const numSections = Math.ceil(surahData.numberOfAyahs / 20);
 
     return (
         <>
@@ -48,7 +48,7 @@ export default function TypingPractice() {
                 </p>
             </div>
             }
-            <div className = "w-3/4 m-auto text-sm">
+            <div className = "w-3/4 m-auto text-sm my-10">
                 {sections.length > 1 ? sections.map((section:Section) => {
                     return <Link to = {section.url}>
                         <div className = "border border-slate-400 rounded-md mb-2 lg:w-3/4 w-full m-auto p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
