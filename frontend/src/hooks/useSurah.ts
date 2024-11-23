@@ -51,6 +51,7 @@ export default function useSurah(): SurahTools {
         // }
         const sections:Section[] = [];
         while (sectionCounter < numSections) {
+
             if (endingVerse > numVerses) {
                 endingVerse = endingVerse - (endingVerse - numVerses);
             }
@@ -58,7 +59,7 @@ export default function useSurah(): SurahTools {
             sections.push({
                 section_no: sectionCounter + 1,
                 verses: `${currentVerse}-${endingVerse}`,
-                url: ""
+                url: `/practice/surah/${surah_no}/section/${sectionCounter + 1}`
             });
         
             currentVerse += 50;
