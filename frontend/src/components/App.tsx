@@ -18,7 +18,7 @@ export default function App() {
 				<Route path="/" element={<Home />} />
 				<Route path="/user/:user_id/account" element={<Account />} />
 				<Route path="/practice/surah/:surah_no" element={<TypingPractice />} />
-				<Route path="/practice/surah/:surah_no/section/:section_no/:surah_no" element={<TypingPracticeSection />} />
+				<Route path="/practice/surah/:surah_no/section/:section_no/:ayahs" element={<TypingPracticeSection />} />
 				<Route path="/practice/surah/:surah_no/info" element={<SurahInfo />} />
 				<Route path="/:surah_no/:ayahs" element={<Reference />} />
 				<Route path="/about" element={<About />} />
