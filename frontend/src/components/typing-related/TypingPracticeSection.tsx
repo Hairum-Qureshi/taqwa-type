@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import useSurah from "../../hooks/useSurah"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Verse } from "../../interfaces";
 
 export default function TypingPracticeSection() {
 
@@ -15,35 +16,76 @@ export default function TypingPracticeSection() {
   const [timer, setTimer] = useState(0);
   const [numMistakes, setNumMistakes] = useState(0);
   const [wpm, setWPM] = useState(1);
-  const [startTimer, setStartTimer] = useState(false);
+  const [startTimer, setStartTimer] = useState(true); // TODO - set to false
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isTyping, setIsTyping] = useState(true); // TODO - set to false
+  const [charIndex, setCharIndex] = useState(0);
+  const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
-    
-    if (startTimer) {
-      setTimeout(() => {
-        setTimer((prev) => prev + 1);
-      }, 1000);
+    if (inputRef.current) inputRef.current.focus();
+  }, []);
+
+  function handleChange(e) {
+    // TODO - see if you can implement an accuracy param too
+    if (charRefs.current) {
+      const characters = charRefs.current; 
+      let currentChar = charRefs.current[charIndex]; // stores current span tag
+      let typedChar = e.target.value.slice(-1); // takes the last character typed and stores it
+      if (charIndex < characters.length && startTimer) { // TODO - make sure startTimer is true
+        if (!isTyping) setIsTyping(true);
+        if (currentChar && typedChar === currentChar.textContent) { // extracts text from that span tag
+          setCharIndex(charIndex + 1);
+        } 
+        else {
+          // TODO - see if you're still able to go back, if you can't, implement a feature to allow you to go back
+        
+          setCharIndex(charIndex + 1);
+          setNumMistakes(numMistakes + 1);
+        }
+
+        if (charIndex === characters.length - 1) setIsTyping(false); // completed the section
+      }
+      // if (e.key === 'Backspace') { // works with onKeyUp, however, sometimes skips over characters for some reason
+      //   setCharIndex(charIndex - 1 < 0 ? 0 : charIndex - 1);
+      //   currentChar = charRefs.current[charIndex - 1];
+      // }
+      else {
+        setIsTyping(false);
+      }
     }
+  }
+
+  // useEffect(() => {
     
-  }, [startTimer, timer]);
+  //   if (startTimer) {
+  //     setTimeout(() => {
+  //       setTimer((prev) => prev + 1);
+  //     }, 1000);
+  //   }
+    
+  // }, [startTimer, timer]);
+
+  const allChars = englishSurahData.flatMap((surah: Verse) =>
+    ` (${surah.verse}) ${surah.text}`.split("")
+  );
 
   return (
     <div>
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
           <h1 className = "text-2xl font-semibold text-center my-5">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
-          <input type="text" className = "absolute outline-none bg-transparent" />
-          {englishSurahData.map((surah, index) => {
-          const verseToType = ` (${surah.verse}) ${surah.text}`;
-          return (
-            <div key={index} className="mb-4 inline">
-              {verseToType.split("").map((char, idx) => (
-                <span key={`${index}-${idx}`} className="text-slate-400">
-                  {char}
-                </span>
-              ))}
-            </div>
-          );
-        })}
+          <input type="text" className = "absolute opacity-0 outline-none bg-transparent" ref = {inputRef} onChange = {handleChange} />
+          <div className = "tracking-widest">
+            {allChars.map((char, index) => (
+              <span
+                key={index}
+                className={`text-slate-500 ${index === charIndex ? "border-b-2 border-b-black w-10 text-blue-700" : ""}`}
+                ref={(e) => (charRefs.current[index] = e)}
+              >
+                {char}
+              </span>
+            ))}
+          </div>
         <div className = "flex justify-center">
         <button className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[Number(section_no)]?.verses}`}>Next Section</button>
         </div>
