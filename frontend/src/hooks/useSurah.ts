@@ -37,7 +37,7 @@ export default function useSurah(): SurahTools {
     async function makeSections() {
         let sectionCounter = 0;
         let currentVerse = 1;
-        const addingFactor = 20;
+        const addingFactor = 15;
         const numSections = Math.ceil(surahData.numberOfAyahs / addingFactor);
         let endingVerse = addingFactor;
         // const englishSurahRes = await axios.get(`https://raw.githubusercontent.com/risan/quran-json/refs/heads/main/data/editions/en.json`);
