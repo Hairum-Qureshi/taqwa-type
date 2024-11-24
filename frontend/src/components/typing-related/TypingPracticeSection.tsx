@@ -105,7 +105,7 @@ export default function TypingPracticeSection() {
   // TODO - make sure to let the user know that when they press the button, they have to press the text to start (see if you can avoid this)
 
   return (
-    <div className = "bg-slate-900 h-screen">
+    <div className = "bg-slate-900 h-full min-h-screen">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
       <button className = "text-white" onClick = {() => setStartTimer(true)}>Press to start typing!</button>
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
