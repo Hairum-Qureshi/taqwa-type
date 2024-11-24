@@ -12,8 +12,9 @@ export default function TypingPracticeSection() {
   // TODO - consider adding the WPM in a div that moves down as your scroll down so that users are bale to see their WPM and accuracy as they type
   // OR BETTER YET - have it display at the end
   // TODO - add a restart button
+  // ! Bug - there's a minor bug where when the results are appearing, the timer updates for an extra second
 
-  const [timer, setTimer] = useState(1);
+  const [timer, setTimer] = useState(0);
   const [numMistakes, setNumMistakes] = useState(0);
   const [wpm, setWPM] = useState(0);
   const [startTimer, setStartTimer] = useState(false); // TODO - set to false
@@ -46,7 +47,6 @@ export default function TypingPracticeSection() {
           // TODO - see if you're still able to go back, if you can't, implement a feature to allow you to go back        
           setCharIndex(charIndex + 1);
           setNumMistakes(numMistakes + 1);
-          console.log(currentChar, typedChar === currentChar?.textContent)
           correctAndIncorrect[charIndex] = "text-red-500";
         }
 
@@ -81,24 +81,16 @@ export default function TypingPracticeSection() {
   }, [startTimer, timer]);
 
   useEffect(() => {
-
+    
     if(!isTyping) {
       const correctChars = charIndex - numMistakes;
       let calcWPM = Math.round((correctChars / 5 / timer) * 60);
       calcWPM = calcWPM < 0 || !calcWPM || calcWPM === Infinity ? 0 : calcWPM;
 
-      const numCorrect = correctAndIncorrect.reduce((accumulator, currentValue) => {
-        return currentValue === "text-green-600" ? accumulator + 1 : accumulator;
-      }, 0);
-
-      const percentageAccuracy = numCorrect / correctAndIncorrect.length;
+      const percentageAccuracy = correctChars / correctAndIncorrect.length;
 
       setWPM(calcWPM);
       setAccuracy(percentageAccuracy);
-
-      console.log('time:', timer);
-      console.log('wpm', wpm);
-      console.log('accuracy', `${accuracy || 0}%`);
 
     }
 
@@ -113,7 +105,7 @@ export default function TypingPracticeSection() {
   // TODO - make sure to let the user know that when they press the button, they have to press the text to start (see if you can avoid this)
 
   return (
-    <div className = "bg-slate-900 min-h-full max-h-screen">
+    <div className = "bg-slate-900 h-screen">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
       <button className = "text-white" onClick = {() => setStartTimer(true)}>Press to start typing!</button>
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
@@ -135,7 +127,7 @@ export default function TypingPracticeSection() {
           <div>
             <p className = "text-yellow-300">Accuracy: {Math.round(accuracy * 100) || 0}%</p>
             <p className = "text-yellow-300">WPM: {wpm}</p>
-            <p className = "text-yellow-300">Time: {wpm} seconds</p>
+            <p className = "text-yellow-300">Time: {timer} seconds</p>
           </div>
         </div>}
         <div className = "flex justify-center">
