@@ -13,17 +13,21 @@ export default function TypingPracticeSection() {
   // OR BETTER YET - have it display at the end
   // TODO - add a restart button
 
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(1);
   const [numMistakes, setNumMistakes] = useState(0);
-  const [wpm, setWPM] = useState(1);
+  const [wpm, setWPM] = useState(0);
   const [startTimer, setStartTimer] = useState(true); // TODO - set to false
   const inputRef = useRef<HTMLInputElement>(null);
   const [isTyping, setIsTyping] = useState(true); // TODO - set to false
   const [charIndex, setCharIndex] = useState(0);
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [correctAndIncorrect, setCorrectAndIncorrect] = useState<string[]>([]);
+
+  // TODO - need to figure out why the first character doesn't start with an underline on page load
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
+    setCorrectAndIncorrect(Array(charRefs.current.length).fill(""));
   }, []);
 
   function handleChange(e) {
@@ -36,12 +40,13 @@ export default function TypingPracticeSection() {
         if (!isTyping) setIsTyping(true);
         if (currentChar && typedChar === currentChar.textContent) { // extracts text from that span tag
           setCharIndex(charIndex + 1);
+          correctAndIncorrect[charIndex] = "text-green-600";
         } 
         else {
-          // TODO - see if you're still able to go back, if you can't, implement a feature to allow you to go back
-        
+          // TODO - see if you're still able to go back, if you can't, implement a feature to allow you to go back        
           setCharIndex(charIndex + 1);
           setNumMistakes(numMistakes + 1);
+          correctAndIncorrect[charIndex] = "text-red-500";
         }
 
         if (charIndex === characters.length - 1) setIsTyping(false); // completed the section
@@ -71,15 +76,15 @@ export default function TypingPracticeSection() {
   );
 
   return (
-    <div>
+    <div className = "bg-slate-900">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
-          <h1 className = "text-2xl font-semibold text-center my-5">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
+          <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
           <input type="text" className = "absolute opacity-0 outline-none bg-transparent" ref = {inputRef} onChange = {handleChange} />
           <div className = "tracking-widest">
             {allChars.map((char, index) => (
               <span
                 key={index}
-                className={`text-slate-500 ${index === charIndex ? "border-b-2 border-b-black w-10 text-blue-700" : ""}`}
+                className={`text-slate-500 ${index === charIndex ? "border-b-2 border-b-white w-10 text-white" : ""} ${correctAndIncorrect[index]}`}
                 ref={(e) => (charRefs.current[index] = e)}
               >
                 {char}
