@@ -133,7 +133,7 @@ export default function TypingPracticeSection() {
           <div className = "text-center mt-5">
           <h2 className = "text-white font-semibold text-xl">Your Stats For This Section</h2>
           <div>
-            <p className = "text-yellow-300">Accuracy: {accuracy * 100 || 0}%</p>
+            <p className = "text-yellow-300">Accuracy: {Math.round(accuracy * 100) || 0}%</p>
             <p className = "text-yellow-300">WPM: {wpm}</p>
             <p className = "text-yellow-300">Time: {wpm} seconds</p>
           </div>
