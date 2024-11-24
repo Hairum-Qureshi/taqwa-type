@@ -107,9 +107,9 @@ export default function TypingPracticeSection() {
   return (
     <div className = "bg-slate-900 h-full min-h-screen">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
-      <button className = "text-white" onClick = {() => setStartTimer(true)}>Press to start typing!</button>
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
-          <input type="text" className = "absolute opacity-0 outline-none bg-transparent" ref = {inputRef} onChange = {handleChange} />
+          <div className = "text-white text-center -mt-3 px-2 border border-slate-500 rounded-md bg-slate-700 hover:cursor-pointer" onClick = {() => setStartTimer(true)}>{!startTimer ? "Press To Start Typing" : "Tap the first word and begin typing!"}</div>
+          <input type = "text" spellCheck = "false" autoCorrect = "off" autoComplete = "off" className = "w-full absolute opacity-0 outline-none bg-transparent" ref = {inputRef} onChange = {handleChange} />
           <div className = "tracking-widest">
             {allChars.map((char, index) => (
               <span
