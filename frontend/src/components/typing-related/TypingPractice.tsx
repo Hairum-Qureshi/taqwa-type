@@ -30,7 +30,7 @@ export default function TypingPractice() {
         }
     }, [surah_no, surahs]);
 
-    const numSections = Math.ceil(surahData.numberOfAyahs / 20);
+    const numSections = Math.ceil(surahData.numberOfAyahs / 15);
 
     return (
         <>
