@@ -57,7 +57,7 @@ export default function useSurah(): SurahTools {
                 endingVerse = endingVerse - (endingVerse - numVerses);
             }
 
-            const verses = `${currentVerse}-${endingVerse}`;
+            const verses = `${currentVerse === endingVerse ? endingVerse : `${currentVerse}-${endingVerse}`}`;
             sections.push({
                 section_no: sectionCounter + 1,
                 verses,
