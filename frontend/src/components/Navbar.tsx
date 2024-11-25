@@ -1,8 +1,7 @@
-import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import useAccount from "../hooks/useAccount";
-import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightFromBracket, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "../features/authentication/authSlice";
 import { useDispatch } from "react-redux";
 
@@ -22,6 +21,11 @@ export default function Navbar() {
 				<h1 className="text-xl">Taqwa Type</h1>
 			</Link>
 			{user && <div className = "text-xl ml-auto hover:cursor-pointer flex">
+				<Link to = "/users">
+					<div className = "rounded-md p-0.5 w-10 text-center mr-2">
+						<FontAwesomeIcon icon={faUsers} />
+					</div>
+				</Link>
 				<Link to={`/user/${user._id}/account`}>
 					<div className = "rounded-md p-0.5 w-10 text-center mr-2">
 						<FontAwesomeIcon icon={faUser} />
