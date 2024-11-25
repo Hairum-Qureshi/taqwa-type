@@ -9,49 +9,33 @@ export default function TypingPracticeSection() {
 
   const { surah_no, section_no } = useParams();
 
-  // TODO - consider adding the WPM in a div that moves down as your scroll down so that users are bale to see their WPM and accuracy as they type
-  // OR BETTER YET - have it display at the end
-  // TODO - add a restart button
   // ! Bug - there's a minor bug where when the results are appearing, the timer updates for an extra second
 
   const [timer, setTimer] = useState(0);
   const [numMistakes, setNumMistakes] = useState(0);
   const [wpm, setWPM] = useState(0);
-  const [startTimer, setStartTimer] = useState(false); // TODO - set to false
+  const [startTimer, setStartTimer] = useState(false); 
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isTyping, setIsTyping] = useState(false); // TODO - set to false
+  const [isTyping, setIsTyping] = useState(false); 
   const [charIndex, setCharIndex] = useState(0);
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [correctAndIncorrect, setCorrectAndIncorrect] = useState<string[]>([]);
   const [accuracy, setAccuracy] = useState(0);
   const parentRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<number>();
-  const [scroll, setScroll] = useState<boolean>(false);
-
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
     setCorrectAndIncorrect(Array(charRefs.current.length).fill(""));
   }, []);
 
-  useEffect(() => setHeight(parentRef.current?.clientHeight), []);
-
-  // const scrollToBottom = () => {
-  //   charRefs.current?.scrollIntoView(true);
-  // };
-
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [scroll, height]);
-
+  // TODO - add a type for 'e'
   function handleChange(e) {
-    // TODO - see if you can implement an accuracy param too
     if (charRefs.current) {
       const characters = charRefs.current; 
       const currentChar = charRefs.current[charIndex]; // stores current span tag
       const typedChar = e.target.value.slice(-1); // takes the last character typed and stores it
 
-      if (charIndex < characters.length && startTimer) { // TODO - make sure startTimer is true
+      if (charIndex < characters.length && startTimer) { 
         if (!isTyping) setIsTyping(true);
         if (currentChar && typedChar === currentChar.textContent) { // extracts text from that span tag
           setCharIndex(charIndex + 1);
@@ -64,10 +48,10 @@ export default function TypingPracticeSection() {
           correctAndIncorrect[charIndex] = "text-red-500";
         }
 
-        if (charIndex === characters.length - 1) {
+        if (charIndex === characters.length - 1) { // completed the section
           setIsTyping(false);
           setStartTimer(false);
-        } // completed the section
+        } 
       }
       // if (e.key === 'Backspace') { // works with onKeyUp, however, sometimes skips over characters for some reason
       //   setCharIndex(charIndex - 1 < 0 ? 0 : charIndex - 1);
@@ -79,10 +63,8 @@ export default function TypingPracticeSection() {
     }
   }
 
-  // TODO - you might wanna implement some logic to detect when the user reaches the end of the section and once they have, stop the timer
   // TODO - check why in mobile view, there's a sliver of a white background at the top
-
-  // ! BUG - it seems like if you press the text or something, you have to refresh the page to start over because it 'freezes' and scrolling down as you type is an issue also
+  // TODO - make sure to add a note that if they accidentally press anywhere else, they just need to press the first line of text
 
   useEffect(() => {
     
@@ -105,14 +87,13 @@ export default function TypingPracticeSection() {
 
       setWPM(calcWPM);
       setAccuracy(percentageAccuracy);
-
     }
 
   }, [isTyping]);
 
   const allChars = englishSurahData.flatMap((surah: Verse, index: number) => 
     `${index === 0 ? `(${surah.verse}) ${surah.text}` : ` (${surah.verse}) ${surah.text}`}`.split("")
-  );  
+  );   
 
   // TODO - figure out how to make the entire screen with the color slate-900
   // TODO - make sure to let the user know that when they press the button, they have to press the text to start (see if you can avoid this)
@@ -120,15 +101,15 @@ export default function TypingPracticeSection() {
 
   return (
     <div className = "bg-slate-900 h-full min-h-screen">
-      <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
+      <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative" ref = {parentRef}>
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
           <div className = "text-white text-center px-2 border border-slate-500 rounded-md bg-slate-700 hover:cursor-pointer my-4" onClick = {() => setStartTimer(true)}>{!startTimer ? "Press To Start Typing" : "Tap the first line of text and begin typing!"}</div>
           <input type = "text" spellCheck = "false" autoCorrect = "off" autoComplete = "off" className = "w-full absolute opacity-0 outline-none bg-transparent" ref = {inputRef} onChange = {handleChange} />
-          <div className = "tracking-widest" ref={parentRef}>
+          <div className = "tracking-widest text-slate-500">
             {allChars.map((char, index) => (
               <span
                 key={index}
-                className={`text-slate-500 ${index === charIndex ? "border-b-2 border-b-white w-10 text-white" : ""} ${correctAndIncorrect[index]}`}
+                className={`${index === charIndex ? "border-b-2 border-b-white w-10 text-white" : ""} ${correctAndIncorrect[index]}`}
                 ref={(e) => (charRefs.current[index] = e)}
               >
                 {char}
