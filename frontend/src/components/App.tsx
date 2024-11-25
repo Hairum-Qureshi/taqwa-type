@@ -9,6 +9,7 @@ import Reference from "./quran-related/Reference";
 import About from "./About";
 import TypingPracticeSection from "./typing-related/TypingPracticeSection";
 import PasswordReset from "./auth-related/PasswordReset";
+import Users from "./Users";
 
 export default function App() {
 	return (
@@ -23,6 +24,7 @@ export default function App() {
 				<Route path="/:surah_no/:ayahs" element={<Reference />} />
 				<Route path="/about" element={<About />} />
 				<Route path="/password-reset/:token" element={<PasswordReset />} />
+				<Route path="/users" element={<Users />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</BrowserRouter>
