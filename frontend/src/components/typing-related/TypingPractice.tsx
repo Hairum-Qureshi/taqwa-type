@@ -53,7 +53,7 @@ export default function TypingPractice() {
                     return <Link to = {section.url}>
                        <div className="border border-slate-400 rounded-md mb-2 lg:w-3/4 w-full mx-auto p-3 bg-slate-100 hover:cursor-pointer hover:bg-slate-200 active:bg-slate-300">
                         <div className="flex items-center justify-between text-center">
-                            <p><b>Section {section.section_no}:</b> Verses {section.verses}</p>
+                            <p><b>Section {section.section_no}:</b> Verse{section.verses.split("-").length === 1 ? "" : "s"} {section.verses}</p>
                             <p className="flex items-center space-x-4">
                             <span><b>Latest time:</b> 00:00</span>
                             <span className="text-xl font-extralight">|</span>
