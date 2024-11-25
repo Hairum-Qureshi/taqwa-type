@@ -39,7 +39,7 @@ export default function TypingPractice() {
                     <div className = "m-5 font-semibold text-slate-500 p-2 border border-slate-500 bg-gray-100 rounded-md hover:bg-slate-200 active:bg-slate-300 active:text-slate-600">Click here to read and learn about Surah {surahData.englishName}</div>
                 </Link>
             }
-            {surahData.numberOfAyahs >= 50 && numSections > 1 &&
+            {surahData.numberOfAyahs >= 15 && numSections > 1 &&
             <div className="m-5 border border-sky-400 bg-sky-100 p-2 rounded-md text-sky-700 font-semibold">
                 <p>
                     This chapter has {surahData.numberOfAyahs} verses and is pretty lengthy so it will be split into&nbsp;{numSections} sections. 
