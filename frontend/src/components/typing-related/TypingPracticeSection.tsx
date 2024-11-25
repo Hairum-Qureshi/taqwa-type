@@ -24,11 +24,25 @@ export default function TypingPracticeSection() {
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [correctAndIncorrect, setCorrectAndIncorrect] = useState<string[]>([]);
   const [accuracy, setAccuracy] = useState(0);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number>();
+  const [scroll, setScroll] = useState<boolean>(false);
+
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
     setCorrectAndIncorrect(Array(charRefs.current.length).fill(""));
   }, []);
+
+  useEffect(() => setHeight(parentRef.current?.clientHeight), []);
+
+  // const scrollToBottom = () => {
+  //   charRefs.current?.scrollIntoView(true);
+  // };
+
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [scroll, height]);
 
   function handleChange(e) {
     // TODO - see if you can implement an accuracy param too
@@ -101,16 +115,15 @@ export default function TypingPracticeSection() {
   );  
 
   // TODO - figure out how to make the entire screen with the color slate-900
-  // TODO - when the stats are displayed, make sure to convert the seconds to minutes if they exceed 60!
   // TODO - make sure to let the user know that when they press the button, they have to press the text to start (see if you can avoid this)
 
   return (
     <div className = "bg-slate-900 h-full min-h-screen">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
-          <div className = "text-white text-center -mt-3 px-2 border border-slate-500 rounded-md bg-slate-700 hover:cursor-pointer" onClick = {() => setStartTimer(true)}>{!startTimer ? "Press To Start Typing" : "Tap the first word and begin typing!"}</div>
+          <div className = "text-white text-center -mt-3 px-2 border border-slate-500 rounded-md bg-slate-700 hover:cursor-pointer" onClick = {() => setStartTimer(true)}>{!startTimer ? "Press To Start Typing" : "Tap the first line of text and begin typing!"}</div>
           <input type = "text" spellCheck = "false" autoCorrect = "off" autoComplete = "off" className = "w-full absolute opacity-0 outline-none bg-transparent" ref = {inputRef} onChange = {handleChange} />
-          <div className = "tracking-widest">
+          <div className = "tracking-widest" ref={parentRef}>
             {allChars.map((char, index) => (
               <span
                 key={index}
@@ -127,7 +140,10 @@ export default function TypingPracticeSection() {
           <div>
             <p className = "text-yellow-300">Accuracy: {Math.round(accuracy * 100) || 0}%</p>
             <p className = "text-yellow-300">WPM: {wpm}</p>
-            <p className = "text-yellow-300">Time: {timer} seconds</p>
+            <p className="text-yellow-300">
+              Time:&nbsp;
+              {`${Math.floor(timer / 60).toString().padStart(2, '0')}:${(timer % 60).toString().padStart(2, '0')}`}
+            </p>
           </div>
         </div>}
         <div className = "flex justify-center">
