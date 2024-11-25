@@ -59,7 +59,7 @@ export default function TypingPractice() {
                             <span className="text-xl font-extralight">|</span>
                             <span><b>Best time:</b> 00:00</span>
                             <span className="text-xl font-extralight">|</span>
-                            <b>WPM:</b> N/A
+                            <b>WPM:</b>&nbsp;N/A
                             </p>
                         </div>
                         </div>
