@@ -12,16 +12,16 @@ export default function Users() {
         <div className = "mt-2">
             <h3>Sort By:</h3>
             <div className="flex text-sm">
-                <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer">
+                <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
                     Words/Min (WPM)
                 </div>
-                <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer">
+                <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
                     Accuracy
                 </div>
-                <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer">
+                <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
                     Surahs Practiced
                 </div>
-                <div className="p-1 border border-black rounded-md flex-1 text-center hover:cursor-pointer">
+                <div className="p-1 border border-black rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
                     Date Joined
                 </div>
             </div>
