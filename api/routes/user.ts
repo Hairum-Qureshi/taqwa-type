@@ -1,20 +1,18 @@
 import express from "express";
 import {
-    getAllUsers,
 	getCurrentUser,
 	getUserData,
 	getUserProgress,
 	reportUser,
+    getAllUsers
 } from "../controllers/user";
 import upload from "./config/handle_uploads";
 import fs from "fs";
 import path from "path";
 import colors from "colors";
 import { v2 as cloudinary } from "cloudinary";
-import { jwtDecode } from "jwt-decode";
 import cloundinary_config from "./config/cloudinary";
 import User from "../models/user";
-import { UserJWTPayload } from "../interfaces";
 import { checkAuthStatus } from "../middleware/checkAuthStatus";
 import isNSFW from "../utils/content-moderator";
 
@@ -94,8 +92,8 @@ router.post("/report", checkAuthStatus, reportUser);
 
 router.get('/current', checkAuthStatus, getCurrentUser);
 
-router.get('/:user_id', checkAuthStatus, getUserData);
-
 router.get('/all-users', checkAuthStatus, getAllUsers);
+
+router.get('/:user_id', checkAuthStatus, getUserData);
 
 export default router;
