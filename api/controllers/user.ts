@@ -89,67 +89,6 @@ const reportUser = async (req: Request, res: Response) => {
 	}
 };
 
-// const banUser = async (req: Request, res: Response) => {
-// 	const { user_id } = req.params;
-
-// 	// TODO - consider implementing helper function that will find the user and return the user data instead of repeating the same code over and over again
-
-// 	try {
-// 		const user = await User.findById({ _id: user_id }).lean();
-// 		if (user) {
-// 			const { full_name, email, pfp } = user;
-
-// 			if (user.isBanned) {
-// 				res.send("<h1>User is already banned</h1>");
-// 			} else {
-// 				User.findByIdAndUpdate(user_id, {
-// 					isBanned: true,
-// 					bannedDate: new Date(),
-// 					hasBeenBannedBefore: true
-// 				}).then(() => {
-// 					sendBanEmail(full_name, email, pfp);
-// 					res.send("<h1>User successfully banned</h1>");
-// 				});
-// 			}
-
-// 			// TODO - delete that user's cookie
-
-// 			// Send email to user when their account is unbanned
-// 		}
-// 	} catch (error) {
-// 		console.log(
-// 			"There was an error (user.ts file, banUser function)",
-// 			(error as Error).toString().red.bold
-// 		);
-// 	}
-// };
-
-// const warnUser = async (req: Request, res: Response) => {
-// 	const { user_id } = req.params;
-// 	try {
-// 		const user = await User.findById({ _id: user_id });
-
-// 		if (user) {
-// 			User.findByIdAndUpdate(user_id, {
-// 				hasBeenWarnedBefore: true
-// 			}).then(() => {
-// 				// TODO - schedule email reminder to send to admin to check if the user changed their pfp or not
-// 				sendWarningEmail(user.email, user.full_name);
-// 				res
-// 					.status(200)
-// 					.send(
-// 						"<h1>Warning email has been sent to user. You will also receive a follow-up email in 2 days that will contain information about this user to see if they have changed their profile picture within these 2 days.</h1>"
-// 					);
-// 			});
-// 		}
-// 	} catch (error) {
-// 		console.log(
-// 			"There was an error (user.ts file, emailUser function)",
-// 			(error as Error).toString().red.bold
-// 		);
-// 	}
-// };
-
 async function returnUserData(uid:string) {
 	// use this as a helper function to return the user data by ID from Mongo to prevent duplicate code
 }
@@ -170,6 +109,8 @@ const getUserData = async (req:Request, res:Response) => {
 	}
 }
 
-// export { getUserProgress, reportUser, banUser, warnUser, getCurrentUser, getUserData };
+const getAllUsers = async (req:Request, res:Response) => {
 
-export { getUserProgress, reportUser, getCurrentUser, getUserData };
+}
+
+export { getUserProgress, reportUser, getCurrentUser, getUserData, getAllUsers };
