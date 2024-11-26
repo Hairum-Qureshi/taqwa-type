@@ -1,11 +1,10 @@
 import express from "express";
 import {
-	// banUser,
+    getAllUsers,
 	getCurrentUser,
 	getUserData,
 	getUserProgress,
 	reportUser,
-	// warnUser
 } from "../controllers/user";
 import upload from "./config/handle_uploads";
 import fs from "fs";
@@ -96,5 +95,7 @@ router.post("/report", checkAuthStatus, reportUser);
 router.get('/current', checkAuthStatus, getCurrentUser);
 
 router.get('/:user_id', checkAuthStatus, getUserData);
+
+router.get('/all-users', checkAuthStatus, getAllUsers);
 
 export default router;
