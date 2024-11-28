@@ -7,6 +7,8 @@ import { UserJWTPayload } from "../interfaces";
 import checkNSFW from "../utils/content-moderator";
 import { sendBanEmail, sendPermanentBanEmail, sendWarningEmail } from "../mailtrap/emails/moderation-related";
 
+const SELECT_PARAMS = "_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt";
+
 const getUserProgress = async (req: Request, res: Response) => {
 	const uid = req.params.user_id;
 	try {
@@ -95,12 +97,12 @@ async function returnUserData(uid:string) {
 
 const getCurrentUser = async (req:Request, res:Response) => {
 	const uid: string = req.cookies.decoded_uid;
-	const user = await User.findById(uid).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak mostPracticedSurah createdAt");
+	const user = await User.findById(uid).select(SELECT_PARAMS);
 	res.status(200).send(user);
 }
 
 const getUserData = async (req:Request, res:Response) => {
-	const user = await User.findById(req.params.user_id).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt");
+	const user = await User.findById(req.params.user_id).select(SELECT_PARAMS);
 	if(user) {
 		res.status(200).send(user);
 	}
@@ -118,7 +120,6 @@ const getAllUsers = async (req:Request, res:Response) => {
 		const numUsers = await User.countDocuments();
 		const pageCount = Math.ceil(numUsers / USERS_PER_PAGE); 
 		const skip = (page - 1) * USERS_PER_PAGE;
-		const SELECT_PARAMS = "_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt";
 		let users;
 
 		switch (filterBy) {
@@ -156,4 +157,21 @@ const getAllUsers = async (req:Request, res:Response) => {
 	}
 }
 
-export { getUserProgress, reportUser, getCurrentUser, getUserData, getAllUsers };
+const searchUser = async (req:Request, res:Response) => {
+	// TODO - need to make sure this will handle pagination and filtering like previous route
+
+	const { nameToSearch } = req.body;
+	try {
+		const SELECT_PARAMS = "_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt";
+	
+		const user_s = await User.find({ $text: { $search: nameToSearch } }).select(SELECT_PARAMS).lean();
+		res.status(200).send(user_s);
+	} catch (error) {
+		console.log(
+			"There was an error (user.ts file, getAllUsers function)",
+			(error as Error).toString().red.bold
+		);
+	}
+}
+
+export { getUserProgress, reportUser, getCurrentUser, getUserData, getAllUsers, searchUser };
