@@ -8,43 +8,31 @@ interface UserHandlers {
     handleNextPage: () => void;
     handlePreviousPage: () => void;
     queryPage: number;
+    maxPages: number;
+    numUsers: number;
 }
 
 export default function useUsers():UserHandlers {
     const [allUserData, setAllUserData] = useState<UserData[]>([]);
     const [searchParams, setSearchParams] = useSearchParams();
     const [queryPage, setQueryPage] = useState(Number(searchParams.get("page")) || 1);
-
-    // useEffect(() => {
-
-    //     async function getAllUsers() {
-    //         axios.get("http://localhost:4000/api/user/all-users", {
-    //             withCredentials: true
-    //         }).then(response => {
-    //             setAllUserData(response.data);
-    //         }).catch(error => {
-    //             console.log(error);
-    //         });
-    //     }
-    
-    //     getAllUsers();
-
-    // }, []);
+    const [maxPages, setMaxPages] = useState(1);
+    const [numUsers, setNumUsers] = useState(0);
 
     useEffect(() => {
-        // searchParams.get("page") || 1
         async function getAllUsers() {
             axios.get(`http://localhost:4000/api/user/all-users?page=${queryPage}`, {
                 withCredentials: true
             }).then(response => {
-                setAllUserData(response.data);
+                setAllUserData(response.data.users);
+                setMaxPages(response.data.pageCount);
+                setNumUsers(response.data.numUsers);
             }).catch(error => {
                 console.log(error);
             });
         }
     
         getAllUsers();
-
     }, []);
 
     function handleNextPage() {
@@ -58,5 +46,5 @@ export default function useUsers():UserHandlers {
     }
     
 
-    return { allUserData, handleNextPage, handlePreviousPage, queryPage };
+    return { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers };
 }
