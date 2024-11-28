@@ -98,3 +98,12 @@ export interface SurahTools {
     englishSurahData: Verse[];
     sections: Section[]
 }
+
+export interface UserProps {
+    user_id: string,
+    full_name: string,
+    wpm: number,
+    surahsPracticed: number,
+    accuracy: number,
+    pfp: string
+}
