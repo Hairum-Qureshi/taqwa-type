@@ -1,6 +1,6 @@
 import { InferSchemaType, Schema, model } from "mongoose";
 
-export const userSchema = new Schema(
+const userSchema = new Schema(
 	{
 		_id: {
 			type: String
@@ -87,6 +87,12 @@ export const userSchema = new Schema(
 		timestamps: true
 	}
 );
+
+userSchema.index({
+	first_name: "text",
+	last_name: "text",
+	full_name: "text"
+});  
 
 type User = InferSchemaType<typeof userSchema>;
 export default model<User>("User", userSchema);
