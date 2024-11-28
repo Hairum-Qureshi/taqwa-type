@@ -7,10 +7,8 @@ import UserInfoContainer from "./UserInfoContainer";
 // TODO - make sure to utilize e.stopPropagation for the flag button
 
 export default function Users() {
-    const { allUserData, handleNextPage, handlePreviousPage, queryPage } = useUsers();
+    const { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers } = useUsers();
     const { user:currentUserData } = useAccount();
-    const pageCount = 10;
-
     return (
         !currentUserData ? <NotFound /> : 
         <div className = "lg:w-1/2 w-full m-auto mt-5 p-3 h-screen relative">
@@ -36,12 +34,12 @@ export default function Users() {
             {allUserData?.map((user:UserData) => {
                 return <UserInfoContainer user_id={user._id} full_name = {`${user.first_name} ${user.last_name}`} wpm = {user.wordsPerMinute} surahsPracticed = {user.totalSurahsCompleted} accuracy = {user.accuracy} pfp = {user.pfp} />
             })}
-            <div className="w-full my-20 absolute bottom-0 flex justify-around">
-            <div className="flex space-x-4">
-                <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-500 disabled:hover:cursor-not-allowed text-white" onClick = {handlePreviousPage} disabled = {queryPage === 1}>Previous</button>
-                <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-500 disabled:hover:cursor-not-allowed text-white" onClick = {handleNextPage} disabled = {queryPage === pageCount}>Next</button>
-            </div>
-            </div>
+            {numUsers > 10 && <div className="w-full my-20 absolute bottom-0 flex justify-around">
+                <div className="flex space-x-4">
+                    <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-500 disabled:hover:cursor-not-allowed text-white" onClick = {handlePreviousPage} disabled = {queryPage === 1}>Previous</button>
+                    <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-500 disabled:hover:cursor-not-allowed text-white" onClick = {handleNextPage} disabled = {queryPage === maxPages}>Next</button>
+                </div>
+            </div>}
         </div>
     )
 }
