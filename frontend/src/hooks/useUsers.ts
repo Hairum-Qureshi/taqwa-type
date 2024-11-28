@@ -3,15 +3,6 @@ import { UserData } from "../interfaces";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-interface UserHandlers {
-    allUserData: UserData[]
-    handleNextPage: () => void;
-    handlePreviousPage: () => void;
-    queryPage: number;
-    maxPages: number;
-    numUsers: number;
-}
-
 export default function useUsers():UserHandlers {
     const [allUserData, setAllUserData] = useState<UserData[]>([]);
     const [searchParams, setSearchParams] = useSearchParams();
