@@ -115,4 +115,8 @@ export interface UserHandlers {
     queryPage: number;
     maxPages: number;
     numUsers: number;
+    filterWPM: () => void;
+    filterAccuracy: () => void;
+    filterSurahsPracticed: () => void;
+    filterDateJoined: () => void;
 }
