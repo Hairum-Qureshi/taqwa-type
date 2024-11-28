@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserData } from "../interfaces";
+import { UserData, UserHandlers } from "../interfaces";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
