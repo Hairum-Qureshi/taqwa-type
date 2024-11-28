@@ -2,15 +2,7 @@ import { faFlag } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import useAccount from "../../hooks/useAccount";
-
-interface UserProps {
-    user_id: string,
-    full_name: string,
-    wpm: number,
-    surahsPracticed: number,
-    accuracy: number,
-    pfp: string
-}
+import { UserProps } from "../../interfaces";
 
 export default function UserInfoContainer({ user_id, full_name, wpm, surahsPracticed, accuracy, pfp }:UserProps) {
     const { user:currentUserData } = useAccount();
@@ -31,7 +23,7 @@ export default function UserInfoContainer({ user_id, full_name, wpm, surahsPract
                     <p className="text-sm">Average WPM: {wpm}</p>
                     <p className="text-sm">Overall Accuracy: {accuracy}%</p>
                 </div>
-               {user_id !== currentUserData?._id &&  <div className = "w-8 h-8 flex justify-center items-center absolute top-0 right-0 bg-red-400 rounded-tr-sm text-white hover:bg-red-500 active:bg-red-700 hover:cursor-pointer" title = "Report this profile">
+               {user_id !== currentUserData?._id &&  <div className = "w-8 h-8 flex justify-center items-center absolute top-0 right-0 bg-red-400 rounded-tr-sm text-white hover:bg-red-500 active:bg-red-700 hover:cursor-pointer" title = "Report this profile" onClick = {e => { e.stopPropagation() }}>
                     <FontAwesomeIcon icon={faFlag} />
             </div>}
             </div>
