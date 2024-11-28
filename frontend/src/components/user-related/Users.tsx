@@ -1,17 +1,20 @@
 import useAccount from "../../hooks/useAccount";
 import useUsers from "../../hooks/useUsers";
 import { UserData } from "../../interfaces";
+import LoadingSpinner from "../LoadingSpinner";
 import NotFound from "../NotFound";
 import UserInfoContainer from "./UserInfoContainer";
 
 // TODO - make sure to utilize e.stopPropagation for the flag button
 // TODO - implement a search functionality
+// TODO - see if you can resolve the issue where the NotFound component is rendered for a brief second as you're switching between the four filters
 
 export default function Users() {
-    const { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined } = useUsers();
+    const { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined, loading } = useUsers();
     const { user:currentUserData } = useAccount();
+
     return (
-        !currentUserData ? <NotFound /> : 
+        !currentUserData && !loading ? <NotFound /> : 
         <div className = "lg:w-1/2 w-full m-auto mt-5 p-3 h-screen relative">
             <h1 className = "text-2xl font-semibold mb-3">All Users</h1>
             <input type="text" placeholder = "Search user by name" className = "border border-black rounded-md w-full p-1 outline-none px-3" />
@@ -32,10 +35,10 @@ export default function Users() {
                     </div>
                 </div>
             </div>
-            {allUserData.length === 0 ? 
+            {allUserData.length === 0 && !loading ? 
                 <div className = "mt-10 p-2">
                     <h1 className = "text-2xl font-semibold text-center">No users found</h1>
-                </div> : allUserData?.map((user:UserData) => {
+                </div> : loading ? <LoadingSpinner /> : allUserData?.map((user:UserData) => {
                     return <UserInfoContainer user_id={user._id} full_name = {`${user.first_name} ${user.last_name}`} wpm = {user.wordsPerMinute} surahsPracticed = {user.totalSurahsCompleted} accuracy = {user.accuracy} pfp = {user.pfp} />
             })}
             {numUsers > 10 && <div className="w-full my-20 absolute bottom-0 flex justify-around">
