@@ -119,4 +119,5 @@ export interface UserHandlers {
     filterAccuracy: () => void;
     filterSurahsPracticed: () => void;
     filterDateJoined: () => void;
+    loading: boolean;
 }
