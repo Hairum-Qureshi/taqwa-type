@@ -5,14 +5,15 @@ import { useSearchParams } from "react-router-dom";
 
 export default function useUsers():UserHandlers {
     const [allUserData, setAllUserData] = useState<UserData[]>([]);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [queryPage, setQueryPage] = useState(Number(searchParams.get("page")) || 1);
+    const [searchParams] = useSearchParams();
+    const [queryPage] = useState(Number(searchParams.get("page")) || 1);
     const [maxPages, setMaxPages] = useState(1);
     const [numUsers, setNumUsers] = useState(0);
+    const [filterType, setFilterType] = useState(searchParams.get("filter") || "default");
 
     useEffect(() => {
         async function getAllUsers() {
-            axios.get(`http://localhost:4000/api/user/all-users?page=${queryPage}`, {
+            axios.get(`http://localhost:4000/api/user/all-users?page=${queryPage}&filter=${filterType}`, {
                 withCredentials: true
             }).then(response => {
                 setAllUserData(response.data.users);
@@ -43,6 +44,8 @@ export default function useUsers():UserHandlers {
         else {
             window.location.href = `/users?page=${queryPage}&filter=wpm`;        
         }
+
+        setFilterType("wpm");
     }
 
     function filterAccuracy() {
@@ -52,6 +55,8 @@ export default function useUsers():UserHandlers {
         else {
             window.location.href = `/users?page=${queryPage}&filter=accuracy`;
         }
+
+        setFilterType("accuracy");
     }
 
     function filterSurahsPracticed() {
@@ -61,6 +66,8 @@ export default function useUsers():UserHandlers {
         else {
             window.location.href = `/users?page=${queryPage}&filter=surahs-practiced`;
         }
+
+        setFilterType("surahs-practiced");
     }
 
     function filterDateJoined() {
@@ -70,6 +77,8 @@ export default function useUsers():UserHandlers {
         else {
             window.location.href = `/users?page=${queryPage}&filter=date-joined`;
         }
+
+        setFilterType("date-joined");
     }
 
     return { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined };
