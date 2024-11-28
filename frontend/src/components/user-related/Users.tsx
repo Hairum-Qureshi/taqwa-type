@@ -38,8 +38,8 @@ export default function Users() {
             })}
             <div className="w-full my-20 absolute bottom-0 flex justify-around">
             <div className="flex space-x-4">
-                <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-400 disabled:hover:cursor-not-allowed text-white" onClick = {handlePreviousPage} disabled = {queryPage === 1}>Previous</button>
-                <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-400 disabled:hover:cursor-not-allowed text-white" onClick = {handleNextPage} disabled = {queryPage === pageCount}>Next</button>
+                <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-500 disabled:hover:cursor-not-allowed text-white" onClick = {handlePreviousPage} disabled = {queryPage === 1}>Previous</button>
+                <button className="border border-slate-500 rounded-md p-1 w-32 disabled:bg-slate-800 bg-slate-500 disabled:hover:cursor-not-allowed text-white" onClick = {handleNextPage} disabled = {queryPage === pageCount}>Next</button>
             </div>
             </div>
         </div>
