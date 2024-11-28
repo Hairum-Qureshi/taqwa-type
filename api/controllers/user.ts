@@ -110,7 +110,21 @@ const getUserData = async (req:Request, res:Response) => {
 }
 
 const getAllUsers = async (req:Request, res:Response) => {
-
+	// TODO - need to handle query params utilizing filtering too
+	const USERS_PER_PAGE = 10;
+	const page = Number(req.query.page) || 1;
+	try {
+		const numUsers = await User.countDocuments();
+		const pageCount = Math.ceil(numUsers / USERS_PER_PAGE); 
+		const skip = (page - 1) * USERS_PER_PAGE;
+		const users = await User.find({}).limit(USERS_PER_PAGE).skip(skip).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt");
+		res.json({ users, pageCount, numUsers });
+	} catch (error) {
+		console.log(
+			"There was an error (user.ts file, getAllUsers function)",
+			(error as Error).toString().red.bold
+		);
+	}
 }
 
 export { getUserProgress, reportUser, getCurrentUser, getUserData, getAllUsers };
