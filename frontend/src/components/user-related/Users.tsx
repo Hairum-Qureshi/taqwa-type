@@ -7,7 +7,7 @@ import UserInfoContainer from "./UserInfoContainer";
 // TODO - make sure to utilize e.stopPropagation for the flag button
 
 export default function Users() {
-    const { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers } = useUsers();
+    const { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined } = useUsers();
     const { user:currentUserData } = useAccount();
     return (
         !currentUserData ? <NotFound /> : 
@@ -17,16 +17,16 @@ export default function Users() {
             <div className = "mt-2">
                 <h3>Sort By:</h3>
                 <div className="flex text-sm">
-                    <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
+                    <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300" onClick = {filterWPM}>
                         Words/Min (WPM)
                     </div>
-                    <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
+                    <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300" onClick = {filterAccuracy}>
                         Accuracy
                     </div>
-                    <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
+                    <div className="p-1 border border-black mr-2 rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300" onClick = {filterSurahsPracticed}>
                         Surahs Practiced
                     </div>
-                    <div className="p-1 border border-black rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300">
+                    <div className="p-1 border border-black rounded-md flex-1 text-center hover:cursor-pointer bg-gray-100 hover:bg-gray-200 active:bg-gray-300" onClick = {filterDateJoined}>
                         Date Joined
                     </div>
                 </div>
