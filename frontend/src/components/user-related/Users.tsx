@@ -5,6 +5,7 @@ import NotFound from "../NotFound";
 import UserInfoContainer from "./UserInfoContainer";
 
 // TODO - make sure to utilize e.stopPropagation for the flag button
+// TODO - implement a search functionality
 
 export default function Users() {
     const { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined } = useUsers();
@@ -31,8 +32,11 @@ export default function Users() {
                     </div>
                 </div>
             </div>
-            {allUserData?.map((user:UserData) => {
-                return <UserInfoContainer user_id={user._id} full_name = {`${user.first_name} ${user.last_name}`} wpm = {user.wordsPerMinute} surahsPracticed = {user.totalSurahsCompleted} accuracy = {user.accuracy} pfp = {user.pfp} />
+            {allUserData.length === 0 ? 
+                <div className = "mt-10 p-2">
+                    <h1 className = "text-2xl font-semibold text-center">No users found</h1>
+                </div> : allUserData?.map((user:UserData) => {
+                    return <UserInfoContainer user_id={user._id} full_name = {`${user.first_name} ${user.last_name}`} wpm = {user.wordsPerMinute} surahsPracticed = {user.totalSurahsCompleted} accuracy = {user.accuracy} pfp = {user.pfp} />
             })}
             {numUsers > 10 && <div className="w-full my-20 absolute bottom-0 flex justify-around">
                 <div className="flex space-x-4">
