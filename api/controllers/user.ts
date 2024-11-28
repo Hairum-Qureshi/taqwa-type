@@ -124,7 +124,7 @@ const getAllUsers = async (req:Request, res:Response) => {
 		switch (filterBy) {
 			case 'wpm': 
 				users = await User.find({}).sort({
-					wpm: -1
+					wordsPerMinute: -1
 				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
 				break;
 			case 'accuracy':
