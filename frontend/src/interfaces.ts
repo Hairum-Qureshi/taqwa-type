@@ -107,3 +107,12 @@ export interface UserProps {
     accuracy: number,
     pfp: string
 }
+
+export interface UserHandlers {
+    allUserData: UserData[]
+    handleNextPage: () => void;
+    handlePreviousPage: () => void;
+    queryPage: number;
+    maxPages: number;
+    numUsers: number;
+}
