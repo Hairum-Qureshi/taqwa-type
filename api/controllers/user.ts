@@ -110,15 +110,44 @@ const getUserData = async (req:Request, res:Response) => {
 }
 
 const getAllUsers = async (req:Request, res:Response) => {
-	// TODO - need to handle query params utilizing filtering too
 	const USERS_PER_PAGE = 10;
 	const page = Number(req.query.page) || 1;
+	const filterBy = req.query.filter;	
+
 	try {
 		const numUsers = await User.countDocuments();
 		const pageCount = Math.ceil(numUsers / USERS_PER_PAGE); 
 		const skip = (page - 1) * USERS_PER_PAGE;
-		const users = await User.find({}).limit(USERS_PER_PAGE).skip(skip).select("_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt");
+		const SELECT_PARAMS = "_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt";
+		let users;
+
+		switch (filterBy) {
+			case 'wpm': 
+				users = await User.find({}).sort({
+					wpm: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			case 'accuracy':
+				users = await User.find({}).sort({
+					accuracy: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			case 'surahs-practiced':
+				users = await User.find({}).sort({
+					surahsPracticed: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			case 'date-joined':
+				users = await User.find({}).sort({
+					createdAt: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			default:
+				users = await User.find({}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+		}
+
 		res.json({ users, pageCount, numUsers });
+
 	} catch (error) {
 		console.log(
 			"There was an error (user.ts file, getAllUsers function)",
