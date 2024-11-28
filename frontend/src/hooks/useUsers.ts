@@ -36,6 +36,41 @@ export default function useUsers():UserHandlers {
         window.location.href = `/users?page=${page}`;
     }
     
+    function filterWPM() {
+        if (numUsers < 10) {
+            window.location.href = `/users?filter=wpm`;
+        }
+        else {
+            window.location.href = `/users?page=${queryPage}&filter=wpm`;        
+        }
+    }
 
-    return { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers };
+    function filterAccuracy() {
+        if (numUsers < 10) {
+            window.location.href = `/users?filter=accuracy`;
+        }
+        else {
+            window.location.href = `/users?page=${queryPage}&filter=accuracy`;
+        }
+    }
+
+    function filterSurahsPracticed() {
+        if (numUsers < 10) {
+            window.location.href = `/users?filter=surahs-practiced`;
+        }
+        else {
+            window.location.href = `/users?page=${queryPage}&filter=surahs-practiced`;
+        }
+    }
+
+    function filterDateJoined() {
+        if (numUsers < 10) {
+            window.location.href = `/users?filter=date-joined`;
+        }
+        else {
+            window.location.href = `/users?page=${queryPage}&filter=date-joined`;
+        }
+    }
+
+    return { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined };
 }
