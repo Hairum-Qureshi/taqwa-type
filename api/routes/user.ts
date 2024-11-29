@@ -51,7 +51,7 @@ router.post(
                 const uid = req.cookies.decoded_uid;
                 try {
                     const uploadResult = await cloudinary.uploader.upload(uploadedImagePath, {
-                        public_id: `${uid}-profile_picture`,
+                        public_id: `${uid}-profile_picture`
                     });
 
                     if (uploadResult?.url) {
@@ -62,7 +62,7 @@ router.post(
                         await User.findByIdAndUpdate(
                             { _id: uid },
                             {
-                                pfp: uploadResult.url || "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png",
+                                pfp: uploadResult.url || "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
                             }
                         );
                     }
