@@ -33,10 +33,19 @@ export default function TypingPracticeSection() {
     <div className = "bg-slate-900 h-full min-h-screen">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
-          <div className = "my-2 rounded-md bg-sky-800 p-2 text-white flex items-center text-sm">
-            <span className = "mx-1"><FontAwesomeIcon icon={faCircleInfo} /></span>&nbsp;
-            <span className = "ml-2">Please note that even if you hit backspace to fix your error, it will still be counted against you. <br /> To start, click on the text and begin typing!</span>
-          </div>
+          <div className="my-2 rounded-md bg-sky-800 p-2 text-white flex items-center text-sm">
+          <span className="mx-1">
+            <FontAwesomeIcon icon={faCircleInfo} />
+          </span>&nbsp;
+          <span className="ml-2">
+            Please note that even if you hit backspace to fix your error, it will still be counted against you. <br />
+            To start, click on the text and begin typing! <br />
+            To start over, hit the escape 
+            <span className="rounded-sm border-1 border-slate-400 text-xs ml-1 text-center items-center bg-slate-300 text-black inline-block w-8 font-mono">
+              ESC
+            </span> button
+          </span>
+        </div>
           <div className = "tracking-widest outline-none"
               onKeyDown={e => {
                 e.preventDefault();
@@ -45,7 +54,7 @@ export default function TypingPracticeSection() {
                   resetTyping();
                   return;
                 }
-                
+
                 if (key === 'Backspace') {
                   deleteTyping(false);
                   return;
