@@ -120,4 +120,6 @@ export interface UserHandlers {
     filterSurahsPracticed: () => void;
     filterDateJoined: () => void;
     loading: boolean;
+    searchUser: (nameToSearch:string) => void;
+    isSearching: boolean;
 }
