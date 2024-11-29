@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 
 export default function useUsers():UserHandlers {
     const [allUserData, setAllUserData] = useState<UserData[]>([]);
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [queryPage] = useState(Number(searchParams.get("page")) || 1);
     const [maxPages, setMaxPages] = useState(1);
     const [numUsers, setNumUsers] = useState(0);
@@ -32,7 +32,7 @@ export default function useUsers():UserHandlers {
         }
     
         getAllUsers();
-    }, [toSearch]);
+    }, [toSearch, searchParams]);
 
     function handleNextPage() {
         const page = (Number(searchParams.get("page")) || 1) + 1;
@@ -48,10 +48,15 @@ export default function useUsers():UserHandlers {
         setLoading(true);
 
         if (numUsers < 10) {
-            window.location.href = `/users?filter=wpm`;
+            setSearchParams({
+                'filter': 'wpm'
+            })
         }
         else {
-            window.location.href = `/users?page=${queryPage}&filter=wpm`;        
+            setSearchParams({
+                'page': queryPage.toString(),
+                'filter': 'wpm'
+            });
         }
 
         setFilterType("wpm");
@@ -61,10 +66,15 @@ export default function useUsers():UserHandlers {
         setLoading(true);
 
         if (numUsers < 10) {
-            window.location.href = `/users?filter=accuracy`;
+            setSearchParams({
+                'filter': 'accuracy'
+            });
         }
         else {
-            window.location.href = `/users?page=${queryPage}&filter=accuracy`;
+            setSearchParams({
+                'page': queryPage.toString(),
+                'filter': 'accuracy'
+            });
         }
 
         setFilterType("accuracy");
@@ -74,10 +84,15 @@ export default function useUsers():UserHandlers {
         setLoading(true);
 
         if (numUsers < 10) {
-            window.location.href = `/users?filter=surahs-practiced`;
+            setSearchParams({
+                'filter': 'surahs-practiced'
+            });
         }
         else {
-            window.location.href = `/users?page=${queryPage}&filter=surahs-practiced`;
+            setSearchParams({
+                'page': queryPage.toString(),
+                'filter': 'surahs-practiced'
+            });
         }
 
         setFilterType("surahs-practiced");
@@ -87,10 +102,15 @@ export default function useUsers():UserHandlers {
         setLoading(true);
 
         if (numUsers < 10) {
-            window.location.href = `/users?filter=date-joined`;
+            setSearchParams({
+                'filter': 'date-joined'
+            });
         }
         else {
-            window.location.href = `/users?page=${queryPage}&filter=date-joined`;
+            setSearchParams({
+                'page': queryPage.toString(),
+                'filter': 'wpm'
+            });
         }
 
         setFilterType("date-joined");
