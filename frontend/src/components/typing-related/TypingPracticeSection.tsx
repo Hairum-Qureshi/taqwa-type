@@ -34,7 +34,7 @@ export default function TypingPracticeSection() {
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
           <div className="my-2 rounded-md bg-sky-800 p-2 text-white flex items-center text-sm">
-          <span className="mx-1">
+          <span className="mx-1 text-xl">
             <FontAwesomeIcon icon={faCircleInfo} />
           </span>&nbsp;
           <span className="ml-2">
