@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UserData, UserHandlers } from "../interfaces";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export default function useUsers():UserHandlers {
@@ -11,6 +11,9 @@ export default function useUsers():UserHandlers {
     const [numUsers, setNumUsers] = useState(0);
     const [filterType, setFilterType] = useState(searchParams.get("filter") || "default");
     const [loading, setLoading] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
+    const keyUpTimer = useRef<number | null>(null);
+    const [toSearch, setToSearch] = useState("");
 
     useEffect(() => {
         setLoading(true);
@@ -29,9 +32,7 @@ export default function useUsers():UserHandlers {
         }
     
         getAllUsers();
-    }, []);
-
-    // TODO - need to detect when the /users route has no search params (i.e. when you click on the link to the users page after having a search param in the URL)
+    }, [toSearch]);
 
     function handleNextPage() {
         const page = (Number(searchParams.get("page")) || 1) + 1;
@@ -94,7 +95,36 @@ export default function useUsers():UserHandlers {
 
         setFilterType("date-joined");
     }
-    
 
-    return { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined, loading };
+    function searchUser(nameToSearch:string) {
+        setToSearch(nameToSearch);
+
+        if (keyUpTimer.current) {
+			clearTimeout(keyUpTimer.current);
+            setIsSearching(false);
+		}
+
+        if (nameToSearch) {
+            setIsSearching(true);
+            keyUpTimer.current = window.setTimeout(async () => {
+            
+                await axios.post("http://localhost:4000/api/user/search", {
+                    nameToSearch
+                }, {
+                    withCredentials: true
+                }).then(response => {
+                    setIsSearching(false);
+                    setAllUserData(response.data.users);
+                    setMaxPages(response.data.pageCount);
+                    setNumUsers(response.data.numUsers);
+                }).catch(error => {
+                    setIsSearching(false);
+                    console.log(error);
+                })    
+            }, 500);
+        }
+        
+    }
+
+    return { allUserData, handleNextPage, handlePreviousPage, queryPage, maxPages, numUsers, filterWPM, filterAccuracy, filterSurahsPracticed, filterDateJoined, loading, searchUser, isSearching };
 }
