@@ -4,7 +4,8 @@ import {
 	getUserData,
 	getUserProgress,
 	reportUser,
-    getAllUsers
+    getAllUsers,
+    searchUser
 } from "../controllers/user";
 import upload from "./config/handle_uploads";
 import fs from "fs";
@@ -95,5 +96,7 @@ router.get('/current', checkAuthStatus, getCurrentUser);
 router.get('/all-users', checkAuthStatus, getAllUsers);
 
 router.get('/:user_id', checkAuthStatus, getUserData);
+
+router.post("/search", checkAuthStatus, searchUser);
 
 export default router;
