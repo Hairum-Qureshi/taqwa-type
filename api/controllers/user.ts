@@ -112,7 +112,7 @@ const getUserData = async (req:Request, res:Response) => {
 }
 
 const getAllUsers = async (req:Request, res:Response) => {
-	const USERS_PER_PAGE = 10;
+	const USERS_PER_PAGE = 10; 
 	const page = Number(req.query.page) || 1;
 	const filterBy = req.query.filter;	
 
@@ -158,14 +158,42 @@ const getAllUsers = async (req:Request, res:Response) => {
 }
 
 const searchUser = async (req:Request, res:Response) => {
-	// TODO - need to make sure this will handle pagination and filtering like previous route
-
 	const { nameToSearch } = req.body;
+	const USERS_PER_PAGE = 10;
+	const page = Number(req.query.page) || 1;
+	const filterBy = req.query.filter;	
 	try {
-		const SELECT_PARAMS = "_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt";
+		const numUsers = await User.countDocuments({ $text: { $search: nameToSearch } });
+		const pageCount = Math.ceil(numUsers / USERS_PER_PAGE); 
+		const skip = (page - 1) * USERS_PER_PAGE;
+		let users;
 	
-		const user_s = await User.find({ $text: { $search: nameToSearch } }).select(SELECT_PARAMS).lean();
-		res.status(200).send(user_s);
+		switch (filterBy) {
+			case 'wpm': 
+				users = await User.find({ $text: { $search: nameToSearch } }).sort({
+					wordsPerMinute: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			case 'accuracy':
+				users = await User.find({ $text: { $search: nameToSearch } }).sort({
+					accuracy: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			case 'surahs-practiced':
+				users = await User.find({ $text: { $search: nameToSearch } }).sort({
+					surahsPracticed: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			case 'date-joined':
+				users = await User.find({ $text: { $search: nameToSearch } }).sort({
+					createdAt: -1
+				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+				break;
+			default:
+				users = await User.find({ $text: { $search: nameToSearch } }).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
+		}
+
+		res.json({ users, pageCount, numUsers });
 	} catch (error) {
 		console.log(
 			"There was an error (user.ts file, getAllUsers function)",
