@@ -39,8 +39,8 @@ export default function TypingPracticeSection() {
           </span>&nbsp;
           <span className="ml-2">
             Please note that even if you hit backspace to fix your error, it will still be counted against you. <br />
-            To start, click on the text and begin typing! <br />
-            To start over, hit the escape 
+            ▶ To start, click on the text and begin typing! <br />
+            ▶ To start over, hit the escape 
             <span className="rounded-sm border-1 border-slate-400 text-xs ml-1 text-center items-center bg-slate-300 text-black inline-block w-8 font-mono">
               ESC
             </span> button
