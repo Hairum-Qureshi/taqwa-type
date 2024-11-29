@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
 import useSurah from "../../hooks/useSurah"
-import { useEffect, useRef, useState } from "react";
 import { Verse } from "../../interfaces";
+import useTypingGame, { CharStateType } from 'react-typing-game-hook';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 export default function TypingPracticeSection() {
 
@@ -9,124 +11,82 @@ export default function TypingPracticeSection() {
 
   const { surah_no, section_no } = useParams();
 
-  // ! Bug - there's a minor bug where when the results are appearing, the timer updates for an extra second
+  let groupedVerses = "";
+  englishSurahData.map((surah: Verse, index: number) => {
+    groupedVerses += `${index === 0 ? `(${surah.verse}) ${surah.text}` : ` (${surah.verse}) ${surah.text}`}`
+  });   
 
-  const [timer, setTimer] = useState(0);
-  const [numMistakes, setNumMistakes] = useState(0);
-  const [wpm, setWPM] = useState(0);
-  const [startTimer, setStartTimer] = useState(false); 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isTyping, setIsTyping] = useState(false); 
-  const [charIndex, setCharIndex] = useState(0);
-  const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const [correctAndIncorrect, setCorrectAndIncorrect] = useState<string[]>([]);
-  const [accuracy, setAccuracy] = useState(0);
-  const parentRef = useRef<HTMLDivElement>(null);
+  const {
+    states: { chars, charsState, currIndex,
+      correctChar,
+      startTime,
+      endTime },
+    actions: { insertTyping, resetTyping, deleteTyping }
+  } = useTypingGame(groupedVerses);
 
-  useEffect(() => {
-    if (inputRef.current) inputRef.current.focus();
-    setCorrectAndIncorrect(Array(charRefs.current.length).fill(""));
-  }, []);
-
-  // TODO - add a type for 'e'
-  function handleChange(e) {
-    if (charRefs.current) {
-      const characters = charRefs.current; 
-      const currentChar = charRefs.current[charIndex]; // stores current span tag
-      const typedChar = e.target.value.slice(-1); // takes the last character typed and stores it
-
-      if (charIndex < characters.length && startTimer) { 
-        if (!isTyping) setIsTyping(true);
-        if (currentChar && typedChar === currentChar.textContent) { // extracts text from that span tag
-          setCharIndex(charIndex + 1);
-          correctAndIncorrect[charIndex] = "text-green-600";
-        } 
-        else {
-          // TODO - see if you're still able to go back, if you can't, implement a feature to allow you to go back        
-          setCharIndex(charIndex + 1);
-          setNumMistakes(numMistakes + 1);
-          correctAndIncorrect[charIndex] = "text-red-500";
-        }
-
-        if (charIndex === characters.length - 1) { // completed the section
-          setIsTyping(false);
-          setStartTimer(false);
-        } 
-      }
-      // if (e.key === 'Backspace') { // works with onKeyUp, however, sometimes skips over characters for some reason
-      //   setCharIndex(charIndex - 1 < 0 ? 0 : charIndex - 1);
-      //   currentChar = charRefs.current[charIndex - 1];
-      // }
-      else {
-        setIsTyping(false);
-      }
-    }
-  }
-
-  // TODO - check why in mobile view, there's a sliver of a white background at the top
-  // TODO - make sure to add a note that if they accidentally press anywhere else, they just need to press the first line of text
-
-  useEffect(() => {
-    
-    if (startTimer) {
-      setTimeout(() => {
-        setTimer((prev) => prev + 1);
-      }, 1000);
-    }
-    
-  }, [startTimer, timer]);
-
-  useEffect(() => {
-    
-    if(!isTyping) {
-      const correctChars = charIndex - numMistakes;
-      let calcWPM = Math.round((correctChars / 5 / timer) * 60);
-      calcWPM = calcWPM < 0 || !calcWPM || calcWPM === Infinity ? 0 : calcWPM;
-
-      const percentageAccuracy = correctChars / correctAndIncorrect.length;
-
-      setWPM(calcWPM);
-      setAccuracy(percentageAccuracy);
-    }
-
-  }, [isTyping]);
-
-  const allChars = englishSurahData.flatMap((surah: Verse, index: number) => 
-    `${index === 0 ? `(${surah.verse}) ${surah.text}` : ` (${surah.verse}) ${surah.text}`}`.split("")
-  );   
-
-  // TODO - figure out how to make the entire screen with the color slate-900
-  // TODO - make sure to let the user know that when they press the button, they have to press the text to start (see if you can avoid this)
-  // TODO - when the user completes the section, replace the button with a restart button 
+  const totalMilliseconds = Number(endTime! - startTime!);
+  const minutes = Math.floor(totalMilliseconds / 60000); // 1 minute = 60,000 ms
+  const seconds = Math.floor((totalMilliseconds % 60000) / 1000); // Remaining seconds
+  const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   return (
     <div className = "bg-slate-900 h-full min-h-screen">
-      <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative" ref = {parentRef}>
+      <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
           <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
-          <div className = "text-white text-center px-2 border border-slate-500 rounded-md bg-slate-700 hover:cursor-pointer my-4" onClick = {() => setStartTimer(true)}>{!startTimer ? "Press To Start Typing" : "Tap the first line of text and begin typing!"}</div>
-          <input type = "text" spellCheck = "false" autoCorrect = "off" autoComplete = "off" className = "w-full absolute opacity-0 outline-none bg-transparent" ref = {inputRef} onChange = {handleChange} />
-          <div className = "tracking-widest text-slate-500">
-            {allChars.map((char, index) => (
-              <span
-                key={index}
-                className={`${index === charIndex ? "border-b-2 border-b-white w-10 text-white" : ""} ${correctAndIncorrect[index]}`}
-                ref={(e) => (charRefs.current[index] = e)}
-              >
-                {char}
-              </span>
-            ))}
+          <div className = "my-2 rounded-md bg-sky-800 p-2 text-white flex items-center text-sm">
+            <span className = "mx-1"><FontAwesomeIcon icon={faCircleInfo} /></span>&nbsp;
+            <span className = "ml-2">Please note that even if you hit backspace to fix your error, it will still be counted against you. <br /> To start, click on the text and begin typing!</span>
           </div>
-          {!isTyping && 
-          <div className = "text-center mt-5">
-          <h2 className = "text-white font-semibold text-xl">Your Stats For This Section</h2>
-          <div>
-            <p className = "text-yellow-300">Accuracy: {Math.round(accuracy * 100) || 0}%</p>
-            <p className = "text-yellow-300">WPM: {wpm}</p>
-            <p className="text-yellow-300">
-              Time:&nbsp;
-              {`${Math.floor(timer / 60).toString().padStart(2, '0')}:${(timer % 60).toString().padStart(2, '0')}`}
-            </p>
+          <div className = "tracking-widest outline-none"
+              onKeyDown={e => {
+                e.preventDefault();
+                const key = e.key;
+                if (key === 'Escape') {
+                  resetTyping();
+                  return;
+                }
+                
+                if (key === 'Backspace') {
+                  deleteTyping(false);
+                  return;
+                }
+
+                if (key.length === 1) {
+                  insertTyping(key);
+                }
+              }}
+              tabIndex={0}
+            >
+              {chars.split('').map((char, index) => {
+                let state = charsState[index];
+                const isNext = index === currIndex; 
+                let color =
+                  state === CharStateType.Incomplete
+                    ? '#f0f3f4'
+                    : state === CharStateType.Correct
+                    ? 'lime'
+                    : 'red';
+                return (
+                  <span
+                    key={char + index}
+                    style={{
+                      color,
+                      fontWeight: isNext ? 'bold' : 'normal', 
+                      textDecoration: isNext ? 'underline' : 'none'
+                    }}>
+                    {char}
+                  </span>
+                );
+              })}
           </div>
+          {currIndex === chars.length -1 && <div className = "text-center mt-5">
+         <div className = 'text-white'>
+            <h2 className = "text-white font-semibold text-xl">Your Stats For This Section</h2>
+            <p>Total Time: {formattedTime}</p>
+            <p>Accuracy: {`${Math.round((correctChar / chars.length) * 100)}%`}</p>
+            <p>WPM: {Math.abs(Math.round((chars.length / 5) / ((endTime! - startTime!) / 60000)))}</p>
+          </div>
+          <button onClick = {resetTyping} className = "bg-slate-700 border-slate-400 hover:bg-slate-600 rounded-md px-2 mt-2 text-white">Restart</button>
         </div>}
         <div className = "flex justify-center">
         <button className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[Number(section_no)]?.verses}`}>Next Section</button>
