@@ -7,6 +7,8 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 export default function TypingPracticeSection() {
 
+  // TODO - fix accuracy; it doesn't seem to be 100% accurate (heh)
+
   const { englishSurahData, sections } = useSurah();
 
   const { surah_no, section_no } = useParams();
@@ -28,11 +30,11 @@ export default function TypingPracticeSection() {
   const minutes = Math.floor(totalMilliseconds / 60000); // 1 minute = 60,000 ms
   const seconds = Math.floor((totalMilliseconds % 60000) / 1000); // Remaining seconds
   const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
+// bg-slate-900 h-full min-h-screen
   return (
-    <div className = "bg-slate-900 h-full min-h-screen">
+    <div className = "">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
-          <h1 className = "text-2xl font-semibold text-center my-5 text-white">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>
+          {section_no && <h1 className = "text-2xl font-semibold text-center my-5 text-black">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>}
           <div className="my-2 rounded-md bg-sky-800 p-2 text-white flex items-center text-sm">
           <span className="mx-1 text-xl">
             <FontAwesomeIcon icon={faCircleInfo} />
@@ -71,9 +73,9 @@ export default function TypingPracticeSection() {
                 const isNext = index === currIndex; 
                 let color =
                   state === CharStateType.Incomplete
-                    ? '#f0f3f4'
+                    ? 'black'
                     : state === CharStateType.Correct
-                    ? 'lime'
+                    ? 'green'
                     : 'red';
                 return (
                   <span
@@ -89,8 +91,8 @@ export default function TypingPracticeSection() {
               })}
           </div>
           {currIndex === chars.length -1 && <div className = "text-center mt-5">
-         <div className = 'text-white'>
-            <h2 className = "text-white font-semibold text-xl">Your Stats For This Section</h2>
+         <div className = 'text-black'>
+            <h2 className = "text-black font-semibold text-xl">Your Stats For This Section</h2>
             <p>Total Time: {formattedTime}</p>
             <p>Accuracy: {`${Math.round((correctChar / chars.length) * 100)}%`}</p>
             <p>WPM: {Math.abs(Math.round((chars.length / 5) / ((endTime! - startTime!) / 60000)))}</p>
@@ -98,7 +100,8 @@ export default function TypingPracticeSection() {
           <button onClick = {resetTyping} className = "bg-slate-700 border-slate-400 hover:bg-slate-600 rounded-md px-2 mt-2 text-white">Restart</button>
         </div>}
         <div className = "flex justify-center">
-        <button className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[Number(section_no)]?.verses}`}>Next Section</button>
+          {section_no && <button className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[Number(section_no)]?.verses}`}>Next Section</button>
+        }
         </div>
       </div>
     </div>
