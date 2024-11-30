@@ -45,7 +45,7 @@ export default function SurahInfo() {
                 </>
             }
             <div className = "lg:w-1/2 p-5 relative">
-                {englishSurah[Number(surah_no)]?.chapter !== 1 || englishSurah[Number(surah_no)]?.chapter !== 9 && <div className = "w-full text-2xl m-2 text-center p-2 font-amiri font-semibold">
+                {englishSurah[Number(surah_no)]?.chapter !== 1 && englishSurah[Number(surah_no)]?.chapter !== 9 && <div className = "w-full text-2xl m-2 text-center p-2 font-amiri font-semibold">
                     ﷽
                     <p className = "mt-4 font-normal text-xl">In the name of Allah, the Most Gracious, the Most Merciful</p>
                 </div>}
