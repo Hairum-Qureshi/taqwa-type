@@ -15,6 +15,7 @@ export default function SurahInfo() {
     // TODO - make the verse links in the info section work
     // TODO - see if you can have it so that the div on the right is the same height as the div on the left and that the content in the right div will utilize a scrollbar if the content on the right exceeds the left div's content
     // TODO - consider seeing if you can add the surah's name too
+    // TODO - figure out a way to add a disclaimer because some of the verses linked as references aren't accurate
 
     useEffect(() => {
         const getSurahInfo = async () => {
@@ -22,10 +23,7 @@ export default function SurahInfo() {
                 const response = await axios.get(`https://api.quran.com/api/v4/chapters/${surah_no}/info`);
                 const englishSurahRes = await axios.get(`https://raw.githubusercontent.com/risan/quran-json/refs/heads/main/data/editions/en.json`);
                 
-                // Correctly access the chapter info data
                 setChapterInfo(response.data.chapter_info);
-                
-                // Access the English translation by index
                 setEnglishSurah(englishSurahRes.data[Number(surah_no)]);
             } catch (error) {
                 console.error(error);
@@ -39,12 +37,15 @@ export default function SurahInfo() {
         Number(surah_no) > 114 ? <NotFound /> : !chapterInfo || englishSurah.length === 0 ? <LoadingSpinner /> : 
         <div className = "lg:flex m-5 border border-slate-300 rounded-md">
             {chapterInfo && 
-            <div
-                className="prose bg-gray-100 lg:prose-md prose-h2:mb-2 max-w-none lg:w-1/2 p-10" 
-                dangerouslySetInnerHTML={{ __html: chapterInfo?.text }}
-            />}
+                <>
+                    <div
+                        className="prose bg-gray-100 lg:prose-md prose-h2:mb-2 max-w-none lg:w-1/2 p-10" 
+                        dangerouslySetInnerHTML={{ __html: chapterInfo?.text }}
+                    />
+                </>
+            }
             <div className = "lg:w-1/2 p-5 relative">
-                {englishSurah[Number(surah_no)]?.chapter !== 1 && <div className = "w-full text-2xl m-2 text-center p-2 font-amiri font-semibold">
+                {englishSurah[Number(surah_no)]?.chapter !== 1 || englishSurah[Number(surah_no)]?.chapter !== 9 && <div className = "w-full text-2xl m-2 text-center p-2 font-amiri font-semibold">
                     ﷽
                     <p className = "mt-4 font-normal text-xl">In the name of Allah, the Most Gracious, the Most Merciful</p>
                 </div>}
