@@ -22,17 +22,17 @@ export default function Navbar() {
 			</Link>
 			{user && <div className = "text-xl ml-auto hover:cursor-pointer flex">
 				<Link to = "/users">
-					<div className = "rounded-md p-0.5 w-10 text-center mr-2">
+					<div className = "rounded-md p-0.5 w-10 text-center mr-2" title = "View all users">
 						<FontAwesomeIcon icon={faUsers} />
 					</div>
 				</Link>
 				<Link to={`/user/${user._id}/account`}>
-					<div className = "rounded-md p-0.5 w-10 text-center mr-2">
+					<div className = "rounded-md p-0.5 w-10 text-center mr-2" title = "Visit profile">
 						<FontAwesomeIcon icon={faUser} />
 					</div>
 				</Link>
 				<Link to = "/" onClick = {handleLogout}>
-					<div className = "rounded-md p-0.5 w-10 text-center mr-1">
+					<div className = "rounded-md p-0.5 w-10 text-center mr-1" title = "Logout">
 						<FontAwesomeIcon icon={faArrowRightFromBracket} />
 					</div>
 				</Link>
