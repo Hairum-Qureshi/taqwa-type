@@ -24,6 +24,9 @@ export default function useSurah(): SurahTools {
                         setEnglishSurahData([englishSurahRes.data[Number(surah_no)][Number(verses[0]) - 1]]);
                     }
                 }
+                else {
+                    setEnglishSurahData(englishSurahRes.data[Number(surah_no)]);
+                }
 
             } catch (error) {
                 console.error(error);
