@@ -8,6 +8,9 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 export default function TypingPracticeSection() {
 
   // TODO - fix accuracy; it doesn't seem to be 100% accurate (heh)
+  // TODO - see if you can change the text font
+  // TODO - make the 'next section' button work
+  // TODO - replace 'Loading...' with a loading spinner. The LoadingSpinner component doesn't fit here well
 
   const { englishSurahData, sections } = useSurah();
 
@@ -48,7 +51,7 @@ export default function TypingPracticeSection() {
             </span> button
           </span>
         </div>
-          <div className = "tracking-widest outline-none"
+          {!groupedVerses ? <h1>Loading...</h1> : <div className = "tracking-widest outline-none"
               onKeyDown={e => {
                 e.preventDefault();
                 const key = e.key;
@@ -89,7 +92,7 @@ export default function TypingPracticeSection() {
                   </span>
                 );
               })}
-          </div>
+          </div>}
           {currIndex === chars.length -1 && <div className = "text-center mt-5">
          <div className = 'text-black'>
             <h2 className = "text-black font-semibold text-xl">Your Stats For This Section</h2>
