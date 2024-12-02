@@ -9,6 +9,7 @@ export default function TypingPracticeSection() {
 
   // TODO - fix accuracy; it doesn't seem to be 100% accurate (heh)
   // TODO - see if you can change the text font
+  // TODO - it seems like if you go back to fix your error, it does not count it against you
   // TODO - make the 'next section' button work
   // TODO - replace 'Loading...' with a loading spinner. The LoadingSpinner component doesn't fit here well
 
@@ -37,7 +38,7 @@ export default function TypingPracticeSection() {
   return (
     <div className = "">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
-          {section_no && <h1 className = "text-2xl font-semibold text-center my-5 text-black">Section {section_no}, Verses {sections[Number(section_no) - 1]?.verses}</h1>}
+          {section_no && <h1 className = "text-2xl font-semibold text-center my-5 text-black">Section {section_no}, Chapter {surah_no} Verses {sections[Number(section_no) - 1]?.verses}</h1>}
           <div className="my-2 rounded-md bg-sky-800 p-2 text-white flex items-center text-sm">
           <span className="mx-1 text-xl">
             <FontAwesomeIcon icon={faCircleInfo} />
