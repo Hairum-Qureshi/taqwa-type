@@ -123,8 +123,7 @@ export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
       </p>
     </div>
   </body>
-  </html>
-`;
+  </html>`;
 
 export const REPORT_WARNING_TEMPLATE = `<!DOCTYPE html>
 <html lang="en">
