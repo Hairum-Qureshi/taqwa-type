@@ -4,18 +4,33 @@ import { Verse } from "../../interfaces";
 import useTypingGame, { CharStateType } from 'react-typing-game-hook';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { ring2 } from 'ldrs';
+
+ring2.register()
 
 export default function TypingPracticeSection() {
 
   // TODO - fix accuracy; it doesn't seem to be 100% accurate (heh)
-  // TODO - see if you can change the text font
   // TODO - it seems like if you go back to fix your error, it does not count it against you
-  // TODO - make the 'next section' button work
-  // TODO - replace 'Loading...' with a loading spinner. The LoadingSpinner component doesn't fit here well
+  // TODO - you're able to manipulate the verse pairings in the URL to get those verse pairings instead of the section pairings allocated; see if you can make sure the user isn't able to do that/cause any problems when you save the designated user stats for that surah's section
+  // TODO - change font family (currently it's "")
+  // TODO - add colors to the buttons and make sure the colors are different if they're disabled
+  // TODO - The loading spinner doesn't appear to be animated for some reason
 
   const { englishSurahData, sections } = useSurah();
+  const [currentVersesIndex, setCurrentVersesIndex] = useState(0);
 
-  const { surah_no, section_no } = useParams();
+  const { surah_no, section_no, ayahs } = useParams();
+
+  useEffect(() => {
+
+    if (ayahs) {
+      const sectionIndex = sections.map(section => section.verses).indexOf(ayahs);
+      setCurrentVersesIndex(sectionIndex);
+    }
+
+  }, [currentVersesIndex, section_no]);
 
   let groupedVerses = "";
   englishSurahData.map((surah: Verse, index: number) => {
@@ -35,10 +50,11 @@ export default function TypingPracticeSection() {
   const seconds = Math.floor((totalMilliseconds % 60000) / 1000); // Remaining seconds
   const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 // bg-slate-900 h-full min-h-screen
+
   return (
     <div className = "">
       <div className = "lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
-          {section_no && <h1 className = "text-2xl font-semibold text-center my-5 text-black">Section {section_no}, Chapter {surah_no} Verses {sections[Number(section_no) - 1]?.verses}</h1>}
+          {section_no && <h1 className = "text-2xl font-semibold text-center my-5 text-black">Section {section_no}, Chapter {surah_no} Verses {sections[currentVersesIndex]?.verses}</h1>}
           <div className="my-2 rounded-md bg-sky-800 p-2 text-white flex items-center text-sm">
           <span className="mx-1 text-xl">
             <FontAwesomeIcon icon={faCircleInfo} />
@@ -52,12 +68,20 @@ export default function TypingPracticeSection() {
             </span> button
           </span>
         </div>
-          {!groupedVerses ? <h1>Loading...</h1> : <div className = "tracking-widest outline-none"
+          {!groupedVerses ? <div className = "text-center mt-20">
+              <span>
+              <l-ring-2
+                size="40"
+                speed="1.75" 
+                color="black" 
+              ></l-ring-2>
+              </span>
+          </div> : <div className = "tracking-widest outline-none"
               onKeyDown={e => {
                 e.preventDefault();
                 const key = e.key;
                 if (key === 'Escape') {
-                  resetTyping();
+                  resetTyping(); 
                   return;
                 }
 
@@ -87,7 +111,8 @@ export default function TypingPracticeSection() {
                     style={{
                       color,
                       fontWeight: isNext ? 'bold' : 'normal', 
-                      textDecoration: isNext ? 'underline' : 'none'
+                      textDecoration: isNext ? 'underline' : 'none',
+                      fontFamily: ""
                     }}>
                     {char}
                   </span>
@@ -104,10 +129,14 @@ export default function TypingPracticeSection() {
           <button onClick = {resetTyping} className = "bg-slate-700 border-slate-400 hover:bg-slate-600 rounded-md px-2 mt-2 text-white">Restart</button>
         </div>}
         <div className = "flex justify-center">
-          {section_no && <button className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[Number(section_no)]?.verses}`}>Next Section</button>
+          {section_no && <>
+            <button disabled = {currentVersesIndex === 0} className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[(sections.length + currentVersesIndex - 1) % sections.length].verses}`}>Prev Section</button>
+            <button disabled = {(sections.length + currentVersesIndex + 1) % sections.length === 0} className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[(sections.length + currentVersesIndex + 1) % sections.length].verses}`}>Next Section</button>
+          </>
         }
         </div>
       </div>
     </div>
   )
 }
+
