@@ -130,8 +130,8 @@ export default function TypingPracticeSection() {
         </div>}
         <div className = "flex justify-center">
           {section_no && <>
-            <button disabled = {currentVersesIndex === 0} className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[(sections.length + currentVersesIndex - 1) % sections.length].verses}`}>Prev Section</button>
-            <button disabled = {(sections.length + currentVersesIndex + 1) % sections.length === 0} className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[(sections.length + currentVersesIndex + 1) % sections.length].verses}`}>Next Section</button>
+            {currentVersesIndex !== 0 && <button className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[(sections.length + currentVersesIndex - 1) % sections.length].verses}`}>Prev Section</button>}
+            {(sections.length + currentVersesIndex + 1) % sections.length !== 0 &&  <button className = "border-2 px-5 my-5 border-black rounded-md" onClick = {() => window.location.href = `/practice/surah/${surah_no}/section/${section_no}/${sections[(sections.length + currentVersesIndex + 1) % sections.length].verses}`}>Next Section</button>}
           </>
         }
         </div>
