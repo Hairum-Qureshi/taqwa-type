@@ -5,9 +5,9 @@ import { useParams } from "react-router-dom";
 
 export default function useSurah(): SurahTools {
     const [englishSurahData, setEnglishSurahData] = useState<Verse[]>([]);
-    const { surah_no, ayahs, section_no } = useParams();
+    const { surah_no, ayahs } = useParams();
     const surahs = localStorage.getItem("surahs");
-    const [surahData, setSurahData] = useState<Surah>(surahs ? JSON.parse(surahs)[0].data[Number(surah_no) - 1] : {});
+    const [surahData] = useState<Surah>(surahs ? JSON.parse(surahs)[0].data[Number(surah_no) - 1] : {});
     const [sections, setSections] = useState<Section[]>([]);
 
     useEffect(() => {
@@ -36,6 +36,7 @@ export default function useSurah(): SurahTools {
         getSurahInfo();
     }, [surah_no]); 
 
+    // TODO - implement some logic to prevent a section from having just one verse
     // Algorithm that will handle breaking down a surah into chunks
     async function makeSections() {
         let sectionCounter = 0;
