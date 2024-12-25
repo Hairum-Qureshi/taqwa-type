@@ -58,7 +58,7 @@ export default function TypingPracticeSection() {
 			<div className="lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
 				{section_no && (
 					<h1 className="text-2xl font-semibold text-center my-5 text-black">
-						Section {section_no}, Chapter {surah_no} Verses{" "}
+						Section {section_no}, Chapter {surah_no} Verse{sections[currentVersesIndex]?.verses.split("-").length > 1 ? "s " : " "}
 						{sections[currentVersesIndex]?.verses}
 					</h1>
 				)}
