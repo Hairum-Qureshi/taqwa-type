@@ -1,4 +1,5 @@
 import { InferSchemaType, Schema, model } from "mongoose";
+import { SurahSchema } from "./typing/surah";
 
 const userSchema = new Schema(
 	{
@@ -81,6 +82,10 @@ const userSchema = new Schema(
 		isVerified: {
 			type: Boolean,
 			default: false
+		},
+		surahs: {
+			type: [SurahSchema],
+			default: []
 		}
 	},
 	{
@@ -92,7 +97,7 @@ userSchema.index({
 	first_name: "text",
 	last_name: "text",
 	full_name: "text"
-});  
+});
 
 type User = InferSchemaType<typeof userSchema>;
 export default model<User>("User", userSchema);
