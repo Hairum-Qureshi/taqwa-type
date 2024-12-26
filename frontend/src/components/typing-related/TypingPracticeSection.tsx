@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { ring2 } from "ldrs";
+import useProgressSaver from "../../hooks/useProgressSaver";
 
 ring2.register();
 
@@ -19,6 +20,7 @@ export default function TypingPracticeSection() {
 
 	const { englishSurahData, sections } = useSurah();
 	const [currentVersesIndex, setCurrentVersesIndex] = useState(0);
+  const { saveProgress } = useProgressSaver();
 
 	const { surah_no, section_no, ayahs } = useParams();
 
@@ -53,6 +55,28 @@ export default function TypingPracticeSection() {
 		.padStart(2, "0")}`;
 	// bg-slate-900 h-full min-h-screen
 
+  const [accuracy, SetAccuracy] = useState("0%");
+  const [wpm, setWPM] = useState('0');
+  const [timeSpent, setTimeSpent] = useState("00:00:00");
+
+  useEffect(() => {
+    if(currIndex === chars.length - 1) {
+      SetAccuracy(`${Math.round((correctChar / chars.length) * 100)}%`);
+      setWPM(Math.abs(
+        Math.round(
+          chars.length / 5 / ((endTime! - startTime!) / 60000)
+        )
+      ).toString());
+      setTimeSpent(formattedTime);
+
+      saveProgress(`${Math.round((correctChar / chars.length) * 100)}%`, Math.abs(
+        Math.round(
+          chars.length / 5 / ((endTime! - startTime!) / 60000)
+        )
+      ).toString(), formattedTime);
+    }
+  }, [currIndex]);
+
 	return (
 		<div className="">
 			<div className="lg:w-3/5 lg:m-auto mx-4 p-2 text-lg leading-9 mt-10 relative">
@@ -78,6 +102,7 @@ export default function TypingPracticeSection() {
 						button <br />▶ If it appears as though you typed all the characters
 						correctly but your accuracy is not 100%, chances are you might have
 						missed a space
+            <br />▶ Once you press on the text, the timer starts
 					</span>
 				</div>
 				{!groupedVerses ? (
@@ -109,9 +134,9 @@ export default function TypingPracticeSection() {
 						tabIndex={0}
 					>
 						{chars.split("").map((char, index) => {
-							let state = charsState[index];
+							const state = charsState[index];
 							const isNext = index === currIndex;
-							let color =
+							const color =
 								state === CharStateType.Incomplete
 									? "black"
 									: state === CharStateType.Correct
@@ -139,17 +164,13 @@ export default function TypingPracticeSection() {
 							<h2 className="text-black font-semibold text-xl">
 								Your Stats For This Section
 							</h2>
-							<p>Total Time: {formattedTime}</p>
+							<p>Total Time: {timeSpent}</p>
 							<p>
-								Accuracy: {`${Math.round((correctChar / chars.length) * 100)}%`}
+								Accuracy: {accuracy}
 							</p>
 							<p>
 								WPM:{" "}
-								{Math.abs(
-									Math.round(
-										chars.length / 5 / ((endTime! - startTime!) / 60000)
-									)
-								)}
+								{wpm}
 							</p>
 						</div>
 						<button
