@@ -49,6 +49,10 @@ const surahSchema = new Schema(
 			type: String,
 			default: "Incomplete"
 		},
+        numSections: {
+            type: Number,
+            default: 0
+        }
 	},
 	{
 		timestamps: true
