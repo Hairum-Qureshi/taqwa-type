@@ -1,5 +1,5 @@
 import { Decimal128 } from "mongodb";
-import { InferSchemaType, Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const sectionSchema = new Schema(
 	{
@@ -45,5 +45,5 @@ const sectionSchema = new Schema(
 	}
 );
 
-type Section = InferSchemaType<typeof sectionSchema>;
-export default model<Section>("Section", sectionSchema);
+export const SectionSchema = sectionSchema;
+export const Section = model("Section", sectionSchema);
