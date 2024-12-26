@@ -1,6 +1,6 @@
 import { Decimal128 } from "mongodb";
-import { InferSchemaType, Schema, model } from "mongoose";
-import Section from "./section";
+import { Schema, model } from "mongoose";
+import { SectionSchema } from "./section";
 
 const surahSchema = new Schema(
 	{
@@ -34,7 +34,7 @@ const surahSchema = new Schema(
 			default: false
 		},
         sections: {
-            type: [Section],
+            type: [SectionSchema],
             default: []
         },
         progress: {
@@ -51,5 +51,8 @@ const surahSchema = new Schema(
 	}
 );
 
-type Surah = InferSchemaType<typeof surahSchema>;
-export default model<Surah>("Surah", surahSchema);
+// type Surah = InferSchemaType<typeof surahSchema>;
+// export default model<Surah>("Surah", surahSchema);
+
+export const SurahSchema = surahSchema;
+export const Surah = model("Surah", surahSchema);
