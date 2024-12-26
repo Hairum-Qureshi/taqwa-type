@@ -30,4 +30,10 @@ export interface UserReport {
 	createdAt: string;
 	hasBeenBannedBefore: boolean;
 	hasBeenWarnedBefore: boolean;
-};
+}
+
+export interface SurahProgress {
+	chapterNo: number,
+	progress: number,
+	isCompleted: boolean
+}
