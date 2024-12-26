@@ -37,6 +37,10 @@ const surahSchema = new Schema(
             type: [SectionSchema],
             default: []
         },
+        timeSpent: {
+            type: String,
+            default: "00:00"
+        },
         progress: {
             type: Decimal128,
 			default: 0.0
