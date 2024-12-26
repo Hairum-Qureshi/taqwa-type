@@ -6,6 +6,7 @@ import colors from "colors";
 import authentication from "./routes/authentication";
 import user from "./routes/user";
 import mongoose from "mongoose";
+import surah from "./routes/surah";
 
 dotenv.config();
 colors.enable();
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authentication);
 app.use("/api/user", user);
+app.use("/api/surah", surah);
 
 mongoose
 	.connect(MONGO_URI)
