@@ -25,6 +25,8 @@ export interface Surah {
     englishNameTranslation: string;
     numberOfAyahs: number;
     revelationType: string;
+    progress?: number,
+    isCompleted?: boolean
 };
 
 export interface SurahResponse {
@@ -122,4 +124,10 @@ export interface UserHandlers {
     loading: boolean;
     searchUser: (nameToSearch:string) => void;
     isSearching: boolean;
+}
+
+export interface SurahProgress {
+	chapterNo: number,
+	progress: number,
+	isCompleted: boolean
 }
