@@ -26,7 +26,10 @@ export interface Surah {
     numberOfAyahs: number;
     revelationType: string;
     progress?: number,
-    isCompleted?: boolean
+    isCompleted?: boolean,
+    timeSpent?: string,
+	accuracy?: number,
+	wpm?: number
 };
 
 export interface SurahResponse {
