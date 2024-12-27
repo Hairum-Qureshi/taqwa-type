@@ -35,5 +35,8 @@ export interface UserReport {
 export interface SurahProgress {
 	chapterNo: number,
 	progress: number,
-	isCompleted: boolean
+	isCompleted: boolean,
+	timeSpent: string,
+	accuracy: number,
+	wpm: number
 }
