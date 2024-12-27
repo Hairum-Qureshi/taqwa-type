@@ -20,7 +20,7 @@ const saveProgress = async (req:Request, res:Response) => {
                     await User.updateOne({
                         _id: uid
                     }, {
-                        $set: {
+                        $push: {
                             surahs: [{
                                 uid,
                                 chapterName: surahNameEng,
@@ -44,18 +44,20 @@ const saveProgress = async (req:Request, res:Response) => {
                 await User.updateOne({
                     _id: uid
                 }, {
-                    surahs: [{
-                        uid,
-                        chapterName: surahNameEng,
-                        chapterNo: surah_no,
-                        noVerses: numVerses,
-                        wpm: numWPM,
-                        accuracy: decimalAccuracy,
-                        isCompleted: true,
-                        timeSpent,
-                        progress: 100.0,
-                        completionStatus: "Completed"
-                    }]       
+                    $push: {
+                        surahs: [{
+                            uid,
+                            chapterName: surahNameEng,
+                            chapterNo: surah_no,
+                            noVerses: numVerses,
+                            wpm: numWPM,
+                            accuracy: decimalAccuracy,
+                            isCompleted: true,
+                            timeSpent,
+                            progress: 100.0,
+                            completionStatus: "Completed"
+                        }] 
+                    }      
                 });
             }
         }
