@@ -95,6 +95,9 @@ export default function useAccount(): AccountHandlers {
                             const index = cachedSurahs.findIndex((chapter) => chapter.number === response.data[i].chapterNo);
                             cachedSurahs[index].progress = response.data[i].progress;
                             cachedSurahs[index].isCompleted = response.data[i].isCompleted;
+                            cachedSurahs[index].timeSpent = response.data[i].timeSpent;
+                            cachedSurahs[index].accuracy = response.data[i].accuracy;
+                            cachedSurahs[index].wpm = response.data[i].wpm;
                         }
                     }
                     setSurahs(cachedSurahs);
