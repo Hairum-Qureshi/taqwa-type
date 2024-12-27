@@ -47,18 +47,18 @@ export default function SurahProgressTracker({ user, userData }: SPTChildren) {
 													{surah.englishNameTranslation}&nbsp;|&nbsp;
 													<span>{surah.numberOfAyahs} verses</span>
 												</h3>
-												<div className={`border border-green-400 rounded-sm ${!surah.progress ? "bg-green-800" : 'bg-green-500'} p-1`}>
+												<div className={`border border-green-400 rounded-sm ${!surah.progress ? "bg-green-800 text-white" : 'bg-green-500 text-blue-900 border-2 border-green-700 font-semibold'} p-1`}>
 													<p
-														className="text-white text-xs"
+														className="text-xs"
 														style={{
 															width: surah.progress ? `${surah.progress}%` : "",
 															backgroundColor: surah.progress
 																? "#22c55e"
 																: "",
-                                                            padding: surah.progress ? '1px' : ''
+                                                            padding: surah.progress ? '1px' : '',
 														}}
 													>
-														Progress: {surah.progress || 0}%
+														Progress: {surah.progress || 0}% | Accuracy: {(surah.accuracy === 1 ? 100 : surah.accuracy) || 0}% | WPM: {surah.wpm || 0} | Time Spent: {surah.timeSpent || "00:00"}
 													</p>
 												</div>
 											</div>
