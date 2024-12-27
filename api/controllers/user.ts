@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import Progress from "../models/progress";
 import User from "../models/user";
-import { UserReport } from "../interfaces";
+import { SurahProgress, UserReport } from "../interfaces";
 import { jwtDecode, JwtDecodeOptions, JwtPayload } from "jwt-decode";
 import { UserJWTPayload } from "../interfaces";
 import checkNSFW from "../utils/content-moderator";
@@ -9,28 +8,32 @@ import { sendBanEmail, sendPermanentBanEmail, sendWarningEmail } from "../mailtr
 
 const SELECT_PARAMS = "_id first_name last_name email pfp experience totalSurahsCompleted wordsPerMinute accuracy streak createdAt";
 
-const getUserProgress = async (req: Request, res: Response) => {
-	const uid = req.params.user_id;
+const getUserProgress = async (req:Request, res:Response) => {
 	try {
-		const [userProgress] = await Progress.find({ uid }).lean();
-		if (!userProgress) {
-			// User has no progress
-			// const Surahs = mongoose.model<Document>(
-			// 	"surahs",
-			// 	new mongoose.Schema({}, { strict: false })
-			// );
-			// const surahs = await Surahs.findOne();
-			res.status(200).send("No progress found");
-		} else {
-			res.json(userProgress);
+		const user = await User.findById({ _id: req.params.user_id }).lean();
+		console.log(user!.surahs)
+
+		const progressData: SurahProgress[] = [];
+
+		if(user!.surahs) {
+			for(let i = 0; i < user!.surahs.length; i++) {
+				progressData.push({
+					chapterNo: user!.surahs[i].chapterNo,
+					progress: Number(user!.surahs[i].progress),
+					isCompleted: user!.surahs[i].completionStatus === "Completed"
+				});
+			}
 		}
+
+		res.status(200).send(progressData);
+
 	} catch (error) {
-		console.log(
-			"There was an error (user.ts file, getUserProgress function)",
-			(error as Error).toString().red.bold
-		);
+			console.log(
+				"There was an error (user.ts file, getUserProgress function)",
+				(error as Error).toString().red.bold
+			);
 	}
-};
+}
 
 const reportUser = async (req: Request, res: Response) => {
 	// TODO - need to implement a check to see if a user has reported this user (to prevent them from reporting repeatedly)
@@ -120,6 +123,7 @@ const getAllUsers = async (req:Request, res:Response) => {
 		const numUsers = await User.countDocuments();
 		const pageCount = Math.ceil(numUsers / USERS_PER_PAGE); 
 		const skip = (page - 1) * USERS_PER_PAGE;
+		// TODO - add a type for 'users'
 		let users;
 
 		switch (filterBy) {
@@ -166,6 +170,7 @@ const searchUser = async (req:Request, res:Response) => {
 		const numUsers = await User.countDocuments({ $text: { $search: nameToSearch } });
 		const pageCount = Math.ceil(numUsers / USERS_PER_PAGE); 
 		const skip = (page - 1) * USERS_PER_PAGE;
+		// TODO - add a type for 'users'
 		let users;
 	
 		switch (filterBy) {
