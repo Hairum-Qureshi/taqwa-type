@@ -4,8 +4,8 @@ import {
 	getUserData,
 	getUserProgress,
 	reportUser,
-    getAllUsers,
-    searchUser
+	getAllUsers,
+	searchUser
 } from "../controllers/user";
 import upload from "./config/handle_uploads";
 import fs from "fs";
@@ -20,68 +20,76 @@ import isNSFW from "../utils/content-moderator";
 const router = express.Router();
 
 colors.enable();
-router.get("/:user_id/progress", getUserProgress);
+router.get("/:user_id/progress", checkAuthStatus, getUserProgress);
 
 router.post(
-    "/upload/pfp",
-    checkAuthStatus,
-    upload.single("profile_picture"),
-    async (req, res) => {
-        const FOLDER_PATH = path.join(__dirname, "..", "/temp_images");
-        try {
-            cloundinary_config; // Ensure Cloudinary configuration is loaded
+	"/upload/pfp",
+	checkAuthStatus,
+	upload.single("profile_picture"),
+	async (req, res) => {
+		const FOLDER_PATH = path.join(__dirname, "..", "/temp_images");
+		try {
+			cloundinary_config; // Ensure Cloudinary configuration is loaded
 
-            // Read files in the temp_images folder
-            const files = await fs.promises.readdir(FOLDER_PATH);
+			// Read files in the temp_images folder
+			const files = await fs.promises.readdir(FOLDER_PATH);
 
-            for (const file of files) {
-                const uploadedImagePath = path.resolve(__dirname, `../temp_images/${file}`);
+			for (const file of files) {
+				const uploadedImagePath = path.resolve(
+					__dirname,
+					`../temp_images/${file}`
+				);
 
-                // Check for NSFW content
-                if (await isNSFW(uploadedImagePath)) {
-                    // Remove the file
-                    await fs.promises.unlink(uploadedImagePath);
+				// Check for NSFW content
+				if (await isNSFW(uploadedImagePath)) {
+					// Remove the file
+					await fs.promises.unlink(uploadedImagePath);
 
-                    // Respond immediately with an error
-                    res.status(400).json({ message: "NSFW content is not allowed" });
+					// Respond immediately with an error
+					res.status(400).json({ message: "NSFW content is not allowed" });
 					return;
-                }
+				}
 
-                // Process the file
-                const uid = req.cookies.decoded_uid;
-                try {
-                    const uploadResult = await cloudinary.uploader.upload(uploadedImagePath, {
-                        public_id: `${uid}-profile_picture`
-                    });
+				// Process the file
+				const uid = req.cookies.decoded_uid;
+				try {
+					const uploadResult = await cloudinary.uploader.upload(
+						uploadedImagePath,
+						{
+							public_id: `${uid}-profile_picture`
+						}
+					);
 
-                    if (uploadResult?.url) {
-                        // Delete the local file
-                        await fs.promises.unlink(uploadedImagePath);
+					if (uploadResult?.url) {
+						// Delete the local file
+						await fs.promises.unlink(uploadedImagePath);
 
-                        // Update the user's profile picture in the database
-                        await User.findByIdAndUpdate(
-                            { _id: uid },
-                            {
-                                pfp: uploadResult.url || "https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
-                            }
-                        );
-                    }
-                } catch (uploadError) {
-                    console.error(
-                        "<user.ts> Cloudinary upload error:".red.bold,
-                        uploadError
-                    );
-                }
-            }
+						// Update the user's profile picture in the database
+						await User.findByIdAndUpdate(
+							{ _id: uid },
+							{
+								pfp:
+									uploadResult.url ||
+									"https://pbs.twimg.com/media/FegInEPXkAAS1PE.png"
+							}
+						);
+					}
+				} catch (uploadError) {
+					console.error(
+						"<user.ts> Cloudinary upload error:".red.bold,
+						uploadError
+					);
+				}
+			}
 
-            res.status(200).send("Success");
+			res.status(200).send("Success");
 			return;
-        } catch (error) {
-            console.error("There was an error", (error as Error).toString().red.bold);
-            res.status(500).send("An error occurred while processing your request.");
+		} catch (error) {
+			console.error("There was an error", (error as Error).toString().red.bold);
+			res.status(500).send("An error occurred while processing your request.");
 			return;
-        }
-    }
+		}
+	}
 );
 
 router.post("/report", checkAuthStatus, reportUser);
@@ -91,11 +99,11 @@ router.post("/report", checkAuthStatus, reportUser);
 
 // router.get(":user_id/user", getUser);
 
-router.get('/current', checkAuthStatus, getCurrentUser);
+router.get("/current", checkAuthStatus, getCurrentUser);
 
-router.get('/all-users', checkAuthStatus, getAllUsers);
+router.get("/all-users", checkAuthStatus, getAllUsers);
 
-router.get('/:user_id', checkAuthStatus, getUserData);
+router.get("/:user_id", checkAuthStatus, getUserData);
 
 router.post("/search", checkAuthStatus, searchUser);
 
