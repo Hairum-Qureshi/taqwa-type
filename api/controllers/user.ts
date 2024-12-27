@@ -20,7 +20,10 @@ const getUserProgress = async (req:Request, res:Response) => {
 				progressData.push({
 					chapterNo: user!.surahs[i].chapterNo,
 					progress: Number(user!.surahs[i].progress),
-					isCompleted: user!.surahs[i].completionStatus === "Completed"
+					isCompleted: user!.surahs[i].completionStatus === "Completed",
+					timeSpent: user!.surahs[i].timeSpent,
+					accuracy: Number(user!.surahs[i].accuracy),
+					wpm: user!.surahs[i].wpm
 				});
 			}
 		}
