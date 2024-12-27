@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { AccountHandlers, Surah, SurahResponse, UserData } from "../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -48,6 +48,7 @@ export default function useAccount(): AccountHandlers {
         refetchUserData();
     }, [user_id]);
 
+    // Populates the cache:
     const { isLoading: isLoadingSurahs } = useQuery({
         queryKey: ["surahs"],
         queryFn: async () => {
@@ -55,7 +56,6 @@ export default function useAccount(): AccountHandlers {
             localStorage.setItem("surahs", JSON.stringify([response.data]));
             return response.data;
         },
-        
     });
 
     function searchSurah(surah: string) {
@@ -77,6 +77,7 @@ export default function useAccount(): AccountHandlers {
         const cachedData: SurahResponse | undefined = queryClient.getQueryData([
             "surahs"
         ]);
+
         return cachedData ? cachedData.data : [];
     }
 
@@ -87,9 +88,16 @@ export default function useAccount(): AccountHandlers {
                 .get(`http://localhost:4000/api/user/${user_id}/progress`, {
                     withCredentials: true
                 })
-                .then(() => {
+                .then(response => {
                     const cachedSurahs: Surah[] = getCachedSurahs();
-                     setSurahs(cachedSurahs);
+                    if(response.data.length !== 0) {
+                        for(let i = 0; i < response.data.length; i++) {
+                            const index = cachedSurahs.findIndex((chapter) => chapter.number === response.data[i].chapterNo);
+                            cachedSurahs[index].progress = response.data[i].progress;
+                            cachedSurahs[index].isCompleted = response.data[i].isCompleted;
+                        }
+                    }
+                    setSurahs(cachedSurahs);
                 })
                 .finally(() => {
                     setIsProgressLoading(false);
