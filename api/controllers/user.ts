@@ -11,8 +11,6 @@ const SELECT_PARAMS = "_id first_name last_name email pfp experience totalSurahs
 const getUserProgress = async (req:Request, res:Response) => {
 	try {
 		const user = await User.findById({ _id: req.params.user_id }).lean();
-		console.log(user!.surahs)
-
 		const progressData: SurahProgress[] = [];
 
 		if(user!.surahs) {
@@ -122,6 +120,7 @@ const getAllUsers = async (req:Request, res:Response) => {
 	const page = Number(req.query.page) || 1;
 	const filterBy = req.query.filter;	
 
+
 	try {
 		const numUsers = await User.countDocuments();
 		const pageCount = Math.ceil(numUsers / USERS_PER_PAGE); 
@@ -142,7 +141,7 @@ const getAllUsers = async (req:Request, res:Response) => {
 				break;
 			case 'surahs-practiced':
 				users = await User.find({}).sort({
-					surahsPracticed: -1
+					totalSurahsCompleted: -1
 				}).limit(USERS_PER_PAGE).skip(skip).select(SELECT_PARAMS);
 				break;
 			case 'date-joined':
