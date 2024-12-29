@@ -1,5 +1,6 @@
 import { InferSchemaType, Schema, model } from "mongoose";
 import { SurahSchema } from "./typing/surah";
+import { IUser } from "../interfaces";
 
 const userSchema = new Schema(
 	{
@@ -99,5 +100,5 @@ userSchema.index({
 	full_name: "text"
 });
 
-type User = InferSchemaType<typeof userSchema>;
-export default model<User>("User", userSchema);
+export default model<IUser>("User", userSchema);
+
