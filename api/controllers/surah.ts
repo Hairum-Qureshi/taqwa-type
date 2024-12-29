@@ -33,6 +33,9 @@ const saveProgress = async (req:Request, res:Response) => {
                                 progress: 100.0,
                                 completionStatus: "Completed"
                             }]
+                        },
+                        $inc: {
+                            totalSurahsCompleted: 1
                         }
                     });
                 } 
@@ -57,7 +60,10 @@ const saveProgress = async (req:Request, res:Response) => {
                             progress: 100.0,
                             completionStatus: "Completed"
                         }] 
-                    }      
+                    },
+                    $inc: {
+                        totalSurahsCompleted: 1
+                    }     
                 });
             }
         }
