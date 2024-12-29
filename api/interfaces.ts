@@ -1,7 +1,38 @@
 import { JwtPayload } from "jsonwebtoken";
 
 export interface UserJWTPayload extends JwtPayload {
-    user_id: string | null;
+	user_id: string | null;
+}
+
+interface Section {
+	uid: string;
+	sectionNumber: number;
+	chapterNumber: number;
+	verseRange: string;
+	latestTime: string;
+	bestTime: string;
+	wpm: number;
+	isCompleted: boolean;
+	accuracy: number;
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+interface Surah {
+	uid: string;
+	chapterName: string;
+	chapterNo: number;
+	noVerses: number;
+	wpm: number;
+	accuracy: number;
+	isCompleted: boolean;
+	sections: Section[];
+	timeSpent: string;
+	progress: number;
+	completionStatus: string;
+	numSections: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface IUser {
@@ -15,11 +46,19 @@ export interface IUser {
 	password: string;
 	experience: number;
 	mostPracticedSurah: string;
-	totalSurahsCompleted: string;
-	wordsPerMinute: string;
+	totalSurahsCompleted: number;
+	wordsPerMinute: number;
 	accuracy: number;
-	streak: string;
-	createdAt: string;
+	streak: number;
+	isBanned: boolean;
+	isPermanentlyBanned: boolean;
+	bannedDate: Date;
+	hasBeenBannedBefore: boolean;
+	hasBeenWarnedBefore: boolean;
+	isVerified: boolean;
+	surahs: Surah[];
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface UserReport {
@@ -33,10 +72,10 @@ export interface UserReport {
 }
 
 export interface SurahProgress {
-	chapterNo: number,
-	progress: number,
-	isCompleted: boolean,
-	timeSpent: string,
-	accuracy: number,
-	wpm: number
+	chapterNo: number;
+	progress: number;
+	isCompleted: boolean;
+	timeSpent: string;
+	accuracy: number;
+	wpm: number;
 }
