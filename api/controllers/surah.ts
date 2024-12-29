@@ -40,22 +40,24 @@ async function updateUserData(
 }
 
 async function updateTotalWPM(uid: string, user: IUser) {
-	const getTotal = await User.aggregate([
+    // ! The code for this *might* not work for the surahs that have sections involved
+
+	const [getTotal] = await User.aggregate([
 		{ $match: { _id: uid } }, // Match the document
 		{
 			$project: {
-				totalWpm: { $sum: "$surahs.wpm" } // Sum up the wpm values
+				totalWPM: { $sum: "$surahs.wpm" } // Sum up the wpm values
 			}
 		}
 	]);
-
-	const totalWPM = getTotal[0].totalWPM;
+    
+	const totalWPM = getTotal.totalWPM;
 
 	await User.updateOne(
 		{ _id: uid },
 		{
 			$set: {
-				wordsPerMinute: totalWPM / user.totalSurahsCompleted
+				wordsPerMinute: totalWPM / (user.totalSurahsCompleted + 1)
 			}
 		}
 	);
@@ -86,8 +88,8 @@ const saveProgress = async (req: Request, res: Response) => {
 				});
 
 				// prevent duplicate data from being appended to the array
-				if (!existingSurah)
-					await updateUserData(
+				if (!existingSurah) {
+                    await updateUserData(
 						uid,
 						surahNameEng,
 						surah_no,
@@ -96,8 +98,9 @@ const saveProgress = async (req: Request, res: Response) => {
 						decimalAccuracy,
 						timeSpent
 					);
+                }
 
-				await updateTotalWPM(uid, user);
+                await updateTotalWPM(uid, user);
 			}
 		}
 		// if the surahs array exists and the surah does NOT have sections
