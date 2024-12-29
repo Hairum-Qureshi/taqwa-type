@@ -57,7 +57,11 @@ export default function Account() {
 						<div>
 							<h1 className="font-semibold text-xl">{`${userData.first_name} ${userData.last_name}`}</h1>
 						</div>
-						<div>Test X</div>
+						<div className = "flex space-x-5">
+							<div className = "lg:text-2xl text-lg font-semibold flex-col text-center">{userData ? userData.wordsPerMinute : user.wordsPerMinute}<div className = "text-sm text-gray-500">Avg WPM</div></div>
+							<div className = "lg:text-2xl text-lg font-semibold flex-col text-center">{userData ? userData.streak : user.streak} <div className = "text-sm text-gray-500">Day{Number(userData ? userData.streak : user.streak) !== 1 && 's'} Streak</div></div>
+							<div className = "lg:text-2xl text-lg font-semibold flex-col text-center">{userData ? userData.accuracy * 100 || 0 : user.accuracy * 100 || 0}%<div className = "text-sm text-gray-500">Accuracy</div></div>
+						</div>
 					</div>
 				</div>
 				<div className="bg-slate-300 h-full p-2 w-full lg:flex">
