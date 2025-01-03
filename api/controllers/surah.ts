@@ -39,7 +39,7 @@ async function updateUserData(
 	);
 }
 
-async function updateTotalWPM(uid: string, user: IUser) {
+async function updateUserStats(uid: string, user: IUser) {
 	// ! The code for this *might* not work for the surahs that have sections involved
 
 	const [getTotal] = await User.aggregate([
@@ -72,7 +72,7 @@ async function updateTotalWPM(uid: string, user: IUser) {
 
 	const totalWPM = getTotal.totalWPM;
 	const totalAccuracy = getTotalAccuracy.totalAccuracy;
-    
+
 	await User.updateOne(
 		{ _id: uid },
 		{
@@ -88,44 +88,41 @@ const saveProgress = async (req: Request, res: Response) => {
 	const {
 		decimalAccuracy,
 		numWPM,
-		surahHasSections,
 		timeSpent,
 		surahNameEng,
 		surah_no,
-		numVerses
+		numVerses,
 	} = req.body;
 	try {
 		const uid: string = req.cookies.decoded_uid;
-		const user: IUser = (await User.findById({ _id: uid }).lean()) as IUser;
+		const user: IUser = await User.findById({ _id: uid }).lean() as IUser;
 
 		// ! NOTE: for surahs that DO have sections, you'll need to make sure the user completes all the sections before incrementing the totalSurahsCompleted property *****
 
 		if (user && !user.surahs) {
 			// if the user does not have an array called "surahs", add it
-			if (!surahHasSections) {
-				const existingSurah = await User.findOne({
-					_id: uid,
-					"surahs.chapterNo": surah_no
-				});
+            const existingSurah = await User.findOne({
+                _id: uid,
+                "surahs.chapterNo": surah_no
+            });
 
-				// prevent duplicate data from being appended to the array
-				if (!existingSurah) {
-					await updateUserData(
-						uid,
-						surahNameEng,
-						surah_no,
-						numVerses,
-						numWPM,
-						decimalAccuracy,
-						timeSpent
-					);
-				}
+            // prevent duplicate data from being appended to the array
+            if (!existingSurah) {
+                await updateUserData(
+                    uid,
+                    surahNameEng,
+                    surah_no,
+                    numVerses,
+                    numWPM,
+                    decimalAccuracy,
+                    timeSpent
+                );
+            }
 
-				await updateTotalWPM(uid, user);
-			}
+            await updateUserStats(uid, user);
+			
 		}
-		// if the surahs array exists and the surah does NOT have sections
-		else if (user && user.surahs && !surahHasSections) {
+		else if (user && user.surahs) {
 			await updateUserData(
 				uid,
 				surahNameEng,
@@ -135,7 +132,7 @@ const saveProgress = async (req: Request, res: Response) => {
 				decimalAccuracy,
 				timeSpent
 			);
-			await updateTotalWPM(uid, user);
+			await updateUserStats(uid, user);
 		}
 	} catch (error) {
 		console.log(
