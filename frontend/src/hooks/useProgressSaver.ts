@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Verse } from "../interfaces";
 
 interface ProgressSaver {
     saveProgress: (accuracy: string, wpm:string, timeSpent: string) => void;
@@ -121,7 +120,7 @@ const ENG_SURAHS = [
     "Al-Ikhlas",
     "Al-Falaq",
     "An-Nas"
-  ];
+];
   
 export default function useProgressSaver():ProgressSaver {
     const { surah_no } = useParams();
