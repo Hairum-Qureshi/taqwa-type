@@ -92,17 +92,14 @@ export default function TypingPracticeSection() {
 					</span>
 					&nbsp;
 					<span className="ml-2">
-						Please note that even if you hit backspace to fix your error, it
-						will still be counted against you. <br />
-						▶ To start, click on the text and begin typing! <br />▶ To start
-						over, hit the escape{" "}
+						▶ To start, click on the text and begin typing! Your timer starts the moment you click on the text <br />▶ To start
+						over, hit the escape
 						<span className="rounded-sm border-1 border-slate-400 text-xs ml-1 text-center items-center bg-slate-300 text-black inline-block w-8 font-mono">
 							ESC
 						</span>{" "}
 						button <br />▶ If it appears as though you typed all the characters
 						correctly but your accuracy is not 100%, chances are you might have
 						missed a space
-            <br />▶ Once you press on the text, the timer starts
 					</span>
 				</div>
 				{!groupedVerses ? (
