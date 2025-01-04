@@ -31,10 +31,6 @@ const sectionSchema = new Schema(
 			type: Number,
 			default: 0
 		},
-		isCompleted: {
-			type: Boolean,
-			default: false
-		},
 		accuracy: {
 			type: Decimal128,
 			default: 0.0
