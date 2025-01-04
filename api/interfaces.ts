@@ -18,7 +18,7 @@ interface Section {
 	updatedAt: Date;
 }
 
-interface Surah {
+export interface Surah {
 	uid: string;
 	chapterName: string;
 	chapterNo: number;
