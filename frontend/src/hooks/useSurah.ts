@@ -38,7 +38,7 @@ export default function useSurah(): SurahTools {
 
     // TODO - implement some logic to prevent a section from having just one verse
     // Algorithm that will handle breaking down a surah into chunks
-    async function makeSections() {
+    function makeSections() {
         let sectionCounter = 0;
         let currentVerse = 1;
         const versesPerSection = 15;
