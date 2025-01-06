@@ -4,7 +4,7 @@ export interface UserJWTPayload extends JwtPayload {
 	user_id: string | null;
 }
 
-interface Section {
+export interface Section {
 	uid: string;
 	sectionNumber: number;
 	chapterNumber: number;
